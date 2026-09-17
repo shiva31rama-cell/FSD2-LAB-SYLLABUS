@@ -1,0 +1,2 @@
+FSD2 repository rebuilt from the supplied VITB R-23 syllabus.
+The GitHub Action on main validates the source and generates PPTs, runtime PDFs and visuals.
