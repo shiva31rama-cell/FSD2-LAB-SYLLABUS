@@ -12,6 +12,9 @@ const taskRoutes = require('./routes/tasks');
 const announcementRoutes = require('./routes/announcements');
 const dashboardRoutes = require('./routes/dashboard');
 const aiRoutes = require('./routes/ai');
+const adminRoutes = require('./routes/admin');
+const notificationRoutes = require('./routes/notifications');
+const knowledgeRoutes = require('./routes/knowledge');
 const { securityHeaders, apiLimiter, authLimiter, aiLimiter } = require('./middleware/security');
 
 const app = express();
@@ -60,7 +63,7 @@ app.get('/api/health', (req, res) => {
   res.status(databaseConnected ? 200 : 503).json({
     ok: databaseConnected,
     app: 'CampusFlow AI',
-    version: '1.0.0',
+    version: '1.1.0',
     database: databaseConnected ? 'connected' : 'disconnected',
     requestId: req.requestId
   });
@@ -77,53 +80,31 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiLimiter, aiRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/knowledge', knowledgeRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found.', requestId: req.requestId });
 });
 
 app.use((err, req, res, next) => {
-  console.error(JSON.stringify({
-    requestId: req.requestId,
-    method: req.method,
-    path: req.path,
-    error: err.message,
-    stack: isProduction ? undefined : err.stack
-  }));
-
+  console.error(JSON.stringify({ requestId: req.requestId, method: req.method, path: req.path, error: err.message, stack: isProduction ? undefined : err.stack }));
   const status = err.status || 500;
-  res.status(status).json({
-    message: status === 500 ? 'Internal server error.' : err.message,
-    requestId: req.requestId
-  });
+  res.status(status).json({ message: status === 500 ? 'Internal server error.' : err.message, requestId: req.requestId });
 });
 
 async function start() {
-  await mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 10000,
-    maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 20)
-  });
-
+  await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000, maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 20) });
   console.log('MongoDB connected:', MONGO_URI.replace(/:\/\/.*?:.*?@/, '://***:***@'));
   const server = app.listen(PORT, () => console.log(`CampusFlow API running on port ${PORT}`));
-
   const shutdown = async signal => {
     console.log(`${signal}: shutting down gracefully...`);
-    server.close(async () => {
-      await mongoose.connection.close(false);
-      process.exit(0);
-    });
+    server.close(async () => { await mongoose.connection.close(false); process.exit(0); });
   };
-
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
-if (require.main === module) {
-  start().catch(error => {
-    console.error('Startup failed:', error.message);
-    process.exit(1);
-  });
-}
-
+if (require.main === module) start().catch(error => { console.error('Startup failed:', error.message); process.exit(1); });
 module.exports = { app, start };
