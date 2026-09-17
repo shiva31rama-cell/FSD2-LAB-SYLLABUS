@@ -21,8 +21,14 @@ function chunkText(value, options = {}) {
     let end = Math.min(start + size, text.length);
 
     if (end < text.length) {
-      const boundary = Math.max(text.lastIndexOf('\n\n', end), text.lastIndexOf('. ', end));
-      if (boundary > start + Math.floor(size * 0.6)) end = boundary + (text[boundary] === '.' ? 1 : 0);
+      const boundaryLimit = end - 1;
+      const paragraphBoundary = text.lastIndexOf('\n\n', boundaryLimit);
+      const sentenceBoundary = text.lastIndexOf('. ', boundaryLimit);
+      const boundary = Math.max(paragraphBoundary, sentenceBoundary);
+
+      if (boundary > start + Math.floor(size * 0.6)) {
+        end = Math.min(size + start, boundary + (text[boundary] === '.' ? 1 : 0));
+      }
     }
 
     const chunk = text.slice(start, end).trim();
