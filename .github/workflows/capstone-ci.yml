@@ -49,13 +49,14 @@ jobs:
           node --check capstone-campusflow-ai/server/services/audit.js
           node --check capstone-campusflow-ai/server/services/chunkText.js
           node --check capstone-campusflow-ai/server/services/notificationWorker.js
+          node --check capstone-campusflow-ai/server/tests/atlas.integration.test.js
       - name: Run unit tests
         run: npm test
       - name: Build React client
         run: npx vite build capstone-campusflow-ai/client
 
   atlas-integration:
-    if: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI != '' }}
+    if: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI != '' && secrets.CAMPUSFLOW_TEST_SESSION_SECRET != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -70,5 +71,6 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI }}
           SESSION_SECRET: ${{ secrets.CAMPUSFLOW_TEST_SESSION_SECRET }}
+          RUN_ATLAS_INTEGRATION: 'true'
           NODE_ENV: test
         run: node --test capstone-campusflow-ai/server/tests/atlas.integration.test.js
