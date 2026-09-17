@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: campusflow
+    volumes:
+      - campusflow-mongo:/data/db
+    ports:
+      - "27017:27017"
+
+  api:
+    build:
+      context: ..
+      dockerfile: capstone-campusflow-ai/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      MONGO_URI: mongodb://mongodb:27017/campusflow
+      CLIENT_URL: http://localhost:5173
+      SESSION_SECRET: replace-this-with-a-long-secret-before-use
+    ports:
+      - "4000:4000"
+
+volumes:
+  campusflow-mongo:
