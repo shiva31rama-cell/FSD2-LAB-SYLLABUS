@@ -12,6 +12,7 @@ const taskRoutes = require('./routes/tasks');
 const announcementRoutes = require('./routes/announcements');
 const dashboardRoutes = require('./routes/dashboard');
 const aiRoutes = require('./routes/ai');
+const aiActionRoutes = require('./routes/aiActions');
 const adminRoutes = require('./routes/admin');
 const notificationRoutes = require('./routes/notifications');
 const knowledgeRoutes = require('./routes/knowledge');
@@ -59,7 +60,7 @@ app.use(session({
 
 app.get('/api/health', (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
-  res.status(databaseConnected ? 200 : 503).json({ ok: databaseConnected, app: 'CampusFlow AI', version: '1.2.0', database: databaseConnected ? 'connected' : 'disconnected', requestId: req.requestId });
+  res.status(databaseConnected ? 200 : 503).json({ ok: databaseConnected, app: 'CampusFlow AI', version: '1.3.0', database: databaseConnected ? 'connected' : 'disconnected', requestId: req.requestId });
 });
 
 app.get('/api/ready', (req, res) => {
@@ -73,6 +74,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ai', aiLimiter, aiRoutes);
+app.use('/api/ai/actions', aiLimiter, aiActionRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/knowledge', knowledgeRoutes);
