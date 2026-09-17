@@ -46,6 +46,7 @@ jobs:
           node --check capstone-campusflow-ai/server/routes/knowledge.js
           node --check capstone-campusflow-ai/server/routes/courses.js
           node --check capstone-campusflow-ai/server/routes/attendance.js
+          node --check capstone-campus-ai/server/services/audit.js
           node --check capstone-campusflow-ai/server/services/audit.js
           node --check capstone-campusflow-ai/server/services/chunkText.js
           node --check capstone-campusflow-ai/server/services/notificationWorker.js
@@ -56,8 +57,12 @@ jobs:
         run: npx vite build capstone-campusflow-ai/client
 
   atlas-integration:
-    if: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI != '' && secrets.CAMPUSFLOW_TEST_SESSION_SECRET != '' }}
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI }}
+      SESSION_SECRET: ${{ secrets.CAMPUSFLOW_TEST_SESSION_SECRET }}
+      RUN_ATLAS_INTEGRATION: 'true'
+      NODE_ENV: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,11 +71,11 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
+        if: ${{ env.MONGO_URI != '' && env.SESSION_SECRET != '' }}
         run: npm install
       - name: Run authenticated Atlas integration suite
-        env:
-          MONGO_URI: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI }}
-          SESSION_SECRET: ${{ secrets.CAMPUSFLOW_TEST_SESSION_SECRET }}
-          RUN_ATLAS_INTEGRATION: 'true'
-          NODE_ENV: test
+        if: ${{ env.MONGO_URI != '' && env.SESSION_SECRET != '' }}
         run: node --test capstone-campusflow-ai/server/tests/atlas.integration.test.js
+      - name: Report Atlas integration status
+        if: ${{ env.MONGO_URI == '' || env.SESSION_SECRET == '' }}
+        run: echo "Atlas integration skipped because repository secrets are not configured."
