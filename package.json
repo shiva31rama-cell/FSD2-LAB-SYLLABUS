@@ -7,7 +7,8 @@
     "react06": "vite --root 06-react-props-states-styles-events",
     "react07": "vite --root 07-react-conditional-lists-forms",
     "react08": "vite --root 08-react-router-updating-screen",
-    "react09": "vite --root 09-react-hooks-sharing-data"
+    "react09": "vite --root 09-react-hooks-sharing-data",
+    "mongo:driver": "node mongodb-complete-course/08-node-driver/index.js"
   },
   "dependencies": {
     "cookie-parser": "latest",
@@ -15,6 +16,7 @@
     "express": "latest",
     "express-session": "latest",
     "mongoose": "latest",
+    "mongodb": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest"
