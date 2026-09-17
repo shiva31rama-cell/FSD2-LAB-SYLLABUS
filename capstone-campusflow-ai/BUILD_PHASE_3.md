@@ -52,8 +52,8 @@ Phase 3 extends the prototype from personal productivity into campus operations 
 
 All routes are authenticated and role/ownership restrictions are enforced server-side.
 
-## Verification boundary
+## Verification
 
-The code has been committed to the `fsd2-capstone-project` branch and the CI workflow was updated to syntax-check the new modules. Atlas deployment is intentionally not claimed here: the connected MongoDB Atlas account currently exposes an organization but no Atlas project through the available integration. A real Atlas project/cluster and its connection configuration must be selected before production data is written.
+The Atlas integration now exposes the CampusFlow project and cluster. The `campusflow` database has the application collections, and the `campusflow_vector_index` is READY/queryable. Runtime credentials remain environment secrets and are not committed to GitHub.
 
 This document records implementation facts only. No benchmark, user-study, load-test, or research result is claimed until an actual experiment produces evidence.
