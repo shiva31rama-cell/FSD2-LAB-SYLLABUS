@@ -55,16 +55,6 @@ Returns readiness for a load balancer or deployment platform.
 
 `POST /tasks`
 
-```json
-{
-  "title": "Finish FSD2 project",
-  "description": "Complete API integration",
-  "priority": "high",
-  "status": "todo",
-  "dueDate": "2026-10-01T12:00:00.000Z"
-}
-```
-
 `PUT /tasks/:id`
 
 `DELETE /tasks/:id`
@@ -123,11 +113,7 @@ The optional background worker creates idempotent reminders for active tasks due
 
 ## Campus knowledge / Vector Search
 
-### Ingest one knowledge item
-
 `POST /knowledge/ingest` — faculty/admin only
-
-### Ingest a document
 
 `POST /knowledge/ingest-document` — faculty/admin only
 
@@ -136,16 +122,13 @@ The optional background worker creates idempotent reminders for active tasks due
   "sourceId": "academic-calendar-2026",
   "title": "Academic Calendar 2026",
   "category": "calendar",
-  "url": "https://example.edu/calendar",
   "content": "Approved campus content goes here...",
   "chunkSize": 900,
   "chunkOverlap": 120
 }
 ```
 
-The server normalizes and chunks the document, generates embeddings in one batch, upserts `(sourceId, chunkIndex)` records, and deactivates stale chunks from an updated document. The embedding remains server-side and is not returned by list/search responses.
-
-### Semantic search
+The document endpoint normalizes and chunks content, generates embeddings in one batch, upserts `(sourceId, chunkIndex)` records, and deactivates stale chunks from an updated document.
 
 `POST /knowledge/search`
 
@@ -157,19 +140,69 @@ The server normalizes and chunks the document, generates embeddings in one batch
 }
 ```
 
-Search uses the configured MongoDB Vector Search index and returns relevance scores plus source/chunk metadata.
-
 ## AI assistant
 
 `POST /ai/assistant`
 
+The assistant retrieves signed-in user task context plus approved campus knowledge and announcement context. Model execution happens on the server; the browser never receives the OpenAI secret.
+
+## Controlled AI actions
+
+AI actions **never execute directly from model output**. The client must explicitly request a proposal, show the preview to the user, and then submit the short-lived confirmation token.
+
+### Propose
+
+`POST /ai/actions/propose`
+
 ```json
 {
-  "message": "Help me plan my pending work for this week."
+  "actionType": "complete_task",
+  "payload": { "taskId": "<owned-task-id>" }
 }
 ```
 
-The API retrieves only the signed-in user's task context plus approved campus knowledge and announcement context. The model call happens on the server; the browser never receives the OpenAI secret.
+Supported actions: `create_task`, `complete_task`, `update_task`.
+
+The response contains a human-readable `preview`, a one-time `confirmationToken`, and a five-minute expiry.
+
+### Confirm
+
+`POST /ai/actions/confirm`
+
+```json
+{
+  "confirmationToken": "<one-time-token>"
+}
+```
+
+The server re-validates the signed-in user, token state, expiry, target ownership and current task state before applying the action. The token becomes unusable after confirmation.
+
+### Cancel
+
+`POST /ai/actions/cancel`
+
+```json
+{
+  "confirmationToken": "<one-time-token>"
+}
+```
+
+All proposal, confirmation and cancellation events are audit logged.
+
+## Authenticated Atlas integration test
+
+`server/tests/atlas.integration.test.js` starts the real Express application against the configured MongoDB URI and exercises registration, session authentication, task creation, AI proposal, pre-confirmation non-execution, confirmation, replay rejection, cancellation and cleanup.
+
+Run it only against a dedicated test database/cluster:
+
+```powershell
+$env:MONGO_URI="<dedicated-test-atlas-uri>"
+$env:SESSION_SECRET="<32+ character test secret>"
+$env:RUN_ATLAS_INTEGRATION="true"
+node --test capstone-campusflow-ai/server/tests/atlas.integration.test.js
+```
+
+Do not use production data for the integration suite.
 
 ## Error contract
 
