@@ -28,6 +28,10 @@ jobs:
           node --check capstone-campusflow-ai/server/models/AuditLog.js
           node --check capstone-campusflow-ai/server/models/KnowledgeChunk.js
           node --check capstone-campusflow-ai/server/models/Notification.js
+          node --check capstone-campusflow-ai/server/models/Course.js
+          node --check capstone-campusflow-ai/server/models/Enrollment.js
+          node --check capstone-campusflow-ai/server/models/AttendanceSession.js
+          node --check capstone-campusflow-ai/server/models/AttendanceRecord.js
           node --check capstone-campusflow-ai/server/middleware/auth.js
           node --check capstone-campusflow-ai/server/middleware/validate.js
           node --check capstone-campusflow-ai/server/routes/auth.js
@@ -38,7 +42,10 @@ jobs:
           node --check capstone-campusflow-ai/server/routes/admin.js
           node --check capstone-campusflow-ai/server/routes/notifications.js
           node --check capstone-campusflow-ai/server/routes/knowledge.js
+          node --check capstone-campusflow-ai/server/routes/courses.js
+          node --check capstone-campusflow-ai/server/routes/attendance.js
           node --check capstone-campusflow-ai/server/services/audit.js
+          node --check capstone-campusflow-ai/server/services/notificationWorker.js
       - name: Run unit tests
         run: npm test
       - name: Build React client
