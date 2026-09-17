@@ -7,7 +7,7 @@ const { audit } = require('../services/audit');
 
 const router = express.Router();
 router.use(requireAuth);
-const allowedStatus = ['todo', 'in-progress', 'completed'];
+const allowedStatus = ['todo', 'in-progress', 'done'];
 const allowedPriority = ['low', 'medium', 'high'];
 
 const taskRules = [
@@ -19,7 +19,10 @@ const taskRules = [
 router.get('/', async (req, res, next) => {
   try {
     const filter = { user: req.user._id };
-    if (req.query.status) filter.status = req.query.status;
+    if (req.query.status) {
+      if (!allowedStatus.includes(String(req.query.status))) return res.status(400).json({ message: 'Invalid task status.' });
+      filter.status = req.query.status;
+    }
     if (req.query.search) filter.$text = { $search: String(req.query.search).slice(0, 100) };
     const limit = Math.min(Math.max(Number(req.query.limit) || 50, 1), 100);
     const tasks = await Task.find(filter).sort({ dueDate: 1, createdAt: -1 }).limit(limit).lean();
