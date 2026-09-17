@@ -25,11 +25,21 @@ jobs:
           node --check capstone-campusflow-ai/server/models/User.js
           node --check capstone-campusflow-ai/server/models/Task.js
           node --check capstone-campusflow-ai/server/models/Announcement.js
+          node --check capstone-campusflow-ai/server/models/AuditLog.js
+          node --check capstone-campusflow-ai/server/models/KnowledgeChunk.js
+          node --check capstone-campusflow-ai/server/models/Notification.js
           node --check capstone-campusflow-ai/server/middleware/auth.js
+          node --check capstone-campusflow-ai/server/middleware/validate.js
           node --check capstone-campusflow-ai/server/routes/auth.js
           node --check capstone-campusflow-ai/server/routes/tasks.js
           node --check capstone-campusflow-ai/server/routes/announcements.js
           node --check capstone-campusflow-ai/server/routes/dashboard.js
           node --check capstone-campusflow-ai/server/routes/ai.js
+          node --check capstone-campusflow-ai/server/routes/admin.js
+          node --check capstone-campusflow-ai/server/routes/notifications.js
+          node --check capstone-campusflow-ai/server/routes/knowledge.js
+          node --check capstone-campusflow-ai/server/services/audit.js
+      - name: Run unit tests
+        run: npm test
       - name: Build React client
         run: npx vite build capstone-campusflow-ai/client
