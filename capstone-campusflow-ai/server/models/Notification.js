@@ -7,6 +7,7 @@ const notificationSchema = new mongoose.Schema({
   message: { type: String, required: true, trim: true, maxlength: 1000 },
   readAt: { type: Date, default: null },
   data: { type: mongoose.Schema.Types.Mixed, default: {} },
+  idempotencyKey: { type: String, trim: true, maxlength: 240, unique: true, sparse: true },
   expiresAt: { type: Date, default: null }
 }, { timestamps: true, versionKey: false });
 
