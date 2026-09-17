@@ -7,14 +7,20 @@
     "react06": "vite --root 06-react-props-states-styles-events",
     "react07": "vite --root 07-react-conditional-lists-forms",
     "react08": "vite --root 08-react-router-updating-screen",
-    "react09": "vite --root 09-react-hooks-sharing-data"
+    "react09": "vite --root 09-react-hooks-sharing-data",
+    "capstone:server": "node capstone-campusflow-ai/server/server.js",
+    "capstone:client": "vite --root capstone-campusflow-ai/client"
   },
   "dependencies": {
+    "bcryptjs": "latest",
     "cookie-parser": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
     "ejs": "latest",
     "express": "latest",
     "express-session": "latest",
     "mongoose": "latest",
+    "openai": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest"
