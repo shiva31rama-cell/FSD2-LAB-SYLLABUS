@@ -1,0 +1,32 @@
+name: MongoDB Course CI
+
+on:
+  push:
+    branches: [mongodb-complete-course]
+  pull_request:
+    branches: [mongodb-complete-course]
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Check JavaScript examples
+        run: |
+          node --check mongodb-complete-course/08-node-driver/index.js
+          node --check mongodb-complete-course/09-mongoose/index.js
+          node --check mongodb-complete-course/07-transactions/transaction.js
+      - name: Check mongosh scripts as JavaScript syntax
+        run: |
+          node --check mongodb-complete-course/01-foundations/commands.js
+          node --check mongodb-complete-course/02-crud/crud.js
+          node --check mongodb-complete-course/03-querying/queries.js
+          node --check mongodb-complete-course/04-indexes/indexes.js
+          node --check mongodb-complete-course/05-aggregation/pipelines.js
