@@ -27,6 +27,7 @@ jobs:
           node --check capstone-campusflow-ai/server/models/Announcement.js
           node --check capstone-campusflow-ai/server/models/AuditLog.js
           node --check capstone-campusflow-ai/server/models/KnowledgeChunk.js
+          node --check capstone-campusflow-ai/server/models/AIAction.js
           node --check capstone-campusflow-ai/server/models/Notification.js
           node --check capstone-campusflow-ai/server/models/Course.js
           node --check capstone-campusflow-ai/server/models/Enrollment.js
@@ -39,6 +40,7 @@ jobs:
           node --check capstone-campusflow-ai/server/routes/announcements.js
           node --check capstone-campusflow-ai/server/routes/dashboard.js
           node --check capstone-campusflow-ai/server/routes/ai.js
+          node --check capstone-campusflow-ai/server/routes/aiActions.js
           node --check capstone-campusflow-ai/server/routes/admin.js
           node --check capstone-campusflow-ai/server/routes/notifications.js
           node --check capstone-campusflow-ai/server/routes/knowledge.js
@@ -51,3 +53,22 @@ jobs:
         run: npm test
       - name: Build React client
         run: npx vite build capstone-campusflow-ai/client
+
+  atlas-integration:
+    if: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Run authenticated Atlas integration suite
+        env:
+          MONGO_URI: ${{ secrets.CAMPUSFLOW_TEST_MONGO_URI }}
+          SESSION_SECRET: ${{ secrets.CAMPUSFLOW_TEST_SESSION_SECRET }}
+          NODE_ENV: test
+        run: node --test capstone-campusflow-ai/server/tests/atlas.integration.test.js
