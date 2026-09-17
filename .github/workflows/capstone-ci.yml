@@ -32,4 +32,4 @@ jobs:
           node --check capstone-campusflow-ai/server/routes/dashboard.js
           node --check capstone-campusflow-ai/server/routes/ai.js
       - name: Build React client
-        run: npx vite build --root capstone-campusflow-ai/client
+        run: npx vite build capstone-campusflow-ai/client
