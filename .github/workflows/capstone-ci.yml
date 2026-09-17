@@ -1,0 +1,35 @@
+name: CampusFlow AI CI
+
+on:
+  push:
+    branches: [fsd2-capstone-project]
+  pull_request:
+    branches: [fsd2-capstone-project]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Check server syntax
+        run: |
+          node --check capstone-campusflow-ai/server/server.js
+          node --check capstone-campusflow-ai/server/seed.js
+          node --check capstone-campusflow-ai/server/models/User.js
+          node --check capstone-campusflow-ai/server/models/Task.js
+          node --check capstone-campusflow-ai/server/models/Announcement.js
+          node --check capstone-campusflow-ai/server/middleware/auth.js
+          node --check capstone-campusflow-ai/server/routes/auth.js
+          node --check capstone-campusflow-ai/server/routes/tasks.js
+          node --check capstone-campusflow-ai/server/routes/announcements.js
+          node --check capstone-campusflow-ai/server/routes/dashboard.js
+          node --check capstone-campusflow-ai/server/routes/ai.js
+      - name: Build React client
+        run: npx vite build --root capstone-campusflow-ai/client
