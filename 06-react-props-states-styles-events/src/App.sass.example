@@ -1,0 +1,7 @@
+$gap: 16px
+
+.box
+  padding: $gap
+  border: 2px solid #333
+  &:hover
+    transform: scale(1.01)
