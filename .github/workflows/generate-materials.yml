@@ -30,12 +30,12 @@ jobs:
           node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
       - name: Build React experiments
         run: |
-          npx vite build --root 05-react-render-html-jsx-components
-          npx vite build --root 06-react-props-states-styles-events
-          npx vite build --root 07-react-conditional-lists-forms
-          npx vite build --root 08-react-router-updating-screen
-          npx vite build --root 09-react-hooks-sharing-data
-          npx vite build --root 12-augmented-programs-todo-and-quiz/quiz-react
+          npx vite build 05-react-render-html-jsx-components
+          npx vite build 06-react-props-states-styles-events
+          npx vite build 07-react-conditional-lists-forms
+          npx vite build 08-react-router-updating-screen
+          npx vite build 09-react-hooks-sharing-data
+          npx vite build 12-augmented-programs-todo-and-quiz/quiz-react
       - name: Install material-generation packages
         run: python -m pip install --upgrade pip pillow python-pptx reportlab
       - name: Generate PPTs, runtime PDFs and visuals
