@@ -1,11 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const mongoose = require('mongoose');
-const { app } = require('../server');
-const User = require('../models/User');
-const Task = require('../models/Task');
-const AIAction = require('../models/AIAction');
-const AuditLog = require('../models/AuditLog');
 
 const runIntegration = process.env.RUN_ATLAS_INTEGRATION === 'true';
 const testName = `atlas-e2e-${Date.now()}@campusflow.test`;
@@ -42,6 +37,14 @@ testOrSkip('authenticated Atlas end-to-end flow with explicit AI confirmation', 
   assert.ok(process.env.MONGO_URI, 'MONGO_URI is required for Atlas integration.');
   assert.ok(process.env.SESSION_SECRET && process.env.SESSION_SECRET.length >= 32, 'A test SESSION_SECRET of at least 32 characters is required.');
 
+  // Load the application only when the integration test is actually enabled.
+  // This prevents skipped CI runs from starting a background MongoDB connection.
+  const { app } = require('../server');
+  const User = require('../models/User');
+  const Task = require('../models/Task');
+  const AIAction = require('../models/AIAction');
+  const AuditLog = require('../models/AuditLog');
+
   await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000, maxPoolSize: 10 });
   server = app.listen(0);
 
@@ -74,7 +77,7 @@ testOrSkip('authenticated Atlas end-to-end flow with explicit AI confirmation', 
     assert.match(proposal.body.preview, /Mark/);
     assert.ok(proposal.body.confirmationToken);
 
-    const beforeConfirm = await request(`/api/tasks`);
+    const beforeConfirm = await request('/api/tasks');
     assert.equal(beforeConfirm.response.status, 200);
     assert.equal(beforeConfirm.body.find(task => task._id === taskId).status, 'in-progress');
 
@@ -117,7 +120,7 @@ testOrSkip('authenticated Atlas end-to-end flow with explicit AI confirmation', 
       await AuditLog.deleteMany({ actor: userId });
       await User.deleteOne({ _id: userId });
     }
-    await new Promise(resolve => server.close(resolve));
+    if (server) await new Promise(resolve => server.close(resolve));
     await mongoose.disconnect();
   }
 });
