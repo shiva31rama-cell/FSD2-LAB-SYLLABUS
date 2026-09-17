@@ -13,8 +13,14 @@ CampusFlow AI is the capstone application for the R-23 FSD2 syllabus: a real-wor
 - Task CRUD with status, priority and due dates
 - Campus announcements
 - Dashboard analytics using MongoDB aggregation
-- React Router, hooks, forms, lists, events and conditional UI
-- Server-side OpenAI Responses API integration
+- Course, enrollment and attendance workflows
+- Persistent notifications with idempotent task-due worker
+- Campus document chunking and batched embedding ingestion
+- MongoDB Vector Search retrieval with source/chunk references
+- Grounded server-side AI assistant
+- Explicit-confirmation AI task actions; AI output cannot directly mutate tasks
+- One-time, five-minute action confirmation tokens
+- Audit logging for AI proposals, confirmations and cancellations
 - Request correlation IDs
 - Helmet security headers
 - API, authentication and AI rate limits
@@ -25,25 +31,26 @@ CampusFlow AI is the capstone application for the R-23 FSD2 syllabus: a real-wor
 - centralized 404/error responses
 - Docker production-like API image and local Compose stack
 - CI syntax validation and React production build
+- Optional authenticated end-to-end test suite against a dedicated Atlas test database
 
 ## FSD2 coverage
 
 | FSD2 topic | CampusFlow implementation |
 |---|---|
-| Express routing | `/api/auth`, `/api/tasks`, `/api/announcements`, `/api/dashboard`, `/api/ai` |
-| HTTP methods | GET, POST, PUT, DELETE REST endpoints |
+| Express routing | `/api/auth`, `/api/tasks`, `/api/announcements`, `/api/dashboard`, `/api/ai`, `/api/courses`, `/api/attendance` |
+| HTTP methods | GET, POST, PUT, PATCH, DELETE REST endpoints |
 | Middleware | JSON parser, CORS, sessions, auth, security, rate limits, errors |
 | Cookies/sessions/authentication | HttpOnly session cookie + MongoDB session store + bcrypt |
-| MongoDB + Mongoose | User, Task and Announcement models |
+| MongoDB + Mongoose | User, Task, Announcement, Course, Enrollment, Attendance, Knowledge and AI action models |
 | REST API | React client consumes Express JSON APIs |
 | React JSX/components | Login, Dashboard, Tasks, Announcements, AI Assistant |
 | Props/state/events/forms | Controlled forms and state updates |
 | Conditional rendering/lists | Auth, loading/error states and mapped records |
 | React Router | Application screens |
 | Hooks | `useState`, `useEffect` |
-| MongoDB CRUD | Tasks and announcements |
-| MongoDB aggregation | Dashboard statistics |
-| AI integration | Server-side OpenAI Responses API with application context |
+| MongoDB CRUD | Tasks, announcements, courses and attendance |
+| MongoDB aggregation | Dashboard and attendance statistics |
+| AI integration | Server-side OpenAI Responses API + MongoDB Vector Search RAG |
 
 ## Architecture
 
@@ -59,25 +66,33 @@ React + Vite
 Express API
   |--- Auth / Sessions
   |--- Tasks / Announcements
+  |--- Courses / Enrollment / Attendance
   |--- Dashboard Aggregation
-  |--- AI Assistant
+  |--- Knowledge Ingestion / Vector Search
+  |--- AI Assistant / Explicit Actions
   |
   v
 MongoDB / MongoDB Atlas
   |--- users
   |--- tasks
   |--- announcements
-  |--- sessions
-  |--- future knowledge + embeddings
+  |--- courses / enrollments
+  |--- attendance sessions / records
+  |--- knowledgechunks + embeddings
+  |--- aiactions
+  |--- auditlogs / notifications / sessions
   |
-  +---------------------> OpenAI model layer
+  +---------------------> OpenAI model + embedding layer
 ```
 
-## AI architecture
+## AI safety architecture
 
-The OpenAI API key stays on the server and is loaded from an environment variable. The browser never receives it. The application currently sends the signed-in user's task context plus approved recent announcements to the Responses API. The model name is configurable with `OPENAI_MODEL`.
+The assistant is split into two different capabilities:
 
-The next research-grade AI layer is MongoDB Vector Search RAG: ingest approved campus knowledge, chunk and embed it, retrieve authorized context, then generate answers with source references. MongoDB documents Vector Search as a way to combine semantic retrieval with filtering and RAG.
+1. **Answering:** the model receives authorized application context and retrieved campus knowledge. It can explain and plan, but does not receive a database write tool.
+2. **Actions:** an action must first be proposed by the authenticated user flow. CampusFlow validates ownership and fields, creates a short-lived confirmation token, and returns a human-readable preview. Only a separate confirmation request can execute the action. Tokens are one-time and all state changes are audit logged.
+
+Supported controlled actions are `create_task`, `complete_task`, and `update_task`.
 
 ## Local VS Code run
 
@@ -101,37 +116,21 @@ PORT=4000
 NODE_ENV=development
 OPENAI_API_KEY=
 OPENAI_MODEL=gpt-5
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+MONGODB_VECTOR_INDEX=campusflow_vector_index
 ```
 
 For Atlas, replace `MONGO_URI` with the Atlas connection string and keep credentials out of Git.
 
-### 3. Seed demo data
-
-```powershell
-node capstone-campusflow-ai/server/seed.js
-```
-
-Demo login:
-
-```text
-Email: demo@campusflow.local
-Password: demo1234
-```
-
-### 4. Backend
+### 3. Backend
 
 ```powershell
 npm run capstone:server
 ```
 
-Check:
+Check `http://localhost:4000/api/health` and `http://localhost:4000/api/ready`.
 
-```text
-http://localhost:4000/api/health
-http://localhost:4000/api/ready
-```
-
-### 5. Frontend
+### 4. Frontend
 
 Open a second terminal:
 
@@ -141,31 +140,21 @@ npm run capstone:client
 
 Use the Vite URL shown in the terminal, normally `http://localhost:5173`.
 
-### 6. AI
+## Authenticated Atlas end-to-end testing
 
-Put a valid OpenAI API key in `server/.env`. Never put it in React source code or commit it to Git. OpenAI's API documentation explicitly treats API keys as secrets that should be loaded server-side.
-
-## Docker local production-like run
-
-From `capstone-campusflow-ai`:
+Use a **dedicated test database/cluster**, not institutional production data. The integration test starts the real Express application, connects it to Atlas, registers a test student, verifies the authenticated session, creates a task, proposes an AI action, verifies that no mutation occurred before confirmation, confirms it, verifies one-time replay rejection, tests cancellation, verifies cancelled actions do not execute, checks audit events, and cleans up its test records.
 
 ```powershell
-docker compose up --build
+$env:MONGO_URI="<dedicated-test-atlas-uri>"
+$env:SESSION_SECRET="<32+ character test secret>"
+$env:RUN_ATLAS_INTEGRATION="true"
+node --test capstone-campusflow-ai/server/tests/atlas.integration.test.js
 ```
 
-The API is exposed on port 4000 and MongoDB on 27017. Replace the example session secret before using the stack beyond local testing.
+CI runs this suite automatically when the repository has `CAMPUSFLOW_TEST_MONGO_URI` and `CAMPUSFLOW_TEST_SESSION_SECRET` secrets configured.
 
-## API documentation
+## Research boundary
 
-See [`API.md`](API.md) for the request/response contract.
+The implementation provides the platform and instrumentation needed for later experiments. It does **not** claim benchmark improvements, user-study results, or a research contribution until those are actually measured and documented.
 
-## Research documentation
-
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — system and AI/RAG architecture
-- [`RESEARCH_PROTOCOL.md`](RESEARCH_PROTOCOL.md) — research questions, baselines, metrics and reproducibility
-- [`THREAT_MODEL.md`](THREAT_MODEL.md) — security boundaries and AI-specific threats
-- [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) — production launch gates
-
-## Important production distinction
-
-This branch is a **full production prototype**, not a claim that a public deployment is already production-ready. A real institutional launch still needs deployment-specific secrets, HTTPS/domain configuration, Atlas backup/restore testing, monitoring, vulnerability scanning, authorization tests, privacy approval and a security review.
+This branch is a **production-level prototype**, not a claim that a public institutional deployment is already production-ready. A real launch still needs deployment-specific secrets, HTTPS/domain configuration, Atlas backup/restore testing, monitoring, vulnerability scanning, authorization tests, privacy approval and security review.
