@@ -1,7 +1,8 @@
 .counter {
+  /* Same box styling as the old global demo-box class, now scoped to Counter. */
   padding: 24px;
   margin: 24px 0;
-  border: 2px solid #6c5ce7;
+  border: 2px solid var(--primary-color);
   border-radius: 12px;
   background: #f7f5ff;
 }
