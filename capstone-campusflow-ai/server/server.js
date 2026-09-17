@@ -15,6 +15,9 @@ const aiRoutes = require('./routes/ai');
 const adminRoutes = require('./routes/admin');
 const notificationRoutes = require('./routes/notifications');
 const knowledgeRoutes = require('./routes/knowledge');
+const courseRoutes = require('./routes/courses');
+const attendanceRoutes = require('./routes/attendance');
+const { startNotificationWorker, stopNotificationWorker } = require('./services/notificationWorker');
 const { securityHeaders, apiLimiter, authLimiter, aiLimiter } = require('./middleware/security');
 
 const app = express();
@@ -35,9 +38,14 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 app.use((req, res, next) => {
+  const startedAt = process.hrtime.bigint();
   const requestId = req.get('x-request-id') || crypto.randomUUID();
   req.requestId = requestId;
   res.setHeader('x-request-id', requestId);
+  res.on('finish', () => {
+    const durationMs = Number(process.hrtime.bigint() - startedAt) / 1e6;
+    if (durationMs > 1000) console.warn(JSON.stringify({ type: 'slow_request', requestId, method: req.method, path: req.path, status: res.statusCode, durationMs: Number(durationMs.toFixed(2)) }));
+  });
   next();
 });
 
@@ -45,28 +53,13 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'development-only-change-this-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: MONGO_URI,
-    collectionName: 'sessions',
-    ttl: 60 * 60 * 24
-  }),
-  cookie: {
-    httpOnly: true,
-    sameSite: isProduction ? 'none' : 'lax',
-    secure: isProduction,
-    maxAge: 1000 * 60 * 60 * 24
-  }
+  store: MongoStore.create({ mongoUrl: MONGO_URI, collectionName: 'sessions', ttl: 60 * 60 * 24 }),
+  cookie: { httpOnly: true, sameSite: isProduction ? 'none' : 'lax', secure: isProduction, maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 app.get('/api/health', (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
-  res.status(databaseConnected ? 200 : 503).json({
-    ok: databaseConnected,
-    app: 'CampusFlow AI',
-    version: '1.1.0',
-    database: databaseConnected ? 'connected' : 'disconnected',
-    requestId: req.requestId
-  });
+  res.status(databaseConnected ? 200 : 503).json({ ok: databaseConnected, app: 'CampusFlow AI', version: '1.2.0', database: databaseConnected ? 'connected' : 'disconnected', requestId: req.requestId });
 });
 
 app.get('/api/ready', (req, res) => {
@@ -83,10 +76,10 @@ app.use('/api/ai', aiLimiter, aiRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/knowledge', knowledgeRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found.', requestId: req.requestId });
-});
+app.use((req, res) => res.status(404).json({ message: 'Route not found.', requestId: req.requestId }));
 
 app.use((err, req, res, next) => {
   console.error(JSON.stringify({ requestId: req.requestId, method: req.method, path: req.path, error: err.message, stack: isProduction ? undefined : err.stack }));
@@ -97,9 +90,11 @@ app.use((err, req, res, next) => {
 async function start() {
   await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000, maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 20) });
   console.log('MongoDB connected:', MONGO_URI.replace(/:\/\/.*?:.*?@/, '://***:***@'));
+  startNotificationWorker();
   const server = app.listen(PORT, () => console.log(`CampusFlow API running on port ${PORT}`));
   const shutdown = async signal => {
     console.log(`${signal}: shutting down gracefully...`);
+    stopNotificationWorker();
     server.close(async () => { await mongoose.connection.close(false); process.exit(0); });
   };
   process.on('SIGTERM', () => shutdown('SIGTERM'));
