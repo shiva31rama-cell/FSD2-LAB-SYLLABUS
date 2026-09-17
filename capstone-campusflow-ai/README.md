@@ -1,88 +1,111 @@
-# CampusFlow AI — FSD2 Capstone Project
+# CampusFlow AI — FSD2 Capstone / Production Prototype
 
-A real-world student productivity and campus information SaaS-style application built directly from the R-23 FSD2 lab pathway.
+CampusFlow AI is the capstone application for the R-23 FSD2 syllabus: a real-world campus productivity SaaS prototype combining React, Express, MongoDB/Mongoose, sessions, REST APIs, analytics and a server-side AI assistant.
 
-## Why this project fits the syllabus
+> **Research-grade direction:** this repository is structured so the software can support a serious experimental study. Calling it a PhD contribution would require a novel research question, reproducible experiments, baselines and evidence; the software itself is the prototype platform.
+
+## Core capabilities
+
+- Student/faculty/admin role field in the identity model
+- Registration, login, logout and authenticated sessions
+- bcrypt password hashing
+- MongoDB-backed session storage
+- Task CRUD with status, priority and due dates
+- Campus announcements
+- Dashboard analytics using MongoDB aggregation
+- React Router, hooks, forms, lists, events and conditional UI
+- Server-side OpenAI Responses API integration
+- Request correlation IDs
+- Helmet security headers
+- API, authentication and AI rate limits
+- bounded JSON request bodies
+- CORS allow-list
+- health and readiness endpoints
+- graceful shutdown
+- centralized 404/error responses
+- Docker production-like API image and local Compose stack
+- CI syntax validation and React production build
+
+## FSD2 coverage
 
 | FSD2 topic | CampusFlow implementation |
 |---|---|
 | Express routing | `/api/auth`, `/api/tasks`, `/api/announcements`, `/api/dashboard`, `/api/ai` |
 | HTTP methods | GET, POST, PUT, DELETE REST endpoints |
-| Middleware | JSON parser, CORS, session middleware, auth middleware, error middleware |
-| Cookies/sessions/authentication | Express session cookie + MongoDB-backed session store + bcrypt password hashing |
-| MongoDB + Mongoose | User, Task and Announcement schemas/models |
+| Middleware | JSON parser, CORS, sessions, auth, security, rate limits, errors |
+| Cookies/sessions/authentication | HttpOnly session cookie + MongoDB session store + bcrypt |
+| MongoDB + Mongoose | User, Task and Announcement models |
 | REST API | React client consumes Express JSON APIs |
-| React JSX/components | Login, Dashboard, Tasks, Announcements, AI Assistant components |
-| Props/state/events/forms | Controlled forms, state updates and event handlers |
-| Conditional rendering/lists | Login state, loading/error states and mapped task/announcement lists |
-| React Router | Dashboard, Tasks, Announcements and AI Assistant routes |
-| Hooks | `useState` and `useEffect` |
-| MongoDB CRUD | Task and announcement create/read/update/delete flows |
-| MongoDB aggregation | Dashboard status and priority statistics |
-| AI integration | Server-side OpenAI Responses API with MongoDB task/announcement context |
-
-## Features
-
-- Student registration and login
-- Secure password hashing with bcrypt
-- MongoDB-backed Express sessions
-- Task CRUD with priority, status and due date
-- Text-searchable task model and useful indexes
-- Campus announcements
-- MongoDB aggregation dashboard
-- AI productivity assistant that uses the logged-in student's application context
-- Responsive React interface
-- Demo seed data
+| React JSX/components | Login, Dashboard, Tasks, Announcements, AI Assistant |
+| Props/state/events/forms | Controlled forms and state updates |
+| Conditional rendering/lists | Auth, loading/error states and mapped records |
+| React Router | Application screens |
+| Hooks | `useState`, `useEffect` |
+| MongoDB CRUD | Tasks and announcements |
+| MongoDB aggregation | Dashboard statistics |
+| AI integration | Server-side OpenAI Responses API with application context |
 
 ## Architecture
 
 ```text
-React + Vite (5173)
-        |
-        | fetch + session cookie
-        v
-Express API (4000)
-  |       |        |
-  |       |        +--> OpenAI Responses API (optional)
-  |       v
-  |   Mongoose models
+Browser
+  |
+  | HTTPS + HttpOnly session cookie
+  v
+React + Vite
+  |
+  | REST/JSON
+  v
+Express API
+  |--- Auth / Sessions
+  |--- Tasks / Announcements
+  |--- Dashboard Aggregation
+  |--- AI Assistant
+  |
   v
 MongoDB / MongoDB Atlas
-  |- users
-  |- tasks
-  |- announcements
-  |- sessions
+  |--- users
+  |--- tasks
+  |--- announcements
+  |--- sessions
+  |--- future knowledge + embeddings
+  |
+  +---------------------> OpenAI model layer
 ```
 
-The OpenAI key is kept on the server. Do not put it in React source code or commit it to Git.
+## AI architecture
 
-## Run it in VS Code
+The OpenAI API key stays on the server and is loaded from an environment variable. The browser never receives it. The application currently sends the signed-in user's task context plus approved recent announcements to the Responses API. The model name is configurable with `OPENAI_MODEL`.
 
-### 1. Install dependencies once from repository root
+The next research-grade AI layer is MongoDB Vector Search RAG: ingest approved campus knowledge, chunk and embed it, retrieve authorized context, then generate answers with source references. MongoDB documents Vector Search as a way to combine semantic retrieval with filtering and RAG.
+
+## Local VS Code run
+
+### 1. Install
 
 ```powershell
 npm install
 ```
 
-### 2. Create server environment file
+### 2. Environment
 
-Copy `server/.env.example` to `server/.env` and set `MONGO_URI`.
+Copy `capstone-campusflow-ai/server/.env.example` to `capstone-campusflow-ai/server/.env`.
 
-Local MongoDB example:
+For local MongoDB:
 
 ```text
 MONGO_URI=mongodb://127.0.0.1:27017/campusflow
+SESSION_SECRET=replace-with-a-long-random-development-secret
+CLIENT_URL=http://localhost:5173
+PORT=4000
+NODE_ENV=development
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5
 ```
 
-Atlas example:
+For Atlas, replace `MONGO_URI` with the Atlas connection string and keep credentials out of Git.
 
-```text
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
-```
-
-For Atlas, configure the database user and network access in Atlas and keep the password out of Git.
-
-### 3. Optional demo data
+### 3. Seed demo data
 
 ```powershell
 node capstone-campusflow-ai/server/seed.js
@@ -95,58 +118,54 @@ Email: demo@campusflow.local
 Password: demo1234
 ```
 
-### 4. Start backend terminal
+### 4. Backend
 
 ```powershell
 npm run capstone:server
 ```
 
-Expected API:
+Check:
 
-`http://localhost:4000/api/health`
+```text
+http://localhost:4000/api/health
+http://localhost:4000/api/ready
+```
 
-### 5. Start frontend in a second VS Code terminal
+### 5. Frontend
+
+Open a second terminal:
 
 ```powershell
 npm run capstone:client
 ```
 
-Open the Vite URL shown in the terminal, normally `http://localhost:5173`.
+Use the Vite URL shown in the terminal, normally `http://localhost:5173`.
 
-### 6. Enable AI
+### 6. AI
 
-Set `OPENAI_API_KEY` in `server/.env`. The React app calls `/api/ai/assistant`; the browser never receives the API key.
+Put a valid OpenAI API key in `server/.env`. Never put it in React source code or commit it to Git. OpenAI's API documentation explicitly treats API keys as secrets that should be loaded server-side.
 
-The current OpenAI JavaScript SDK uses the Responses API through `client.responses.create(...)`. The exact model is configurable with `OPENAI_MODEL` so the project can follow the models available to your API account.
+## Docker local production-like run
 
-## API map
+From `capstone-campusflow-ai`:
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-- `POST /api/auth/logout`
-- `GET /api/tasks`
-- `POST /api/tasks`
-- `PUT /api/tasks/:id`
-- `DELETE /api/tasks/:id`
-- `GET /api/announcements`
-- `POST /api/announcements`
-- `DELETE /api/announcements/:id`
-- `GET /api/dashboard/summary`
-- `POST /api/ai/assistant`
-- `GET /api/health`
+```powershell
+docker compose up --build
+```
 
-## What to demonstrate in a viva
+The API is exposed on port 4000 and MongoDB on 27017. Replace the example session secret before using the stack beyond local testing.
 
-1. Register/login creates an authenticated session.
-2. Session data is persisted in MongoDB through `connect-mongo`.
-3. Create a task → MongoDB document appears in `tasks`.
-4. Change task status → PUT request updates the document.
-5. Dashboard → aggregation pipeline calculates counts.
-6. Announcement → document is stored and displayed through a populated author reference.
-7. AI Assistant → Express fetches MongoDB context and sends it to the AI model from the server.
-8. Explain why secrets belong in environment variables, not frontend code.
+## API documentation
 
-## Important production upgrades
+See [`API.md`](API.md) for the request/response contract.
 
-This is a complete educational capstone baseline. Before production deployment, add rate limiting, CSRF protection appropriate to the chosen cookie strategy, stricter role-based authorization, schema validation at every boundary, centralized logging, HTTPS-only cookies, secret management, automated tests, monitoring and a production-grade session/backup strategy.
+## Research documentation
+
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — system and AI/RAG architecture
+- [`RESEARCH_PROTOCOL.md`](RESEARCH_PROTOCOL.md) — research questions, baselines, metrics and reproducibility
+- [`THREAT_MODEL.md`](THREAT_MODEL.md) — security boundaries and AI-specific threats
+- [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) — production launch gates
+
+## Important production distinction
+
+This branch is a **full production prototype**, not a claim that a public deployment is already production-ready. A real institutional launch still needs deployment-specific secrets, HTTPS/domain configuration, Atlas backup/restore testing, monitoring, vulnerability scanning, authorization tests, privacy approval and a security review.
