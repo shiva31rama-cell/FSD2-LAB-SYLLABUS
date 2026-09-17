@@ -106,8 +106,11 @@ function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [form, setForm] = useState({ title: '', description: '', priority: 'medium', dueDate: '' });
   const [error, setError] = useState('');
+  const [action, setAction] = useState(null);
+
   async function load() { setTasks(await api('/tasks')); }
   useEffect(() => { load().catch(e => setError(e.message)); }, []);
+
   async function add(event) {
     event.preventDefault(); setError('');
     try { await api('/tasks', { method: 'POST', body: JSON.stringify(form) }); setForm({ title: '', description: '', priority: 'medium', dueDate: '' }); await load(); }
@@ -115,6 +118,7 @@ function Tasks() {
   }
   async function update(id, status) { await api(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }); await load(); }
   async function remove(id) { await api(`/tasks/${id}`, { method: 'DELETE' }); await load(); }
+
   return <>
     <h1>Tasks</h1>
     <form className="card form-grid" onSubmit={add}>
@@ -125,11 +129,91 @@ function Tasks() {
       <button className="primary">Add task</button>
     </form>
     {error && <p className="error">{error}</p>}
-    <div className="list">{tasks.map(task => <div className="card row" key={task._id}>
-      <div><b>{task.title}</b><div className="muted">{task.description || 'No description'} • {task.priority}</div></div>
-      <div><select value={task.status} onChange={e => update(task._id, e.target.value)}><option>todo</option><option>in-progress</option><option>done</option></select> <button onClick={() => remove(task._id)}>Delete</button></div>
-    </div>)}</div>
+    <div className="list">
+      {tasks.map(task => <div className="card task-card" key={task._id}>
+        <div className="row">
+          <div><b>{task.title}</b><div className="muted">{task.description || 'No description'} • {task.priority}</div></div>
+          <div className="task-controls">
+            <select value={task.status} onChange={e => update(task._id, e.target.value)}><option>todo</option><option>in-progress</option><option>done</option></select>
+            <button onClick={() => setAction({ type: 'complete_task', task })} disabled={task.status === 'done'}>AI Complete</button>
+            <button onClick={() => remove(task._id)}>Delete</button>
+          </div>
+        </div>
+        {task.dueDate && <small className="muted">Due {new Date(task.dueDate).toLocaleDateString()}</small>}
+      </div>)}
+    </div>
+    {action && <AIActionDialog action={action} onClose={() => setAction(null)} onConfirmed={load} />}
   </>;
+}
+
+function AIActionDialog({ action, onClose, onConfirmed }) {
+  const [proposal, setProposal] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [done, setDone] = useState(false);
+
+  async function propose() {
+    setLoading(true); setError('');
+    try {
+      const payload = action.type === 'complete_task'
+        ? { taskId: action.task._id }
+        : action.payload;
+      const data = await api('/ai/actions/propose', {
+        method: 'POST',
+        body: JSON.stringify({ actionType: action.type, payload })
+      });
+      setProposal(data);
+    } catch (err) { setError(err.message); }
+    finally { setLoading(false); }
+  }
+
+  async function confirm() {
+    if (!proposal?.confirmationToken) return;
+    setLoading(true); setError('');
+    try {
+      await api('/ai/actions/confirm', {
+        method: 'POST',
+        body: JSON.stringify({ confirmationToken: proposal.confirmationToken })
+      });
+      setDone(true);
+      await onConfirmed?.();
+    } catch (err) { setError(err.message); }
+    finally { setLoading(false); }
+  }
+
+  async function cancel() {
+    if (!proposal?.confirmationToken) return onClose();
+    setLoading(true); setError('');
+    try {
+      await api('/ai/actions/cancel', {
+        method: 'POST',
+        body: JSON.stringify({ confirmationToken: proposal.confirmationToken })
+      });
+      onClose();
+    } catch (err) { setError(err.message); setLoading(false); }
+  }
+
+  useEffect(() => { propose(); }, []);
+
+  return <div className="modal-backdrop" role="presentation" onMouseDown={e => e.target === e.currentTarget && onClose()}>
+    <section className="modal" role="dialog" aria-modal="true" aria-labelledby="ai-action-title">
+      <div className="row">
+        <h2 id="ai-action-title">AI action confirmation</h2>
+        <button onClick={onClose} aria-label="Close">×</button>
+      </div>
+      <p className="muted">AI actions never change your tasks directly. Review the proposal, then explicitly confirm it.</p>
+      {loading && !proposal && <p>Preparing secure proposal...</p>}
+      {proposal && !done && <>
+        <div className="proposal"><span className="badge">Pending confirmation</span><h3>{proposal.preview}</h3><small>Expires {new Date(proposal.expiresAt).toLocaleTimeString()}</small></div>
+        <div className="action-buttons">
+          <button className="primary" onClick={confirm} disabled={loading}>Confirm & apply</button>
+          <button onClick={cancel} disabled={loading}>Cancel</button>
+        </div>
+      </>}
+      {done && <div className="success"><b>Action confirmed.</b><p>Your task was updated and the action was recorded in the audit log.</p><button className="primary" onClick={onClose}>Close</button></div>}
+      {error && <p className="error">{error}</p>}
+    </section>
+  </div>;
 }
 
 function Announcements() {
@@ -148,18 +232,61 @@ function Announcements() {
 function AIAssistant() {
   const [message, setMessage] = useState('');
   const [answer, setAnswer] = useState('');
+  const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [action, setAction] = useState(null);
+  const [actionForm, setActionForm] = useState({ title: '', description: '', priority: 'medium', dueDate: '' });
+  const [actionError, setActionError] = useState('');
+
+  useEffect(() => { api('/tasks').then(setTasks).catch(console.error); }, []);
+
   async function ask(e) {
-    e.preventDefault(); setLoading(true); setAnswer('');
-    try { const data = await api('/ai/assistant', { method: 'POST', body: JSON.stringify({ message }) }); setAnswer(data.answer); }
-    catch (err) { setAnswer(err.message); }
+    e.preventDefault(); setLoading(true); setAnswer(''); setSources([]);
+    try {
+      const data = await api('/ai/assistant', { method: 'POST', body: JSON.stringify({ message }) });
+      setAnswer(data.answer);
+      setSources(data.sources || []);
+    } catch (err) { setAnswer(err.message); }
     finally { setLoading(false); }
   }
+
+  function openAction(type) {
+    setActionError('');
+    if (type === 'create_task') setActionForm({ title: '', description: '', priority: 'medium', dueDate: '' });
+    setAction({ type });
+  }
+
+  function proposeFromForm(e) {
+    e.preventDefault();
+    if (!actionForm.title.trim()) return setActionError('Task title is required.');
+    setAction({ type: 'create_task', payload: { ...actionForm, title: actionForm.title.trim() } });
+  }
+
   return <>
     <h1>CampusFlow AI</h1>
-    <p className="muted">The server reads your MongoDB task context and sends only the needed context to the AI model.</p>
+    <p className="muted">Ask questions using your verified campus context. AI-generated task changes require a separate preview and explicit confirmation.</p>
     <form className="card" onSubmit={ask}><textarea rows="5" placeholder="Example: Make a realistic plan for my pending tasks this week." value={message} onChange={e => setMessage(e.target.value)} required /><button className="primary" disabled={loading}>{loading ? 'Thinking...' : 'Ask AI'}</button></form>
-    {answer && <section className="card ai-answer"><h2>AI response</h2><p>{answer}</p></section>}
+    {answer && <section className="card ai-answer"><h2>AI response</h2><p>{answer}</p>{sources.length > 0 && <div className="sources"><b>Verified knowledge used</b>{sources.map(source => <div key={source.id || source._id || source.chunkIndex}>[{source.id || `K${source.chunkIndex + 1}`}] {source.title || source.sourceId || 'Campus knowledge'}</div>)}</div>}</section>}
+
+    <section className="card action-center">
+      <div className="row action-heading"><div><h2>Controlled AI actions</h2><p className="muted">Create or complete tasks through a secure propose → review → confirm flow.</p></div><span className="badge">Explicit confirmation</span></div>
+      <div className="action-grid">
+        <button onClick={() => openAction('create_task')}>＋ Propose new task</button>
+        <button onClick={() => openAction('complete_task')} disabled={!tasks.some(task => task.status !== 'done')}>✓ Propose task completion</button>
+      </div>
+      {action?.type === 'create_task' && <form className="action-form" onSubmit={proposeFromForm}>
+        <h3>New task proposal</h3>
+        <input placeholder="Task title" value={actionForm.title} onChange={e => setActionForm({ ...actionForm, title: e.target.value })} required />
+        <input placeholder="Description" value={actionForm.description} onChange={e => setActionForm({ ...actionForm, description: e.target.value })} />
+        <div className="form-two"><select value={actionForm.priority} onChange={e => setActionForm({ ...actionForm, priority: e.target.value })}><option>low</option><option>medium</option><option>high</option></select><input type="date" value={actionForm.dueDate} onChange={e => setActionForm({ ...actionForm, dueDate: e.target.value })} /></div>
+        {actionError && <p className="error">{actionError}</p>}
+        <button className="primary">Review proposal</button>
+      </form>}
+      {action?.type === 'complete_task' && <div className="action-form"><h3>Choose a task</h3>{tasks.filter(task => task.status !== 'done').map(task => <button className="task-choice" key={task._id} onClick={() => setAction({ type: 'complete_task', task })}>{task.title}<span>{task.status} • {task.priority}</span></button>)}<button onClick={() => setAction(null)}>Close</button></div>}
+    </section>
+    {action?.type === 'create_task' && action.payload && <AIActionDialog action={action} onClose={() => setAction(null)} />}
+    {action?.type === 'complete_task' && action.task && <AIActionDialog action={action} onClose={() => setAction(null)} onConfirmed={() => api('/tasks').then(setTasks)} />}
   </>;
 }
 
