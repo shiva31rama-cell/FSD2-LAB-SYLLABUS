@@ -12,6 +12,7 @@ function Counter() {
     setCount(count - 1);
   }
 
+  // Double button: current count becomes count * 2.
   function double() {
     setCount(count * 2);
   }
@@ -22,6 +23,7 @@ function Counter() {
       <p>Count: {count}</p>
 
       <button onClick={increment}>Increment</button>
+      {/* Disabled at zero so the counter cannot go negative. */}
       <button disabled={count === 0} onClick={decrement}>Decrement</button>
       <button onClick={double}>Double</button>
     </section>
