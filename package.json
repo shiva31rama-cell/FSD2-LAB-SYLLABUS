@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "bcryptjs": "latest",
+    "connect-mongo": "latest",
     "cookie-parser": "latest",
     "cors": "latest",
     "dotenv": "latest",
