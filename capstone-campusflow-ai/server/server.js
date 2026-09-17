@@ -12,7 +12,7 @@ const taskRoutes = require('./routes/tasks');
 const announcementRoutes = require('./routes/announcements');
 const dashboardRoutes = require('./routes/dashboard');
 const aiRoutes = require('./routes/ai');
-const { securityHeaders, apiLimiter, authLimiter } = require('./middleware/security');
+const { securityHeaders, apiLimiter, authLimiter, aiLimiter } = require('./middleware/security');
 
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
@@ -20,7 +20,6 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campusflow
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Fail fast in production instead of silently running with insecure defaults.
 if (isProduction && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) {
   throw new Error('SESSION_SECRET must be at least 32 characters in production.');
 }
@@ -32,7 +31,6 @@ app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// Every request gets a short correlation id for logs and support diagnostics.
 app.use((req, res, next) => {
   const requestId = req.get('x-request-id') || crypto.randomUUID();
   req.requestId = requestId;
@@ -40,7 +38,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Sessions are persisted in MongoDB rather than process memory.
 app.use(session({
   secret: process.env.SESSION_SECRET || 'development-only-change-this-secret',
   resave: false,
@@ -79,7 +76,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiLimiter, aiRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found.', requestId: req.requestId });
@@ -108,9 +105,7 @@ async function start() {
   });
 
   console.log('MongoDB connected:', MONGO_URI.replace(/:\/\/.*?:.*?@/, '://***:***@'));
-  const server = app.listen(PORT, () => {
-    console.log(`CampusFlow API running on port ${PORT}`);
-  });
+  const server = app.listen(PORT, () => console.log(`CampusFlow API running on port ${PORT}`));
 
   const shutdown = async signal => {
     console.log(`${signal}: shutting down gracefully...`);
