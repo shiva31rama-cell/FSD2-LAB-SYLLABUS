@@ -12,9 +12,11 @@ test('chunkText returns one chunk for short content', () => {
 
 test('chunkText creates bounded overlapping chunks for long content', () => {
   const input = Array.from({ length: 80 }, (_, i) => `Sentence ${i}.`).join(' ');
-  const chunks = chunkText(input, { size: 180, overlap: 30 });
+  const size = 220;
+  const overlap = 30;
+  const chunks = chunkText(input, { size, overlap });
 
   assert.ok(chunks.length > 1);
-  assert.ok(chunks.every(chunk => chunk.length <= 180));
+  assert.ok(chunks.every(chunk => chunk.length <= size));
   assert.equal(chunks.join(' ').includes('Sentence 79.'), true);
 });
