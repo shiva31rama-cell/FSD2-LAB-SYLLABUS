@@ -1,13 +1,11 @@
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-// Baseline HTTP security headers for the production prototype.
 const securityHeaders = helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false
 });
 
-// Keep authentication and AI endpoints protected from accidental request floods.
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 300,
@@ -24,4 +22,12 @@ const authLimiter = rateLimit({
   message: { message: 'Too many authentication attempts. Please try again later.' }
 });
 
-module.exports = { securityHeaders, apiLimiter, authLimiter };
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 40,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { message: 'AI request limit reached. Please try again later.' }
+});
+
+module.exports = { securityHeaders, apiLimiter, authLimiter, aiLimiter };
