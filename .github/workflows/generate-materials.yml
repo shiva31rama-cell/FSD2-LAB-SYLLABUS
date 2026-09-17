@@ -39,11 +39,7 @@ jobs:
       - name: Install material-generation packages
         run: python -m pip install --upgrade pip pillow python-pptx reportlab
       - name: Generate PPTs, runtime PDFs and visuals
-        run: |
-          # Keep preview images comfortably inside the landscape PDF frame.
-          sed -i 's/width=9.75 \* inch, height=5.49 \* inch/width=8.3 * inch, height=4.67 * inch/g' tools/generate_materials.py
-          sed -i 's/width=9.0 \* inch, height=5.06 \* inch/width=8.3 * inch, height=4.67 * inch/g' tools/generate_materials.py
-          python tools/generate_materials.py
+        run: python tools/generate_materials.py
       - name: Commit generated material
         run: |
           git config user.name "github-actions[bot]"
