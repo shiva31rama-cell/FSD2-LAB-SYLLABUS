@@ -23,6 +23,10 @@ Run `npm install` once from this repository root.
 - React experiments: run `npm run react05` through `npm run react09`
 - MongoDB experiments: use `mongosh` and run the matching `queries.js`
 
+### Complete run instructions
+
+For the exact VS Code steps, commands, required connections/files, URLs, sample inputs, output locations, workflows and troubleshooting for **all 12 experiments**, open **[RUN_GUIDE.md](RUN_GUIDE.md)**.
+
 Every experiment folder contains a small README, the exact syllabus tasks, workflow, run steps and commented source code.
 
 ## Study material
