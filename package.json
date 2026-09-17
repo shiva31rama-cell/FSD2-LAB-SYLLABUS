@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "install-all": "npm install",
+    "test": "node --test capstone-campusflow-ai/server/tests/*.test.js",
     "react05": "vite --root 05-react-render-html-jsx-components",
     "react06": "vite --root 06-react-props-states-styles-events",
     "react07": "vite --root 07-react-conditional-lists-forms",
