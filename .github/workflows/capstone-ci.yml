@@ -46,7 +46,6 @@ jobs:
           node --check capstone-campusflow-ai/server/routes/knowledge.js
           node --check capstone-campusflow-ai/server/routes/courses.js
           node --check capstone-campusflow-ai/server/routes/attendance.js
-          node --check capstone-campus-ai/server/services/audit.js
           node --check capstone-campusflow-ai/server/services/audit.js
           node --check capstone-campusflow-ai/server/services/chunkText.js
           node --check capstone-campusflow-ai/server/services/notificationWorker.js
