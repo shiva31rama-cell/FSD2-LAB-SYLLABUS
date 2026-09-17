@@ -29,6 +29,20 @@ For the exact VS Code steps, commands, required connections/files, URLs, sample 
 
 Every experiment folder contains a small README, the exact syllabus tasks, workflow, run steps and commented source code.
 
+## Extended branches
+
+### MongoDB Complete Course
+Branch: `mongodb-complete-course`
+
+A dedicated beginner-to-advanced MongoDB track covering shell commands, CRUD, querying, arrays/embedded documents, schema design, indexes and `explain()`, aggregation pipelines, `$lookup`, transactions, Node.js driver, Mongoose, Atlas, Search/Vector Search, triggers/automation, security and performance.
+
+### FSD2 Capstone Project
+Branch: `fsd2-capstone-project`
+
+**CampusFlow AI** is the large real-world project built from the FSD2 syllabus. It combines React + Router + Hooks + Express + REST APIs + sessions/authentication + Mongoose + MongoDB/Atlas + aggregation + an optional server-side OpenAI integration. It includes registration/login, MongoDB-backed sessions, task CRUD, announcements, dashboard analytics and an AI productivity assistant.
+
+Project folder: `capstone-campusflow-ai/`
+
 ## Study material
 The repository also contains one topic-named PPT and one runtime walkthrough PDF per experiment. The PDFs use clear workflow/output diagrams so you can see what happens from **input → code → browser/terminal → output**.
 
