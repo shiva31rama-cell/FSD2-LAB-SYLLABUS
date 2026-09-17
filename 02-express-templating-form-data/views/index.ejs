@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title><%= title %></title></head>
+<body style="font-family:Arial;max-width:600px;margin:40px auto">
+  <h1><%= title %></h1>
+  <form method="POST" action="/submit">
+    <label>Name</label><br>
+    <input name="name" required><br><br>
+    <label>Course</label><br>
+    <select name="course">
+      <option>FSD2</option>
+      <option>Computer Networks</option>
+    </select><br><br>
+    <button type="submit">Submit</button>
+  </form>
+  <p><%= message %></p>
+</body>
+</html>

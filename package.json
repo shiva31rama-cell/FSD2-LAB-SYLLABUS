@@ -1,0 +1,26 @@
+{
+  "name": "fsd2-lab-syllabus",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install",
+    "react05": "vite --root 05-react-render-html-jsx-components",
+    "react06": "vite --root 06-react-props-states-styles-events",
+    "react07": "vite --root 07-react-conditional-lists-forms",
+    "react08": "vite --root 08-react-router-updating-screen",
+    "react09": "vite --root 09-react-hooks-sharing-data"
+  },
+  "dependencies": {
+    "cookie-parser": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "mongoose": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "latest"
+  },
+  "devDependencies": {
+    "sass": "latest",
+    "vite": "latest"
+  }
+}
