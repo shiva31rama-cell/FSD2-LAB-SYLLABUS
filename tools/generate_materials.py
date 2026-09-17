@@ -198,22 +198,15 @@ def add_code_slide(prs, index, filename, start_line, lines):
     box.fill.solid()
     box.fill.fore_color.rgb = RGBColor(248, 250, 252)
     box.line.color.rgb = BORDER
-    visual_lines = []
-    visual_numbers = []
+    visual = []
     for offset, line in enumerate(lines):
         pieces = textwrap.wrap(line, width=94, subsequent_indent="    ", break_long_words=False, break_on_hyphens=False) or [""]
-        visual_lines.extend(pieces)
-        visual_numbers.append(start_line + offset)
-    code_text = []
-    source_index = 0
-    for line in visual_lines:
-        if source_index < len(visual_numbers):
-            code_text.append(f"{visual_numbers[source_index]:>3}  {line}")
-            if not line.startswith("    "):
-                source_index += 1
-        else:
-            code_text.append(f"     {line}")
-    add_text(slide, "\n".join(code_text), 0.90, 1.68, 11.5, 5.05, size=12.5, color=DARK, font="DejaVu Sans Mono")
+        visual.append((start_line + offset, pieces))
+    code_lines = []
+    for number, pieces in visual:
+        code_lines.append(f"{number:>3}  {pieces[0]}")
+        code_lines.extend(f"     {piece}" for piece in pieces[1:])
+    add_text(slide, "\n".join(code_lines), 0.90, 1.68, 11.5, 5.05, size=12.5, color=DARK, font="DejaVu Sans Mono")
 
 
 def add_image_slide(prs, title, image_path, caption):
@@ -254,23 +247,23 @@ def add_viva_slide(prs):
 def make_preview_pdf(path, title, number, tasks, workflow, runtime, chunks):
     page_w, page_h = landscape((13.333 * inch, 7.5 * inch))
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle("TitleClean", parent=styles["Title"], fontName="Helvetica-Bold", fontSize=25, leading=29, textColor=colors.HexColor("1B2B4B"), spaceAfter=12)
-    h_style = ParagraphStyle("HClean", parent=styles["Heading2"], fontName="Helvetica-Bold", fontSize=19, leading=23, textColor=colors.HexColor("1B2B4B"), spaceAfter=10)
-    body = ParagraphStyle("BodyClean", parent=styles["BodyText"], fontName="Helvetica", fontSize=13, leading=17, textColor=colors.HexColor("23272F"))
+    title_style = ParagraphStyle("TitleClean", parent=styles["Title"], fontName="Helvetica-Bold", fontSize=25, leading=29, textColor=colors.HexColor("#1B2B4B"), spaceAfter=12)
+    h_style = ParagraphStyle("HClean", parent=styles["Heading2"], fontName="Helvetica-Bold", fontSize=19, leading=23, textColor=colors.HexColor("#1B2B4B"), spaceAfter=10)
+    body = ParagraphStyle("BodyClean", parent=styles["BodyText"], fontName="Helvetica", fontSize=13, leading=17, textColor=colors.HexColor("#23272F"))
     code = ParagraphStyle("CodeClean", parent=body, fontName="Courier", fontSize=9.0, leading=11.3)
     doc = SimpleDocTemplate(str(path), pagesize=(page_w, page_h), leftMargin=0.65 * inch, rightMargin=0.65 * inch, topMargin=0.48 * inch, bottomMargin=0.45 * inch, title=title)
     story = [Paragraph(f"FSD2 LAB • EXPERIMENT {number}", body), Spacer(1, 6), Paragraph(title, title_style), Paragraph("GitHub-readable preview of the presentation. Download the matching .pptx for the editable PowerPoint.", body), PageBreak()]
     story.append(Paragraph("1. Syllabus tasks", h_style))
     data = [[Paragraph(f"• {t}", body)] for t in tasks[:10]]
     table = Table(data, colWidths=[11.95 * inch])
-    table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("F4F6F9")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("DCE1E8")), ("INNERGRID", (0, 0), (-1, -1), 0.3, colors.HexColor("E6EAF0")), ("LEFTPADDING", (0, 0), (-1, -1), 10), ("RIGHTPADDING", (0, 0), (-1, -1), 10), ("TOPPADDING", (0, 0), (-1, -1), 8), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
-    story += [table, PageBreak(), Paragraph("2. Workflow", h_style), RLImage(str(workflow), width=11.95 * inch, height=6.72 * inch), PageBreak()]
+    table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F4F6F9")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#DCE1E8")), ("INNERGRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#E6EAF0")), ("LEFTPADDING", (0, 0), (-1, -1), 10), ("RIGHTPADDING", (0, 0), (-1, -1), 10), ("TOPPADDING", (0, 0), (-1, -1), 8), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
+    story += [table, PageBreak(), Paragraph("2. Workflow", h_style), RLImage(str(workflow), width=11.95 * inch, height=5.85 * inch), PageBreak()]
     for i, (filename, start, lines) in enumerate(chunks, start=1):
         story.append(Paragraph(f"3.{i}. Code pathway — {filename}", h_style))
         escaped = "<br/>".join(f"{start + j:>3}  {line.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')}" for j, line in enumerate(lines))
-        story.append(Table([[Paragraph(escaped, code)]], colWidths=[11.95 * inch], style=TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("F8FAFC")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("D2D8E0")), ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12), ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10)])))
+        story.append(Table([[Paragraph(escaped, code)]], colWidths=[11.95 * inch], style=TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F8FAFC")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#D2D8E0")), ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12), ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10)])))
         story.append(PageBreak())
-    story += [Paragraph("4. Runtime walkthrough", h_style), RLImage(str(runtime), width=11.95 * inch, height=6.72 * inch), PageBreak(), Paragraph("5. Run and observe", h_style)]
+    story += [Paragraph("4. Runtime walkthrough", h_style), RLImage(str(runtime), width=11.95 * inch, height=5.85 * inch), PageBreak(), Paragraph("5. Run and observe", h_style)]
     for item in ["Start the server / Vite app or open the MongoDB shell as described in the experiment README.", "Enter the sample input or call the required route.", "Watch the terminal for logs and errors.", "Verify the browser, API response, or database result."]:
         story += [Paragraph(f"• {item}", body), Spacer(1, 5)]
     story += [Spacer(1, 10), Paragraph("6. Viva questions", h_style)]
