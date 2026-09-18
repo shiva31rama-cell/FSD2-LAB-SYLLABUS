@@ -24,9 +24,16 @@ const { securityHeaders, apiLimiter, authLimiter, aiLimiter } = require('./middl
 
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/campusflow';
+const MONGO_URI = process.env.MONGO_URI;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 const isProduction = process.env.NODE_ENV === 'production';
+
+// Never silently fall back to localhost. CampusFlow is designed to use the configured Atlas database.
+if (!MONGO_URI) {
+  console.error(`Startup configuration error: MONGO_URI is missing. Expected .env at ${path.join(__dirname, '.env')}`);
+  process.exitCode = 1;
+  if (require.main === module) process.exit(1);
+}
 
 if (isProduction && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) {
   throw new Error('SESSION_SECRET must be at least 32 characters in production.');
@@ -55,7 +62,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'development-only-change-this-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: MONGO_URI, collectionName: 'sessions', ttl: 60 * 60 * 24 }),
+  store: MONGO_URI ? MongoStore.create({ mongoUrl: MONGO_URI, collectionName: 'sessions', ttl: 60 * 60 * 24 }) : undefined,
   cookie: { httpOnly: true, sameSite: isProduction ? 'none' : 'lax', secure: isProduction, maxAge: 1000 * 60 * 60 * 24 }
 }));
 
@@ -91,6 +98,7 @@ app.use((err, req, res, next) => {
 });
 
 async function start() {
+  if (!MONGO_URI) throw new Error('MONGO_URI is required. Add the Atlas URI to server/.env.');
   await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 10000, maxPoolSize: Number(process.env.MONGO_MAX_POOL_SIZE || 20) });
   console.log('MongoDB connected:', MONGO_URI.replace(/:\/\/.*?:.*?@/, '://***:***@'));
   startNotificationWorker();
