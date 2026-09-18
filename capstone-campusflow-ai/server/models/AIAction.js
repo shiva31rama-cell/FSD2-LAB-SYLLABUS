@@ -7,11 +7,13 @@ const aiActionSchema = new mongoose.Schema({
   preview: { type: String, required: true, maxlength: 1000 },
   tokenHash: { type: String, required: true, unique: true },
   status: { type: String, enum: ['pending', 'confirmed', 'expired', 'cancelled'], default: 'pending', index: true },
-  expiresAt: { type: Date, required: true, index: true },
+  // TTL index is declared below so MongoDB can automatically remove expired actions.
+  expiresAt: { type: Date, required: true },
   confirmedAt: Date,
   result: { type: mongoose.Schema.Types.Mixed }
 }, { timestamps: true, versionKey: false });
 
+// Keep one index definition. This is a TTL index and also supports expiry queries.
 aiActionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model('AIAction', aiActionSchema);
