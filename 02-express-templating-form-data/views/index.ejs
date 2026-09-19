@@ -1,18 +1,72 @@
 <!DOCTYPE html>
-<html>
-<head><title><%= title %></title></head>
-<body style="font-family:Arial;max-width:600px;margin:40px auto">
-  <h1><%= title %></h1>
-  <form method="POST" action="/submit">
-    <label>Name</label><br>
-    <input name="name" required><br><br>
-    <label>Course</label><br>
-    <select name="course">
-      <option>FSD2</option>
-      <option>Computer Networks</option>
-    </select><br><br>
-    <button type="submit">Submit</button>
-  </form>
-  <p><%= message %></p>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title><%= title %></title>
+  </head>
+
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    "
+  >
+    <h1><%= title %></h1>
+
+    <form method="POST" action="/submit">
+      <label for="name">
+        Name
+      </label>
+
+      <br />
+
+      <input
+        id="name"
+        name="name"
+        type="text"
+        required
+      />
+
+      <br />
+      <br />
+
+      <label for="course">
+        Course
+      </label>
+
+      <br />
+
+      <select
+        id="course"
+        name="course"
+      >
+        <option value="FSD2">
+          FSD2
+        </option>
+
+        <option value="Computer Networks">
+          Computer Networks
+        </option>
+      </select>
+
+      <br />
+      <br />
+
+      <button type="submit">
+        Submit
+      </button>
+    </form>
+
+    <p>
+      <%= message %>
+    </p>
+  </body>
 </html>
