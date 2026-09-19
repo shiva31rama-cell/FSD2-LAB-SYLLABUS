@@ -1,14 +1,52 @@
-# ReactJS Conditional Rendering, Lists and React Forms
+# Experiment 07 — Conditional Rendering, Lists and React Forms
 
-## Syllabus tasks
-- Implement conditional rendering.
-- Render lists.
-- Work with different form fields using React forms.
+## What is this?
 
-## Additional code
-- Added `EventDemo` with a `name` state starting as an empty string.
-- Added a controlled text input using `value` and `onChange`.
-- The page immediately displays `Hello, {name}!` while the user types, with no submit button.
+This experiment demonstrates how React conditionally displays content, renders arrays as lists and handles controlled form inputs.
+
+## What can it do?
+
+- Show or hide a message.
+- Render a student list using map().
+- Track input values with useState().
+- Display a live greeting while typing.
+- Handle a form submission.
+- Read the selected course.
+
+## Main concepts
+
+| Concept | Purpose |
+| --- | --- |
+| Conditional rendering | Show content when a condition is true |
+| map() | Convert array data into JSX |
+| Controlled input | React controls the input value |
+| onChange | Updates state from user input |
+| onSubmit | Handles form submission |
+
+## File structure
+
+```text
+07-react-conditional-lists-forms/
+├── index.html
+├── package.json
+└── src/
+    └── main.jsx
+```
 
 ## Run
-`npm run react07` → open the URL shown by Vite.
+
+```bash
+npm run react07
+```
+
+Open the Vite URL shown in the terminal.
+
+## Expected behavior
+
+Type a name into the live greeting field:
+
+```text
+Hello, <name>!
+```
+
+Use Toggle Message to demonstrate conditional rendering.
