@@ -1,15 +1,69 @@
-# ExpressJS Database with Mongoose, CRUD, RESTful API
+# Experiment 04 — ExpressJS, Mongoose, CRUD and REST API
 
-## Syllabus tasks
-- Connect MongoDB using Mongoose and perform CRUD operations.
-- Develop a single page application using RESTful APIs.
+## What is this?
+
+This experiment connects an ExpressJS application to MongoDB using Mongoose and exposes the data through RESTful APIs.
+
+## What can it do?
+
+- Connect to MongoDB.
+- Define a Product schema.
+- Create products.
+- Read all products.
+- Update a product.
+- Delete a product.
+- Display the API data in a simple browser page using fetch().
+
+## Main concepts
+
+| Concept | Purpose |
+| --- | --- |
+| Mongoose | MongoDB object modeling |
+| Schema | Defines document fields |
+| Model | Performs database operations |
+| REST API | Exposes data through HTTP |
+| fetch() | Calls the REST API from the browser |
+| CRUD | Create, Read, Update, Delete |
 
 ## Setup
-Create `MONGO_URI` in your environment. Do not commit your real database password.
+
+Set the MongoDB connection string before running:
+
+Windows PowerShell:
+
+```powershell
+$env:MONGO_URI="your-mongodb-uri"
+```
+
+Do not commit real database passwords.
 
 ## Run
-`MONGO_URI="your-uri" node 04-express-database-rest-api/server.js`
-Then open `http://localhost:3004`.
 
-## Flow
-Browser SPA → fetch() → REST endpoint → Mongoose → MongoDB → JSON response → screen update.
+```bash
+node 04-express-database-rest-api/server.js
+```
+
+Open:
+
+```text
+http://localhost:3004
+```
+
+## API endpoints
+
+```text
+GET    /api/products
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+```
+
+## Basic flow
+
+Browser
+→ fetch()
+→ REST route
+→ Mongoose
+→ MongoDB
+→ JSON response
+→ Browser
