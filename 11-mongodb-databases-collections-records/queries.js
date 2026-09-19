@@ -1,31 +1,117 @@
-// Database and collection operations.
+/**
+ * Experiment 11: MongoDB Databases, Collections and Records
+ *
+ * Run this file inside mongosh.
+ *
+ * Demonstrates:
+ * - Database and collection creation
+ * - Insert many records
+ * - Find
+ * - Limit
+ * - Sort
+ * - Index
+ * - Aggregation
+ */
+
+// ------------------------------------------------------------
+// Database and collection
+// ------------------------------------------------------------
+
 use fsd2records;
+
 db.createCollection('students');
 
+// ------------------------------------------------------------
+// INSERT MANY
+// ------------------------------------------------------------
+
 db.students.insertMany([
-  { name: 'Rama', marks: 88, branch: 'CSE' },
-  { name: 'Gandhi', marks: 76, branch: 'CSE' },
-  { name: 'Roshni', marks: 92, branch: 'ECE' },
-  { name: 'Kiran', marks: 81, branch: 'CSE' }
+  {
+    name: 'Rama',
+    marks: 88,
+    branch: 'CSE',
+  },
+  {
+    name: 'Gandhi',
+    marks: 76,
+    branch: 'CSE',
+  },
+  {
+    name: 'Roshni',
+    marks: 92,
+    branch: 'ECE',
+  },
+  {
+    name: 'Kiran',
+    marks: 81,
+    branch: 'CSE',
+  },
 ]);
 
-// FIND records.
+// ------------------------------------------------------------
+// FIND
+// ------------------------------------------------------------
+
 db.students.find();
 
-// LIMIT records.
-db.students.find().limit(2);
+// ------------------------------------------------------------
+// LIMIT
+// ------------------------------------------------------------
 
-// SORT by marks, descending.
-db.students.find().sort({ marks: -1 });
+db.students
+  .find()
+  .limit(2);
 
-// INDEX for faster lookup.
-db.students.createIndex({ branch: 1 });
+// ------------------------------------------------------------
+// SORT
+// ------------------------------------------------------------
 
-// AGGREGATE: average marks by branch.
+// Sort marks from highest to lowest.
+db.students
+  .find()
+  .sort({
+    marks: -1,
+  });
+
+// ------------------------------------------------------------
+// INDEX
+// ------------------------------------------------------------
+
+// Create an index on the branch field.
+db.students.createIndex({
+  branch: 1,
+});
+
+// ------------------------------------------------------------
+// AGGREGATION
+// ------------------------------------------------------------
+
+// Calculate average marks and count by branch.
 db.students.aggregate([
-  { $group: { _id: '$branch', averageMarks: { $avg: '$marks' }, count: { $sum: 1 } } },
-  { $sort: { averageMarks: -1 } }
+  {
+    $group: {
+      _id: '$branch',
+      averageMarks: {
+        $avg: '$marks',
+      },
+      count: {
+        $sum: 1,
+      },
+    },
+  },
+  {
+    $sort: {
+      averageMarks: -1,
+    },
+  },
 ]);
 
-// To drop the collection when practising: db.students.drop();
-// To drop the database when practising: db.dropDatabase();
+// ------------------------------------------------------------
+// OPTIONAL CLEANUP
+// ------------------------------------------------------------
+
+// Drop collection:
+// db.students.drop();
+//
+// Drop database:
+// db.dropDatabase();
