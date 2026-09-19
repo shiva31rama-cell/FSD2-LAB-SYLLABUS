@@ -1,53 +1,156 @@
+/**
+ * Experiment 04: ExpressJS + Mongoose + CRUD + REST API
+ *
+ * What it demonstrates:
+ * - MongoDB connection using Mongoose
+ * - Mongoose schema and model
+ * - GET, POST, PUT and DELETE REST endpoints
+ * - A simple browser page that consumes the REST API
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
+
 const app = express();
+
 const PORT = 3004;
+const MONGO_URI =
+  process.env.MONGO_URI ||
+  'mongodb://127.0.0.1:27017/fsd2lab';
+
+// ------------------------------------------------------------
+// Middleware
+// ------------------------------------------------------------
 
 app.use(express.json());
 
+// ------------------------------------------------------------
+// Mongoose schema and model
+// ------------------------------------------------------------
+
 const productSchema = new mongoose.Schema({
   name: String,
-  price: Number
+  price: Number,
 });
-const Product = mongoose.model('Product', productSchema);
 
-// REST: GET all products.
+const Product = mongoose.model(
+  'Product',
+  productSchema,
+);
+
+// ------------------------------------------------------------
+// REST API routes
+// ------------------------------------------------------------
+
+// GET all products.
 app.get('/api/products', async (req, res) => {
-  res.json(await Product.find());
+  const products = await Product.find();
+
+  res.json(products);
 });
 
-// REST: POST a product.
+// POST a product.
 app.post('/api/products', async (req, res) => {
   const product = await Product.create(req.body);
-  res.status(201).json(product);
+
+  res
+    .status(201)
+    .json(product);
 });
 
-// REST: PUT a product.
+// PUT a product.
 app.put('/api/products/:id', async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    },
+  );
+
   res.json(product);
 });
 
-// REST: DELETE a product.
+// DELETE a product.
 app.delete('/api/products/:id', async (req, res) => {
   await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Product deleted' });
+
+  res.json({
+    message: 'Product deleted',
+  });
 });
 
-// A tiny SPA page: it talks to the REST API without a full page reload.
+// ------------------------------------------------------------
+// Simple browser page
+// ------------------------------------------------------------
+
 app.get('/', (req, res) => {
-  res.send(`<!doctype html><html><body style="font-family:Arial;margin:40px">
-    <h1>Products</h1><button onclick="load()">Refresh</button><pre id="out">Loading...</pre>
+  res.send(
+    `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>FSD2 Products</title>
+  </head>
+
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    "
+  >
+    <h1>Products</h1>
+
+    <button onclick="loadProducts()">
+      Refresh
+    </button>
+
+    <pre id="output">
+Loading...
+    </pre>
+
     <script>
-      async function load(){
-        const data = await fetch('/api/products').then(r => r.json());
-        document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+      async function loadProducts() {
+        const response =
+          await fetch('/api/products');
+
+        const data =
+          await response.json();
+
+        document.getElementById('output')
+          .textContent =
+          JSON.stringify(data, null, 2);
       }
-      load();
+
+      loadProducts();
     </script>
-  </body></html>`);
+  </body>
+</html>`,
+  );
 });
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/fsd2lab')
-  .then(() => app.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`)))
-  .catch(err => console.error('MongoDB connection failed:', err.message));
+// ------------------------------------------------------------
+// Database connection
+// ------------------------------------------------------------
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(
+        'Server: http://localhost:' + PORT,
+      );
+    });
+  })
+  .catch((error) => {
+    console.error(
+      'MongoDB connection failed:',
+      error.message,
+    );
+  });
