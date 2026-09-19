@@ -1,11 +1,54 @@
-# ExpressJS Cookies, Sessions, Authentication
+# Experiment 03 — Cookies, Sessions and Authentication
 
-## Syllabus tasks
-- Write a program for session management using cookies and sessions.
-- Write a program for user authentication.
+## What is this?
+
+This experiment demonstrates a simple login system using ExpressJS sessions and cookies.
+
+## What can it do?
+
+- Display a login form.
+- Check demo username and password.
+- Store the logged-in user in a session.
+- Store a role value in a cookie.
+- Protect the profile route.
+- Destroy the session during logout.
 
 ## Demo login
-Username: `student`  Password: `1234`
+
+```text
+Username: student
+Password: 1234
+```
+
+## Main concepts
+
+| Concept | Purpose |
+| --- | --- |
+| Cookie | Stores small client-side values |
+| Session | Stores server-side login state |
+| Authentication | Checks user credentials |
+| Protected route | Allows access only after login |
+| Logout | Destroys the active session |
 
 ## Run
-`node 03-express-cookies-sessions-authentication/app.js` → `http://localhost:3003`
+
+```bash
+node 03-express-cookies-sessions-authentication/app.js
+```
+
+Open:
+
+```text
+http://localhost:3003
+```
+
+## Basic flow
+
+Login form
+→ POST /login
+→ Validate credentials
+→ Create session
+→ Redirect to /profile
+→ Logout destroys session
+
+> This is a classroom demonstration. The hard-coded credentials and session secret are intentionally simple for learning.
