@@ -1,5 +1,8 @@
 .counter {
-  /* Same box styling as the old global demo-box class, now scoped to Counter. */
+  /*
+   * Counter-specific styling.
+   * CSS Modules keep this class scoped to Counter.jsx.
+   */
   padding: 24px;
   margin: 24px 0;
   border: 2px solid var(--primary-color);
