@@ -1,12 +1,73 @@
-# Augmented Programs — NodeJS Express To-do + React Quiz
+# Experiment 12 — NodeJS To-do and React Quiz
 
-## Syllabus task
-- Design a to-do list application using NodeJS and ExpressJS.
-- Design a Quiz app using ReactJS.
-- MongoDB University certification is included as a separate guide.
+## What is this?
 
-## Run To-do
-`node 12-augmented-programs-todo-and-quiz/todo-node-express/server.js` → `http://localhost:3012`
+Experiment 12 contains two small applications that combine the concepts learned in the earlier experiments.
 
-## Run Quiz
-`npx vite --root 12-augmented-programs-todo-and-quiz/quiz-react`
+## Program A — NodeJS + Express To-do
+
+### What can it do?
+
+- Create a to-do item.
+- Display all items.
+- Toggle an item's done status.
+- Delete an item.
+- Use REST endpoints with fetch().
+
+### API
+
+```text
+GET    /api/todos
+POST   /api/todos
+PATCH  /api/todos/:id
+DELETE /api/todos/:id
+```
+
+### Run
+
+```bash
+node 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+```
+
+Open:
+
+```text
+http://localhost:3012
+```
+
+## Program B — React Quiz
+
+### What can it do?
+
+- Display one question at a time.
+- Show multiple-choice options.
+- Track the score.
+- Move to the next question.
+- Display the final score.
+
+### Run
+
+```bash
+npx vite --root 12-augmented-programs-todo-and-quiz/quiz-react
+```
+
+## File structure
+
+```text
+12-augmented-programs-todo-and-quiz/
+├── README.md
+├── todo-node-express/
+│   └── server.js
+└── quiz-react/
+    ├── index.html
+    └── src/
+        └── main.jsx
+```
+
+## Learning focus
+
+To-do:
+Express + REST + fetch()
+
+Quiz:
+React + useState() + events + lists
