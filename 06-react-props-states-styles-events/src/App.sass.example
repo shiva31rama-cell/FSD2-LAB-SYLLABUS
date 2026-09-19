@@ -1,7 +1,8 @@
-$gap: 16px
+// Example Sass file for Experiment 06.
+// The main application uses App.scss.
 
-.box
-  padding: $gap
-  border: 2px solid #333
-  &:hover
-    transform: scale(1.01)
+.app {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 40px auto;
+}
