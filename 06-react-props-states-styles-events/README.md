@@ -1,17 +1,62 @@
-# ReactJS Props, State, Styles and Events
+# Experiment 06 — ReactJS Props, State, Styles and Events
 
-## Syllabus tasks
-- Work with props and states.
-- Add CSS and Sass styling and display data.
-- Respond to events.
+## What is this?
 
-## Additional code implemented
-1. **Double button** — sets `count` to `count * 2`.
-2. **Disable Decrement at zero** — uses `disabled={count === 0}` so the count cannot go negative.
-3. **Sass theme color** — `$primary-color` is defined in `App.scss` and is shared through `--primary-color` with the Counter CSS Module.
-4. **Second CSS Module** — `Counter.module.css` replaces the old global `demo-box` styling. Vite scopes the generated class name in the browser.
+This experiment demonstrates how React components receive data, store state, respond to events and use CSS/Sass.
 
-> Note: changing `$primary-color` changes the h2 border, `.section-title` text, and Counter border color together. The Counter `border-radius` is a separate size property, so changing a color does not change its radius.
+## What can it do?
+
+- Receive a prop in the Student component.
+- Store counter data using useState().
+- Increment, decrement and double the counter.
+- Prevent decrement below zero.
+- Apply Sass theme styling.
+- Use a CSS Module for Counter-specific styles.
+
+## Main concepts
+
+| Concept | Example |
+| --- | --- |
+| Props | name="Rama" |
+| State | useState(0) |
+| Event | onClick |
+| Sass | $primary-color |
+| CSS Module | Counter.module.css |
+
+## Important behavior
+
+The Decrement button is disabled when the count is zero.
+
+The Double button changes:
+
+```text
+count → count × 2
+```
+
+The theme color is shared through:
+
+```text
+Sass variable
+→ CSS custom property
+→ Counter CSS Module
+```
+
+## File structure
+
+```text
+06-react-props-states-styles-events/
+├── index.html
+└── src/
+    ├── main.jsx
+    ├── Counter.jsx
+    ├── Counter.module.css
+    └── App.scss
+```
 
 ## Run
-`npm run react06` → open the URL shown by Vite.
+
+```bash
+npm run react06
+```
+
+Open the Vite URL shown in the terminal.
