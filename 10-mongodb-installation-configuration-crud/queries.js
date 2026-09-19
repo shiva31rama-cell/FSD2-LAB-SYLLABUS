@@ -1,19 +1,82 @@
-// FSD2 MongoDB CRUD lab. Run this file in mongosh.
+/**
+ * Experiment 10: MongoDB Installation, Configuration and CRUD
+ *
+ * Run this file inside mongosh.
+ *
+ * Demonstrates:
+ * - Database selection
+ * - Insert
+ * - Find
+ * - Update
+ * - Delete
+ */
+
+// ------------------------------------------------------------
+// Select database
+// ------------------------------------------------------------
+
 use fsd2lab;
 
-// INSERT: syllabus uses insert(); modern MongoDB also supports insertOne().
-db.students.insertOne({ name: 'Rama', branch: 'CSE', year: 3 });
-db.students.insertOne({ name: 'Gandhi', branch: 'CSE', year: 3 });
+// ------------------------------------------------------------
+// CREATE
+// ------------------------------------------------------------
 
-// FIND records.
+db.students.insertOne({
+  name: 'Rama',
+  branch: 'CSE',
+  year: 3,
+});
+
+db.students.insertOne({
+  name: 'Gandhi',
+  branch: 'CSE',
+  year: 3,
+});
+
+// ------------------------------------------------------------
+// READ
+// ------------------------------------------------------------
+
+// Find all students.
 db.students.find();
-db.students.find({ branch: 'CSE' });
 
-// UPDATE: syllabus says update(); modern form is updateOne().
-db.students.updateOne({ name: 'Rama' }, { $set: { year: 4 } });
+// Find only CSE students.
+db.students.find({
+  branch: 'CSE',
+});
 
-// REMOVE: syllabus says remove(); modern form is deleteOne().
-db.students.deleteOne({ name: 'Gandhi' });
+// ------------------------------------------------------------
+// UPDATE
+// ------------------------------------------------------------
 
-// Check the final data.
+db.students.updateOne(
+  {
+    name: 'Rama',
+  },
+  {
+    $set: {
+      year: 4,
+    },
+  },
+);
+
+// ------------------------------------------------------------
+// DELETE
+// ------------------------------------------------------------
+
+db.students.deleteOne({
+  name: 'Gandhi',
+});
+
+// ------------------------------------------------------------
+// VERIFY
+// ------------------------------------------------------------
+
+// View the final data.
 db.students.find();
+
+// Syllabus terminology:
+// insert(), update() and remove()
+//
+// Modern MongoDB methods:
+// insertOne(), updateOne() and deleteOne()
