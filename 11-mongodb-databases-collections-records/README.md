@@ -26,6 +26,16 @@ This experiment demonstrates database and collection operations together with co
 | Index | createIndex({ branch: 1 }) |
 | Aggregation | $group + $sort |
 
+## VS Code path
+
+MongoDB query file:
+
+```text
+11-mongodb-databases-collections-records/queries.js
+```
+
+Run it with `mongosh` from the repository root.
+
 ## Run
 
 Open mongosh and execute:
