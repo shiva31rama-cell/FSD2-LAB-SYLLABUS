@@ -22,6 +22,29 @@ This experiment shows how ExpressJS can render dynamic HTML using the EJS templa
 | GET | Displays the form |
 | POST | Receives the form |
 
+## VS Code path
+
+This experiment uses two connected files:
+
+```text
+02-express-templating-form-data/
+├── app.js
+└── views/
+    └── index.ejs
+```
+
+Main server path:
+
+```text
+02-express-templating-form-data/app.js
+```
+
+Template path:
+
+```text
+02-express-templating-form-data/views/index.ejs
+```
+
 ## Run
 
 ```bash
