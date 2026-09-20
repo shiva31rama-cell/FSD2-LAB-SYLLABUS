@@ -30,6 +30,20 @@ Password: 1234
 | Protected route | Allows access only after login |
 | Logout | Destroys the active session |
 
+## VS Code path
+
+From the repository root, open:
+
+```text
+03-express-cookies-sessions-authentication/app.js
+```
+
+Run:
+
+```bash
+node 03-express-cookies-sessions-authentication/app.js
+```
+
 ## Run
 
 ```bash
