@@ -53,6 +53,32 @@ Sass variable
     └── App.scss
 ```
 
+## VS Code path
+
+React project:
+
+```text
+06-react-props-states-styles-events/
+├── index.html
+└── src/
+    ├── main.jsx
+    ├── Counter.jsx
+    ├── Counter.module.css
+    └── App.scss
+```
+
+Main React entry path:
+
+```text
+06-react-props-states-styles-events/src/main.jsx
+```
+
+Counter component path:
+
+```text
+06-react-props-states-styles-events/src/Counter.jsx
+```
+
 ## Run
 
 ```bash
