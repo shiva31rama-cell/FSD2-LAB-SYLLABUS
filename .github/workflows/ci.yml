@@ -1,0 +1,69 @@
+name: FSD2 Lab CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Check repository whitespace
+        run: git diff --check
+
+      - name: Validate lab paths
+        run: |
+          test -f 01-express-routing-http-methods-middleware/app.js
+          test -f 02-express-templating-form-data/app.js
+          test -f 02-express-templating-form-data/views/index.ejs
+          test -f 03-express-cookies-sessions-authentication/app.js
+          test -f 04-express-database-rest-api/server.js
+          test -f 05-react-render-html-jsx-components/src/main.jsx
+          test -f 05-react-render-html-jsx-components/src/StudentCard.jsx
+          test -f 06-react-props-states-styles-events/src/main.jsx
+          test -f 06-react-props-states-styles-events/src/Counter.jsx
+          test -f 06-react-props-states-styles-events/src/Counter.module.css
+          test -f 06-react-props-states-styles-events/src/App.scss
+          test -f 07-react-conditional-lists-forms/src/main.jsx
+          test -f 08-react-router-updating-screen/src/main.jsx
+          test -f 09-react-hooks-sharing-data/src/main.jsx
+          test -f 10-mongodb-installation-configuration-crud/queries.js
+          test -f 11-mongodb-databases-collections-records/queries.js
+          test -f 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+          test -f 12-augmented-programs-todo-and-quiz/quiz-react/src/main.jsx
+
+      - name: Check Node and Express programs
+        run: |
+          node --check 01-express-routing-http-methods-middleware/app.js
+          node --check 02-express-templating-form-data/app.js
+          node --check 03-express-cookies-sessions-authentication/app.js
+          node --check 04-express-database-rest-api/server.js
+          node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+
+      - name: Build React experiments
+        run: |
+          npx vite build 05-react-render-html-jsx-components
+          npx vite build 06-react-props-states-styles-events
+          npx vite build 07-react-conditional-lists-forms
+          npx vite build 08-react-router-updating-screen
+          npx vite build 09-react-hooks-sharing-data
+          npx vite build 12-augmented-programs-todo-and-quiz/quiz-react
