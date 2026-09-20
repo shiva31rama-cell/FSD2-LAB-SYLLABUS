@@ -25,6 +25,20 @@ This program introduces the basic structure of an ExpressJS server.
 | Middleware | Request logger |
 | JSON body | express.json() |
 
+## VS Code path
+
+From the repository root, open:
+
+```text
+01-express-routing-http-methods-middleware/app.js
+```
+
+Run this exact file from the repository root:
+
+```bash
+node 01-express-routing-http-methods-middleware/app.js
+```
+
 ## Run
 
 From the repository root:
