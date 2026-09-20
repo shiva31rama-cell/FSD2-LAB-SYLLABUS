@@ -25,6 +25,16 @@ This experiment introduces MongoDB shell commands for basic CRUD operations.
 
 The original syllabus may use the older names insert(), update() and remove(). The program uses modern equivalents.
 
+## VS Code path
+
+MongoDB query file:
+
+```text
+10-mongodb-installation-configuration-crud/queries.js
+```
+
+Run it with `mongosh` from the repository root.
+
 ## Run
 
 Open mongosh and execute:
