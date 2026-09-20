@@ -29,6 +29,15 @@ For the exact VS Code steps, commands, required connections/files, URLs, sample 
 
 Every experiment folder contains a small README, the exact syllabus tasks, workflow, run steps and commented source code.
 
+
+## Program paths
+
+For the exact **VS Code path** of every lab program, including the source file, supporting file, run command and runtime/API path where applicable, see:
+
+**[LAB_PATHS.md](LAB_PATHS.md)**
+
+Each experiment README also contains its own **VS Code path** section.
+
 ## Extended branches
 
 ### MongoDB Complete Course
