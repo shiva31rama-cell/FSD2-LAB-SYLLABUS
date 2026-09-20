@@ -29,6 +29,22 @@ This experiment introduces client-side routing and shows how changing state upda
 | Route | Connects a path to a component |
 | State | Causes the screen to update |
 
+## VS Code path
+
+Main React entry path:
+
+```text
+08-react-router-updating-screen/src/main.jsx
+```
+
+React Router paths used by the program:
+
+```text
+/          → Home
+/about     → About
+/counter   → Counter
+```
+
 ## Run
 
 ```bash

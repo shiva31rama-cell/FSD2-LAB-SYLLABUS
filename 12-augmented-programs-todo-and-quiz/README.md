@@ -4,6 +4,28 @@
 
 Experiment 12 contains two small applications that combine the concepts learned in the earlier experiments.
 
+## VS Code path
+
+Experiment 12 contains two separate programs.
+
+### Program A — Node + Express To-do
+
+```text
+12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+```
+
+### Program B — React Quiz
+
+```text
+12-augmented-programs-todo-and-quiz/quiz-react/src/main.jsx
+```
+
+Quiz project folder:
+
+```text
+12-augmented-programs-todo-and-quiz/quiz-react/
+```
+
 ## Program A — NodeJS + Express To-do
 
 ### What can it do?

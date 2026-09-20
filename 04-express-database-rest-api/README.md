@@ -37,6 +37,23 @@ $env:MONGO_URI="your-mongodb-uri"
 
 Do not commit real database passwords.
 
+## VS Code path
+
+Main server file:
+
+```text
+04-express-database-rest-api/server.js
+```
+
+REST API paths exposed by this program:
+
+```text
+GET    /api/products
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+```
+
 ## Run
 
 ```bash

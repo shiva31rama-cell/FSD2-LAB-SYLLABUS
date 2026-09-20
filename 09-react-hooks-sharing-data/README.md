@@ -30,6 +30,20 @@ This experiment demonstrates React hooks and sharing data between components wit
     └── main.jsx
 ```
 
+## VS Code path
+
+Main React entry path:
+
+```text
+09-react-hooks-sharing-data/src/main.jsx
+```
+
+Complete experiment folder:
+
+```text
+09-react-hooks-sharing-data/
+```
+
 ## Run
 
 ```bash

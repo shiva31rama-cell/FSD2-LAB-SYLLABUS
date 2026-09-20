@@ -33,6 +33,30 @@ This experiment introduces the React rendering process and shows how JSX and reu
     └── StudentCard.jsx
 ```
 
+## VS Code path
+
+React project:
+
+```text
+05-react-render-html-jsx-components/
+├── index.html
+└── src/
+    ├── main.jsx
+    └── StudentCard.jsx
+```
+
+Main React entry path:
+
+```text
+05-react-render-html-jsx-components/src/main.jsx
+```
+
+Reusable component path:
+
+```text
+05-react-render-html-jsx-components/src/StudentCard.jsx
+```
+
 ## Run
 
 From the repository root:

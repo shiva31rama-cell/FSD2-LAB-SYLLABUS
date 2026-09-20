@@ -4,6 +4,22 @@ This guide explains exactly what to do in VS Code for **every experiment**: wher
 
 The goal is simple: **Open code → install dependencies once → run the correct command → open the shown URL / MongoDB shell → enter the sample input → observe output.**
 
+
+## Quick path map
+
+Before running a program, use **[LAB_PATHS.md](LAB_PATHS.md)** to see the exact path from the repository root to the required file.
+
+Example:
+
+```text
+FSD2-LAB-SYLLABUS
+└── 06-react-props-states-styles-events
+    └── src
+        └── main.jsx
+```
+
+The individual experiment README files repeat their exact paths so you can navigate directly in the VS Code Explorer.
+
 ---
 
 ## 0. One-time setup

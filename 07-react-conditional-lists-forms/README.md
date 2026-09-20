@@ -33,6 +33,20 @@ This experiment demonstrates how React conditionally displays content, renders a
     └── main.jsx
 ```
 
+## VS Code path
+
+From the repository root, open:
+
+```text
+07-react-conditional-lists-forms/src/main.jsx
+```
+
+The complete experiment folder is:
+
+```text
+07-react-conditional-lists-forms/
+```
+
 ## Run
 
 ```bash
