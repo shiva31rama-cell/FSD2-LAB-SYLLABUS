@@ -8,26 +8,16 @@ import { createRoot } from 'react-dom/client';
 const questions = [
   {
     question: 'Which hook stores state?',
-    options: [
-      'useState',
-      'useRoute',
-      'useHTML',
-    ],
+    options: ['useState', 'useRoute', 'useHTML'],
     answer: 'useState',
   },
   {
-    question:
-      'Which method is used to find MongoDB documents?',
-    options: [
-      'find()',
-      'show()',
-      'open()',
-    ],
+    question: 'Which method is used to find MongoDB documents?',
+    options: ['find()', 'show()', 'open()'],
     answer: 'find()',
   },
   {
-    question:
-      'Express is mainly used for?',
+    question: 'Express is mainly used for?',
     options: [
       'Server-side web apps',
       'Image editing',
@@ -47,26 +37,20 @@ function App() {
   const [finished, setFinished] = useState(false);
 
   function handleAnswer(choice) {
-    const currentQuestion =
-      questions[questionIndex];
+    const currentQuestion = questions[questionIndex];
 
     if (choice === currentQuestion.answer) {
-      setScore((currentScore) =>
-        currentScore + 1,
-      );
+      setScore((currentScore) => currentScore + 1);
     }
 
-    const isLastQuestion =
-      questionIndex === questions.length - 1;
+    const isLastQuestion = questionIndex === questions.length - 1;
 
     if (isLastQuestion) {
       setFinished(true);
       return;
     }
 
-    setQuestionIndex((currentIndex) =>
-      currentIndex + 1,
-    );
+    setQuestionIndex((currentIndex) => currentIndex + 1);
   }
 
   return (
@@ -79,9 +63,7 @@ function App() {
         border: '1px solid #aaa',
       }}
     >
-      <h1>
-        FSD2 React Quiz
-      </h1>
+      <h1>FSD2 React Quiz</h1>
 
       {finished ? (
         <h2>
@@ -90,31 +72,24 @@ function App() {
       ) : (
         <>
           <p>
-            Question {questionIndex + 1} of{' '}
-            {questions.length}
+            Question {questionIndex + 1} of {questions.length}
           </p>
 
-          <h2>
-            {questions[questionIndex].question}
-          </h2>
+          <h2>{questions[questionIndex].question}</h2>
 
-          {questions[questionIndex].options.map(
-            (option) => (
-              <button
-                key={option}
-                onClick={() =>
-                  handleAnswer(option)
-                }
-                style={{
-                  display: 'block',
-                  margin: '10px 0',
-                  padding: '10px',
-                }}
-              >
-                {option}
-              </button>
-            ),
-          )}
+          {questions[questionIndex].options.map((option) => (
+            <button
+              key={option}
+              onClick={() => handleAnswer(option)}
+              style={{
+                display: 'block',
+                margin: '10px 0',
+                padding: '10px',
+              }}
+            >
+              {option}
+            </button>
+          ))}
         </>
       )}
     </main>
@@ -125,8 +100,4 @@ function App() {
 // Render React application
 // ------------------------------------------------------------
 
-createRoot(
-  document.getElementById('root'),
-).render(
-  <App />,
-);
+createRoot(document.getElementById('root')).render(<App />);
