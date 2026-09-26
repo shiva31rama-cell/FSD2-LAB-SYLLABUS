@@ -10,14 +10,8 @@ import StudentCard from './StudentCard';
 function FunctionCard() {
   return (
     <div className="student-card">
-      <h2>
-        Function Component
-      </h2>
-
-      <p>
-        This card is returned by a
-        JavaScript function.
-      </p>
+      <h2>Function Component</h2>
+      <p>This card is returned by a JavaScript function.</p>
     </div>
   );
 }
@@ -30,14 +24,8 @@ class ClassCard extends React.Component {
   render() {
     return (
       <div className="student-card">
-        <h2>
-          Class Component
-        </h2>
-
-        <p>
-          This card comes from a
-          React class.
-        </p>
+        <h2>Class Component</h2>
+        <p>This card comes from a React class.</p>
       </div>
     );
   }
@@ -59,18 +47,14 @@ function App() {
         padding: '0 20px',
       }}
     >
-      <h1>
-        React Render + JSX
-      </h1>
+      <h1>React Render + JSX</h1>
 
       <p>
-        Hello <strong>{name}</strong>.
-        This text is rendered into the
-        HTML page.
+        Hello <strong>{name}</strong>. This text is rendered into the HTML
+        page.
       </p>
 
       <FunctionCard />
-
       <ClassCard />
 
       {/* StudentCard receives details through props. */}
@@ -88,8 +72,4 @@ function App() {
 // Render React application
 // ------------------------------------------------------------
 
-createRoot(
-  document.getElementById('root'),
-).render(
-  <App />,
-);
+createRoot(document.getElementById('root')).render(<App />);
