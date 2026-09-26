@@ -31,28 +31,16 @@ function Counter() {
 
   return (
     <section className={styles.counter}>
-      <h2>
-        Counter
-      </h2>
+      <h2>Counter</h2>
+      <p>Count: {count}</p>
 
-      <p>
-        Count: {count}
-      </p>
+      <button onClick={increment}>Increment</button>
 
-      <button onClick={increment}>
-        Increment
-      </button>
-
-      <button
-        disabled={count === 0}
-        onClick={decrement}
-      >
+      <button disabled={count === 0} onClick={decrement}>
         Decrement
       </button>
 
-      <button onClick={double}>
-        Double
-      </button>
+      <button onClick={double}>Double</button>
     </section>
   );
 }
