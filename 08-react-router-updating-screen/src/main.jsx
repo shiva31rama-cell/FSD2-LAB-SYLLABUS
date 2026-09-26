@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 
 // ------------------------------------------------------------
-// Route Components
+// Route components
 // ------------------------------------------------------------
 
 function Home() {
@@ -40,19 +40,15 @@ function Counter() {
     <>
       <h2>Updating the Screen</h2>
 
-      <button onClick={increment}>
-        Count: {count}
-      </button>
+      <button onClick={increment}>Count: {count}</button>
 
-      <p>
-        State changes cause React to render the new value.
-      </p>
+      <p>State changes cause React to render the new value.</p>
     </>
   );
 }
 
 // ------------------------------------------------------------
-// Main App Component
+// Main App component
 // ------------------------------------------------------------
 
 function App() {
@@ -89,7 +85,7 @@ function App() {
 }
 
 // ------------------------------------------------------------
-// Render React Application
+// Render React application
 // ------------------------------------------------------------
 
 createRoot(document.getElementById('root')).render(
