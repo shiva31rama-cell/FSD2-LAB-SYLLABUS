@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-
 import {
   BrowserRouter,
   Link,
@@ -9,19 +8,14 @@ import {
 } from 'react-router-dom';
 
 // ------------------------------------------------------------
-// Route components
+// Route Components
 // ------------------------------------------------------------
 
 function Home() {
   return (
     <>
-      <h2>
-        Home
-      </h2>
-
-      <p>
-        This is the home route.
-      </p>
+      <h2>Home</h2>
+      <p>This is the home route.</p>
     </>
   );
 }
@@ -29,13 +23,8 @@ function Home() {
 function About() {
   return (
     <>
-      <h2>
-        About
-      </h2>
-
-      <p>
-        This is another route.
-      </p>
+      <h2>About</h2>
+      <p>This is another route.</p>
     </>
   );
 }
@@ -49,24 +38,21 @@ function Counter() {
 
   return (
     <>
-      <h2>
-        Updating the Screen
-      </h2>
+      <h2>Updating the Screen</h2>
 
       <button onClick={increment}>
         Count: {count}
       </button>
 
       <p>
-        State changes cause React to
-        render the new value.
+        State changes cause React to render the new value.
       </p>
     </>
   );
 }
 
 // ------------------------------------------------------------
-// Main App component
+// Main App Component
 // ------------------------------------------------------------
 
 function App() {
@@ -79,9 +65,7 @@ function App() {
         padding: '0 20px',
       }}
     >
-      <h1>
-        React Router
-      </h1>
+      <h1>React Router</h1>
 
       <nav
         style={{
@@ -90,46 +74,25 @@ function App() {
           marginBottom: '24px',
         }}
       >
-        <Link to="/">
-          Home
-        </Link>
-
-        <Link to="/about">
-          About
-        </Link>
-
-        <Link to="/counter">
-          Counter
-        </Link>
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/counter">Counter</Link>
       </nav>
 
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        <Route
-          path="/about"
-          element={<About />}
-        />
-
-        <Route
-          path="/counter"
-          element={<Counter />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/counter" element={<Counter />} />
       </Routes>
     </main>
   );
 }
 
 // ------------------------------------------------------------
-// Render React application
+// Render React Application
 // ------------------------------------------------------------
 
-createRoot(
-  document.getElementById('root'),
-).render(
+createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,
