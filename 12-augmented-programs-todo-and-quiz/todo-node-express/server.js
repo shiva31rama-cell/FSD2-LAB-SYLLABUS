@@ -44,25 +44,18 @@ app.post('/api/todos', (req, res) => {
 
   todos.push(todo);
 
-  res
-    .status(201)
-    .json(todo);
+  res.status(201).json(todo);
 });
 
 // PATCH: toggle a todo.
 app.patch('/api/todos/:id', (req, res) => {
   const todoId = Number(req.params.id);
-
-  const todo = todos.find(
-    (item) => item.id === todoId,
-  );
+  const todo = todos.find((item) => item.id === todoId);
 
   if (!todo) {
-    return res
-      .status(404)
-      .json({
-        message: 'Todo not found',
-      });
+    return res.status(404).json({
+      message: 'Todo not found',
+    });
   }
 
   todo.done = !todo.done;
@@ -74,9 +67,7 @@ app.patch('/api/todos/:id', (req, res) => {
 app.delete('/api/todos/:id', (req, res) => {
   const todoId = Number(req.params.id);
 
-  todos = todos.filter(
-    (todo) => todo.id !== todoId,
-  );
+  todos = todos.filter((todo) => todo.id !== todoId);
 
   res.json({
     message: 'Todo deleted',
@@ -88,20 +79,15 @@ app.delete('/api/todos/:id', (req, res) => {
 // ------------------------------------------------------------
 
 app.get('/', (req, res) => {
-  res.send(
-    `<!DOCTYPE html>
+  res.send(`<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-
-    <title>
-      FSD2 To-do
-    </title>
+    <title>FSD2 To-do</title>
   </head>
 
   <body
@@ -112,9 +98,7 @@ app.get('/', (req, res) => {
       padding: 0 20px;
     "
   >
-    <h1>
-      FSD2 To-do
-    </h1>
+    <h1>FSD2 To-do</h1>
 
     <input
       id="todoInput"
@@ -122,68 +106,38 @@ app.get('/', (req, res) => {
       placeholder="New task"
     />
 
-    <button onclick="addTodo()">
-      Add
-    </button>
+    <button onclick="addTodo()">Add</button>
 
     <ul id="todoList"></ul>
 
     <script>
       async function loadTodos() {
-        const response =
-          await fetch('/api/todos');
-
-        const todos =
-          await response.json();
-
-        const list =
-          document.getElementById('todoList');
+        const response = await fetch('/api/todos');
+        const todos = await response.json();
+        const list = document.getElementById('todoList');
 
         list.innerHTML = '';
 
         todos.forEach((todo) => {
-          const item =
-            document.createElement('li');
+          const item = document.createElement('li');
+          item.textContent = todo.text + (todo.done ? ' (done)' : '');
 
-          item.textContent =
-            todo.text +
-            (todo.done ? ' (done)' : '');
+          const toggleButton = document.createElement('button');
+          toggleButton.textContent = 'Toggle';
+          toggleButton.onclick = () => toggleTodo(todo.id);
 
-          const toggleButton =
-            document.createElement('button');
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.onclick = () => deleteTodo(todo.id);
 
-          toggleButton.textContent =
-            'Toggle';
-
-          toggleButton.onclick = () =>
-            toggleTodo(todo.id);
-
-          const deleteButton =
-            document.createElement('button');
-
-          deleteButton.textContent =
-            'Delete';
-
-          deleteButton.onclick = () =>
-            deleteTodo(todo.id);
-
-          item.append(
-            ' ',
-            toggleButton,
-            ' ',
-            deleteButton,
-          );
-
+          item.append(' ', toggleButton, ' ', deleteButton);
           list.appendChild(item);
         });
       }
 
       async function addTodo() {
-        const input =
-          document.getElementById('todoInput');
-
-        const text =
-          input.value.trim();
+        const input = document.getElementById('todoInput');
+        const text = input.value.trim();
 
         if (!text) {
           return;
@@ -191,40 +145,28 @@ app.get('/', (req, res) => {
 
         await fetch('/api/todos', {
           method: 'POST',
-
           headers: {
-            'Content-Type':
-              'application/json',
+            'Content-Type': 'application/json',
           },
-
-          body: JSON.stringify({
-            text,
-          }),
+          body: JSON.stringify({ text }),
         });
 
         input.value = '';
-
         loadTodos();
       }
 
       async function toggleTodo(id) {
-        await fetch(
-          '/api/todos/' + id,
-          {
-            method: 'PATCH',
-          },
-        );
+        await fetch('/api/todos/' + id, {
+          method: 'PATCH',
+        });
 
         loadTodos();
       }
 
       async function deleteTodo(id) {
-        await fetch(
-          '/api/todos/' + id,
-          {
-            method: 'DELETE',
-          },
-        );
+        await fetch('/api/todos/' + id, {
+          method: 'DELETE',
+        });
 
         loadTodos();
       }
@@ -232,8 +174,7 @@ app.get('/', (req, res) => {
       loadTodos();
     </script>
   </body>
-</html>`,
-  );
+</html>`);
 });
 
 // ------------------------------------------------------------
@@ -241,7 +182,5 @@ app.get('/', (req, res) => {
 // ------------------------------------------------------------
 
 app.listen(PORT, () => {
-  console.log(
-    'To-do app: http://localhost:' + PORT,
-  );
+  console.log('To-do app: http://localhost:' + PORT);
 });
