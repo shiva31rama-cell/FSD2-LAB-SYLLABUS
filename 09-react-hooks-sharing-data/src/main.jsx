@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-
 import { createRoot } from 'react-dom/client';
 
 // ------------------------------------------------------------
@@ -22,8 +21,7 @@ function Child() {
 
   return (
     <p>
-      Child component received shared
-      name: <strong>{name}</strong>
+      Child component received shared name: <strong>{name}</strong>
     </p>
   );
 }
@@ -39,13 +37,10 @@ function App() {
   // Update the timer every second.
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setSeconds((currentSeconds) =>
-        currentSeconds + 1,
-      );
+      setSeconds((currentSeconds) => currentSeconds + 1);
     }, 1000);
 
-    // Clean up the interval when the
-    // component is removed.
+    // Clean up the interval when the component is removed.
     return () => {
       clearInterval(intervalId);
     };
@@ -61,26 +56,19 @@ function App() {
           padding: '0 20px',
         }}
       >
-        <h1>
-          Hooks + Shared Data
-        </h1>
+        <h1>Hooks + Shared Data</h1>
 
         <input
           value={name}
-          onChange={(event) =>
-            setName(event.target.value)
-          }
+          onChange={(event) => setName(event.target.value)}
         />
 
         <Child />
 
-        <p>
-          Timer using useEffect: {seconds}s
-        </p>
+        <p>Timer using useEffect: {seconds}s</p>
 
         <p>
-          <strong>Why hooks?</strong>{' '}
-          Hooks let function components use
+          <strong>Why hooks?</strong> Hooks let function components use
           state, effects and shared context.
         </p>
       </main>
@@ -92,8 +80,4 @@ function App() {
 // Render React application
 // ------------------------------------------------------------
 
-createRoot(
-  document.getElementById('root'),
-).render(
-  <App />,
-);
+createRoot(document.getElementById('root')).render(<App />);
