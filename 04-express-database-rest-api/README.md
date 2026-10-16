@@ -1,86 +1,47 @@
-# Experiment 04 — ExpressJS, Mongoose, CRUD and REST API
+# Experiment 04 — ExpressJS + Mongoose CRUD + RESTful API
 
-## What is this?
+## Aim
 
-This experiment connects an ExpressJS application to MongoDB using Mongoose and exposes the data through RESTful APIs.
+Connect Express to MongoDB using Mongoose, implement CRUD REST routes, and let a single-page browser interface call the API using `fetch()`.
 
-## What can it do?
+## Files needed
 
-- Connect to MongoDB.
-- Define a Product schema.
-- Create products.
-- Read all products.
-- Update a product.
-- Delete a product.
-- Display the API data in a simple browser page using fetch().
+One main program file: `04-express-database-rest-api/server.js`. The package dependencies are installed once from the repository root.
 
-## Main concepts
+## Run on Linux / VS Code
 
-| Concept | Purpose |
-| --- | --- |
-| Mongoose | MongoDB object modeling |
-| Schema | Defines document fields |
-| Model | Performs database operations |
-| REST API | Exposes data through HTTP |
-| fetch() | Calls the REST API from the browser |
-| CRUD | Create, Read, Update, Delete |
-
-## Setup
-
-Set the MongoDB connection string before running:
-
-Windows PowerShell:
-
-```powershell
-$env:MONGO_URI="your-mongodb-uri"
-```
-
-Do not commit real database passwords.
-
-## VS Code path
-
-Main server file:
-
-```text
-04-express-database-rest-api/server.js
-```
-
-REST API paths exposed by this program:
-
-```text
-GET    /api/products
-POST   /api/products
-PUT    /api/products/:id
-DELETE /api/products/:id
-```
-
-## Run
+Make sure local MongoDB is running, or set an Atlas URI first:
 
 ```bash
+export MONGO_URI='your-own-mongodb-connection-string'
 node 04-express-database-rest-api/server.js
 ```
 
-Open:
+For a local database, omit the export command. Open `http://localhost:3004/`.
 
-```text
-http://localhost:3004
-```
+## Expected behavior
 
-## API endpoints
+Enter `Notebook` as product name and `50` as price, then click **Add product**. It should appear in the product list. Use **Edit** and **Delete** to try update/delete operations.
 
-```text
-GET    /api/products
-POST   /api/products
-PUT    /api/products/:id
-DELETE /api/products/:id
-```
+## REST API endpoints
 
-## Basic flow
+| Method | Route | Meaning |
+|---|---|---|
+| GET | `/api/health` | Check API |
+| GET | `/api/products` | Read all products |
+| POST | `/api/products` | Create a product |
+| PUT | `/api/products/:id` | Update a product |
+| DELETE | `/api/products/:id` | Delete a product |
 
-Browser
-→ fetch()
-→ REST route
-→ Mongoose
-→ MongoDB
-→ JSON response
-→ Browser
+## Program flow
+
+Browser form → `fetch()` → Express route → Mongoose model → MongoDB → JSON response → browser updates.
+
+## Common fixes
+
+- `ECONNREFUSED`: start local MongoDB or supply a correct Atlas URI.
+- Invalid URI / Atlas timeout: recheck connection string and Atlas Network Access.
+- Invalid product ID: API returns a 400 response.
+- Missing dependency: from repository root run `npm install`.
+
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for exact Linux debugging commands.

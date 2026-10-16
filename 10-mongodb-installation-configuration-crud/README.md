@@ -1,28 +1,42 @@
 # Experiment 10 — MongoDB Installation, Atlas Configuration and CRUD
 
-This repository's query file covers the handout's CRUD section. MongoDB installation and Atlas setup are environment steps; follow the uploaded handout for your OS and never commit Atlas credentials.
+## Part (a) — Setup
 
-## Part A — Installation and connection checks
+Install MongoDB Community Server and `mongosh`, or configure a MongoDB Atlas cluster. In Atlas, create a database user, allow the lab computer's current IP address, copy the connection string and test the connection. Never commit a real Atlas password to GitHub or leave broad network access enabled beyond a controlled lab.
 
-Verify the shell is installed:
+Check the tools:
 
 ```bash
 mongod --version
 mongosh --version
 ```
 
-For Atlas, create a database user, allow your current IP in Network Access, copy the cluster connection string, and test it with `mongosh`. Avoid committing passwords or leaving `0.0.0.0/0` enabled outside a controlled lab.
-
-## Part B — CRUD query path
-
-`10-mongodb-installation-configuration-crud/queries.js`
-
-Run from the repository root after connecting to your local server or Atlas:
+For a local MongoDB service on Linux:
 
 ```bash
-mongosh < 10-mongodb-installation-configuration-crud/queries.js
+sudo systemctl status mongod
+sudo systemctl start mongod
+mongosh
 ```
 
-The script uses `fsdLab` and a five-student dataset. It demonstrates legacy syllabus methods `insert()`, `find()`, `update()`, `remove()`, plus modern replacements `insertOne/insertMany`, `updateOne/updateMany` and `deleteOne/deleteMany`.
+## Part (b) — CRUD queries
 
-It includes filters, projections, sorting, limit, count, `findOne()`, `$set`, `$inc`, multi-update and upsert examples. Whole-collection/database deletion commands are commented out for safety.
+**One program file:** `10-mongodb-installation-configuration-crud/queries.js`.
+
+Run from the repository root against local MongoDB:
+
+```bash
+mongosh --file 10-mongodb-installation-configuration-crud/queries.js
+```
+
+For Atlas, pass your own URI directly to mongosh (never paste the actual URI/password into GitHub):
+
+```bash
+mongosh "YOUR_ATLAS_URI" --file 10-mongodb-installation-configuration-crud/queries.js
+```
+
+The script selects `fsdLab`, loads five sample students and prints the results of `insert()`, `find()`, `update()`, `remove()`, filters, projections, operators and modern replacements. It reloads the sample data to make re-runs predictable. Whole-collection and whole-database deletion commands stay commented out.
+
+## Verify
+
+Look for the final printed documents and count in mongosh. If the shell cannot connect, see the MongoDB troubleshooting section in [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md).

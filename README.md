@@ -1,59 +1,58 @@
 # FSD2 LAB SYLLABUS — Vishnu Institute of Technology
 
-A simple, exam-friendly and runnable implementation of the R-23 **Full Stack Development - 2** lab syllabus.
+A runnable, exam-oriented implementation of the **R-23 Full Stack Development – 2 syllabus**.
 
-## Lab pathway
-1. Express routing, HTTP methods and middleware
-2. Express templating and form data
-3. Cookies, sessions and authentication
-4. MongoDB with Mongoose, CRUD and RESTful API
-5. React HTML, JSX and function/class components
-6. React props, state, styles and events
-7. Conditional rendering, lists and React forms
-8. React Router and screen updates
-9. React hooks and sharing data between components
-10. MongoDB installation/configuration and CRUD queries
-11. MongoDB databases, collections and record queries
-12. Augmented programs: Node + Express To-do and React Quiz
+## Start here for your practical exam
 
-## How to use
-Run `npm install` once from this repository root.
+**Read the [Exam Handbook](EXAM_HANDBOOK.md) first.** It answers the exam-day questions: how to start in Linux/VS Code, which exact file(s) to create/use for each experiment, how many files a part needs, exact run commands, sample inputs/outputs and commands for common runtime errors.
 
-- Express experiments: `node <experiment-folder>/app.js` or `node <experiment-folder>/server.js`
-- React experiments: run `npm run react05` through `npm run react09`
-- MongoDB experiments: use `mongosh` and run the matching `queries.js`
+- [All program paths](LAB_PATHS.md)
+- [Quick run guide](RUN_GUIDE.md)
+- [Experiment 01 — Express Routes](01-express-routing-http-methods-middleware/README.md)
+- [Experiment 03 — Cookies, Sessions, Authentication](03-express-cookies-sessions-authentication/README.md)
+- [Experiment 04 — Mongoose CRUD + REST API](04-express-database-rest-api/README.md)
+- [Experiment 06 — Props, State, Styling, Events](06-react-props-states-styles-events/README.md)
+- [Experiment 07 — Conditional Rendering, Lists, Forms](07-react-conditional-lists-forms/README.md)
+- [Experiment 08 — Router + Screen Updates](08-react-router-updating-screen/README.md)
+- [Experiment 09 — Hooks + Sharing Data](09-react-hooks-sharing-data/README.md)
+- [Experiment 10 — MongoDB/Atlas + CRUD](10-mongodb-installation-configuration-crud/README.md)
+- [Experiment 11 — Databases, Collections, Records](11-mongodb-databases-collections-records/README.md)
+- [Experiment 12 — To-do + Quiz](12-augmented-programs-todo-and-quiz/README.md)
 
-### Complete run instructions
+## One-time Linux setup
 
-For the exact VS Code steps, commands, required connections/files, URLs, sample inputs, output locations, workflows and troubleshooting for **all 12 experiments**, open **[RUN_GUIDE.md](RUN_GUIDE.md)**.
+```bash
+git clone https://github.com/shiva31rama-cell/FSD2-LAB-SYLLABUS.git
+cd FSD2-LAB-SYLLABUS
+code .
+npm install
+```
 
-Every experiment folder contains a small README, the exact syllabus tasks, workflow, run steps and commented source code.
+Use `git checkout main && git pull origin main` first if you already cloned the repository before these updates.
 
+## Run React programs separately
 
-## Program paths
+```bash
+npm run react05
+npm run react06
+npm run react07
+npm run react08a  # Part (a): Student Portal routes
+npm run react08b  # Part (b): state updates + live clock
+npm run react09a  # Part (a): class counter vs hook counter
+npm run react09b  # Part (b): lifting state up + Context
+npm run react12b  # React quiz
+```
 
-For the exact **VS Code path** of every lab program, including the source file, supporting file, run command and runtime/API path where applicable, see:
+Express programs are run with `node path/to/file.js`; MongoDB query files run in `mongosh`. The Exam Handbook provides every specific command and expected outcome.
 
-**[LAB_PATHS.md](LAB_PATHS.md)**
+## Syllabus coverage
 
-Each experiment README also contains its own **VS Code path** section.
+The 12 numbered experiment folders map to the VITB R-23 FSD2 syllabus: Express routing/methods/middleware, EJS/forms, cookies/sessions/authentication, Mongoose CRUD/REST SPA, React rendering/JSX/components, props/state/styles/events, conditional rendering/lists/forms, React Router/screen updates, hooks/data sharing, MongoDB Atlas/CRUD, databases/collections/records/index/aggregation, and the augmented To-do/Quiz/certification options.
 
-## Extended branches
+## CI
 
-### MongoDB Complete Course
-Branch: `mongodb-complete-course`
+GitHub Actions validates required paths, Node syntax and React builds (including independently runnable Experiment 8 and 9 parts). MongoDB runtime behavior still requires a reachable local server or the user's own valid Atlas connection.
 
-A dedicated beginner-to-advanced MongoDB track covering shell commands, CRUD, querying, arrays/embedded documents, schema design, indexes and `explain()`, aggregation pipelines, `$lookup`, transactions, Node.js driver, Mongoose, Atlas, Search/Vector Search, triggers/automation, security and performance.
+## Extended learning material
 
-### FSD2 Capstone Project
-Branch: `fsd2-capstone-project`
-
-**CampusFlow AI** is the large real-world project built from the FSD2 syllabus. It combines React + Router + Hooks + Express + REST APIs + sessions/authentication + Mongoose + MongoDB/Atlas + aggregation + an optional server-side OpenAI integration. It includes registration/login, MongoDB-backed sessions, task CRUD, announcements, dashboard analytics and an AI productivity assistant.
-
-Project folder: `capstone-campusflow-ai/`
-
-## Study material
-The repository also contains one topic-named PPT and one runtime walkthrough PDF per experiment. The PDFs use clear workflow/output diagrams so you can see what happens from **input → code → browser/terminal → output**.
-
-## Source basis
-The structure follows the supplied VITB R-23 syllabus: ExpressJS routing/methods/middleware/templating/sessions/authentication/database/REST APIs; React rendering, JSX, components, props/state, styles, events, forms, Router, hooks; and MongoDB CRUD, database/collection/record queries. The syllabus also lists NodeJS + Express To-do and React Quiz as augmented programs.
+The repository also contains course material, previews and other study branches. For practical exam work, start with `EXAM_HANDBOOK.md` and use the matching experiment README.

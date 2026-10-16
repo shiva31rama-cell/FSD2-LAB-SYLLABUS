@@ -6,8 +6,14 @@
     "react05": "vite --root 05-react-render-html-jsx-components",
     "react06": "vite --root 06-react-props-states-styles-events",
     "react07": "vite --root 07-react-conditional-lists-forms",
-    "react08": "vite --root 08-react-router-updating-screen",
-    "react09": "vite --root 09-react-hooks-sharing-data"
+    "react08": "vite --root 08-react-router-updating-screen/part-a-routing",
+    "react08a": "vite --root 08-react-router-updating-screen/part-a-routing",
+    "react08b": "vite --root 08-react-router-updating-screen/part-b-updating-screen",
+    "react09": "vite --root 09-react-hooks-sharing-data/part-a-hooks",
+    "react09a": "vite --root 09-react-hooks-sharing-data/part-a-hooks",
+    "react09b": "vite --root 09-react-hooks-sharing-data/part-b-sharing-data",
+    "react12b": "vite --root 12-augmented-programs-todo-and-quiz/quiz-react",
+    "check:node": "node --check 01-express-routing-http-methods-middleware/app.js && node --check 02-express-templating-form-data/app.js && node --check 03-express-cookies-sessions-authentication/app.js && node --check 03-express-cookies-sessions-authentication/auth-app.js && node --check 04-express-database-rest-api/server.js && node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js"
   },
   "dependencies": {
     "cookie-parser": "latest",

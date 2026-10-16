@@ -1,67 +1,74 @@
 /**
  * Experiment 10(b): MongoDB CRUD operations.
  *
- * Connect to local MongoDB or Atlas first, then run inside mongosh:
- *   mongosh < 10-mongodb-installation-configuration-crud/queries.js
+ * Run from the repository root:
+ *   mongosh --file 10-mongodb-installation-configuration-crud/queries.js
+ * To use Atlas, pass your connection URI before --file:
+ *   mongosh "YOUR_ATLAS_URI" --file 10-mongodb-installation-configuration-crud/queries.js
  *
- * This uses the handout's fsdLab database and five sample students.
- * Destructive whole-collection deletion is intentionally commented out.
+ * This script uses its own fsdLab sample database and prints important results.
  */
-use fsdLab;
+db = db.getSiblingDB('fsdLab');
 
-// Reset only the sample collection to make repeated runs predictable.
+// Recreate predictable sample state by clearing only this lab collection.
 db.students.deleteMany({});
-db.students.insertMany([
+print('CREATE: insert five sample students');
+printjson(db.students.insert([
   { name: 'Anitha', branch: 'CSE', year: 3, cgpa: 8.9 },
   { name: 'Ravi', branch: 'ECE', year: 2, cgpa: 7.8 },
   { name: 'Sneha', branch: 'CSE', year: 3, cgpa: 9.1 },
   { name: 'Kiran', branch: 'MECH', year: 4, cgpa: 6.9 },
   { name: 'Divya', branch: 'CSE', year: 2, cgpa: 8.2 }
-]);
+]));
 
-// CREATE — syllabus legacy insert() and modern equivalents.
-db.students.insert({ name: 'Meena', branch: 'ECE', year: 3, cgpa: 8.4 });
-// Modern methods (examples; comment out if you do not want extra records):
-// db.students.insertOne({ name: 'Varun', branch: 'CSE', year: 2, cgpa: 7.9 });
-// db.students.insertMany([{ name: 'Roshni', branch: 'ECE', year: 3, cgpa: 8.6 }]);
+// Modern create example; remove the comment to create an extra sample student.
+// printjson(db.students.insertOne({ name: 'Varun', branch: 'CSE', year: 2, cgpa: 7.9 }));
 
-// READ — find, filters, projection, sorting, limit, count and findOne.
-db.students.find();
-db.students.find({ branch: 'CSE' });
-db.students.find({ cgpa: { $gt: 8.5 } });
-db.students.find({ branch: { $in: ['CSE', 'ECE'] } });
-db.students.find({ branch: 'CSE', year: 3 });
-db.students.find({ $or: [{ year: 2 }, { cgpa: { $gt: 9 } }] });
-db.students.find({ branch: 'CSE' }, { name: 1, cgpa: 1, _id: 0 });
-db.students.find().sort({ cgpa: -1 }).limit(3);
-db.students.countDocuments({ branch: 'CSE' });
-db.students.findOne({ name: 'Sneha' });
+print('READ: all students');
+printjson(db.students.find().toArray());
+print('Filter: CSE students');
+printjson(db.students.find({ branch: 'CSE' }).toArray());
+print('Filter: CGPA > 8.5');
+printjson(db.students.find({ cgpa: { $gt: 8.5 } }).toArray());
+print('Filter with $in');
+printjson(db.students.find({ branch: { $in: ['CSE', 'ECE'] } }).toArray());
+print('AND filter: CSE, third year');
+printjson(db.students.find({ branch: 'CSE', year: 3 }).toArray());
+print('OR filter: year 2 or CGPA > 9');
+printjson(db.students.find({ $or: [{ year: 2 }, { cgpa: { $gt: 9 } }] }).toArray());
+print('Projection: name and CGPA only');
+printjson(db.students.find({ branch: 'CSE' }, { name: 1, cgpa: 1, _id: 0 }).toArray());
+print('Top three by CGPA');
+printjson(db.students.find().sort({ cgpa: -1 }).limit(3).toArray());
+print('Find one student');
+printjson(db.students.findOne({ name: 'Sneha' }));
 
-// UPDATE — legacy update() and modern updateOne/updateMany examples.
-// The sample Ravi record is updated using $set, not document replacement.
-db.students.update({ name: 'Ravi' }, { $set: { cgpa: 8.0 } });
-db.students.update({ branch: 'CSE' }, { $inc: { year: 1 } }, { multi: true });
-db.students.update(
+print('UPDATE: change Ravi CGPA using $set');
+printjson(db.students.update({ name: 'Ravi' }, { $set: { cgpa: 8.0 } }));
+print('UPDATE: move all CSE students up one year using $inc');
+printjson(db.students.update({ branch: 'CSE' }, { $inc: { year: 1 } }, { multi: true }));
+print('UPSERT: update Meena if found, otherwise insert');
+printjson(db.students.update(
   { name: 'Meena' },
   { $set: { branch: 'IT', year: 1, cgpa: 8.4 } },
   { upsert: true }
-);
+));
 // Modern equivalents:
-// db.students.updateOne({ name: 'Ravi' }, { $set: { cgpa: 8.0 } });
-// db.students.updateMany({ branch: 'CSE' }, { $inc: { year: 1 } });
+// printjson(db.students.updateOne({ name: 'Ravi' }, { $set: { cgpa: 8.0 } }));
+// printjson(db.students.updateMany({ branch: 'CSE' }, { $inc: { year: 1 } }));
 
-// DELETE — syllabus remove() and modern equivalents.
-// Check matching records with find() before running delete commands.
-db.students.remove({ branch: 'MECH' });
-// db.students.remove({ year: 2 }, { justOne: true });
+print('DELETE: remove MECH students');
+printjson(db.students.remove({ branch: 'MECH' }));
 // Modern equivalents:
-// db.students.deleteOne({ name: 'Kiran' });
-// db.students.deleteMany({ branch: 'MECH' });
+// printjson(db.students.deleteOne({ name: 'Kiran' }));
+// printjson(db.students.deleteMany({ branch: 'MECH' }));
 
-db.students.find();
-db.students.countDocuments();
+print('FINAL DOCUMENTS');
+printjson(db.students.find().toArray());
+print('FINAL COUNT');
+printjson(db.students.countDocuments());
 
-// Destructive cleanup examples: intentionally disabled.
+// Do not uncomment without checking the selected database first:
 // db.students.remove({});
 // db.students.deleteMany({});
 // db.students.drop();

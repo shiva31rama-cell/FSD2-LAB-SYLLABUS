@@ -1,45 +1,14 @@
 # Experiment 01 — ExpressJS Routing, HTTP Methods and Middleware
 
-## What is this?
+## Aim
 
-This program introduces the basic structure of an ExpressJS server.
+Demonstrate route definition/handling, route parameters, query parameters, URL building, GET/POST/DELETE HTTP methods, and middleware.
 
-## What can it do?
+## Files needed
 
-- Start an Express server on port 3001.
-- Use custom middleware to log requests.
-- Read route parameters such as /students/1.
-- Read query parameters such as /search?name=Rama.
-- Build a URL dynamically.
-- Create, read and delete student records in memory.
+**One file:** `01-express-routing-http-methods-middleware/app.js`.
 
-## Main concepts
-
-| Concept | Example |
-| --- | --- |
-| GET | Read data |
-| POST | Create data |
-| DELETE | Remove data |
-| Route parameter | /students/:id |
-| Query parameter | /search?name=Rama |
-| Middleware | Request logger |
-| JSON body | express.json() |
-
-## VS Code path
-
-From the repository root, open:
-
-```text
-01-express-routing-http-methods-middleware/app.js
-```
-
-Run this exact file from the repository root:
-
-```bash
-node 01-express-routing-http-methods-middleware/app.js
-```
-
-## Run
+## Run on Linux / VS Code
 
 From the repository root:
 
@@ -47,20 +16,30 @@ From the repository root:
 node 01-express-routing-http-methods-middleware/app.js
 ```
 
-Open:
+Open `http://localhost:3001/`.
+
+## Try the examples
 
 ```text
-http://localhost:3001
+/                   → FSD2 Express Lab is running
+/students           → records in JSON
+/students/1         → route parameter
+/search?name=Rama   → query parameter
+/build-url          → dynamically generated student URL
 ```
 
-## Basic flow
+Test POST and DELETE with `curl`:
 
-Client request
-→ Middleware
-→ Route
-→ Route handler
-→ Response
+```bash
+curl -X POST http://localhost:3001/students -H 'Content-Type: application/json' -d '{"name":"Anitha"}'
+curl http://localhost:3001/students
+curl -X DELETE http://localhost:3001/students/1
+```
 
-## Source file
+Every request prints a method and URL line in the server terminal, demonstrating middleware.
 
-- app.js — complete ExpressJS example with comments and clear sections.
+## Core flow
+
+Request → logging middleware → route handler → text/JSON response. The sample data is in memory, not MongoDB.
+
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for copy/run steps and common Linux fixes.
