@@ -1,17 +1,17 @@
 /**
  * Experiment 10(b): MongoDB CRUD operations.
  *
- * Connect to local MongoDB or Atlas first, then run inside mongosh:
+ * First connect to local MongoDB or Atlas, then run in mongosh:
  *   mongosh < 10-mongodb-installation-configuration-crud/queries.js
  *
- * This uses the handout's fsdLab database and five sample students.
- * Destructive whole-collection deletion is intentionally commented out.
+ * Uses the syllabus' fsdLab database and five example students.
+ * Destructive collection/database deletion commands stay commented out.
  */
 use fsdLab;
 
-// Reset only the sample collection to make repeated runs predictable.
+// RESET the named lab dataset to avoid accumulating duplicate records on reruns.
 db.students.deleteMany({});
-db.students.insertMany([
+db.students.insert([
   { name: 'Anitha', branch: 'CSE', year: 3, cgpa: 8.9 },
   { name: 'Ravi', branch: 'ECE', year: 2, cgpa: 7.8 },
   { name: 'Sneha', branch: 'CSE', year: 3, cgpa: 9.1 },
@@ -19,13 +19,13 @@ db.students.insertMany([
   { name: 'Divya', branch: 'CSE', year: 2, cgpa: 8.2 }
 ]);
 
-// CREATE — syllabus legacy insert() and modern equivalents.
+// CREATE: the legacy syllabus insert() plus a modern insertOne() example.
 db.students.insert({ name: 'Meena', branch: 'ECE', year: 3, cgpa: 8.4 });
-// Modern methods (examples; comment out if you do not want extra records):
+// Modern alternatives (uncomment for practice):
 // db.students.insertOne({ name: 'Varun', branch: 'CSE', year: 2, cgpa: 7.9 });
 // db.students.insertMany([{ name: 'Roshni', branch: 'ECE', year: 3, cgpa: 8.6 }]);
 
-// READ — find, filters, projection, sorting, limit, count and findOne.
+// READ: find all, equality, comparison, $in, AND, OR and projection.
 db.students.find();
 db.students.find({ branch: 'CSE' });
 db.students.find({ cgpa: { $gt: 8.5 } });
@@ -37,8 +37,7 @@ db.students.find().sort({ cgpa: -1 }).limit(3);
 db.students.countDocuments({ branch: 'CSE' });
 db.students.findOne({ name: 'Sneha' });
 
-// UPDATE — legacy update() and modern updateOne/updateMany examples.
-// The sample Ravi record is updated using $set, not document replacement.
+// UPDATE: use operators so other fields are not accidentally replaced.
 db.students.update({ name: 'Ravi' }, { $set: { cgpa: 8.0 } });
 db.students.update({ branch: 'CSE' }, { $inc: { year: 1 } }, { multi: true });
 db.students.update(
@@ -50,18 +49,18 @@ db.students.update(
 // db.students.updateOne({ name: 'Ravi' }, { $set: { cgpa: 8.0 } });
 // db.students.updateMany({ branch: 'CSE' }, { $inc: { year: 1 } });
 
-// DELETE — syllabus remove() and modern equivalents.
-// Check matching records with find() before running delete commands.
+// DELETE: legacy remove() and modern replacements. Test with find() first.
 db.students.remove({ branch: 'MECH' });
 // db.students.remove({ year: 2 }, { justOne: true });
-// Modern equivalents:
 // db.students.deleteOne({ name: 'Kiran' });
 // db.students.deleteMany({ branch: 'MECH' });
 
+print('Final documents:');
 db.students.find();
+print('Final count:');
 db.students.countDocuments();
 
-// Destructive cleanup examples: intentionally disabled.
+// DANGEROUS cleanup examples—only run manually when you intend to remove all data:
 // db.students.remove({});
 // db.students.deleteMany({});
 // db.students.drop();
