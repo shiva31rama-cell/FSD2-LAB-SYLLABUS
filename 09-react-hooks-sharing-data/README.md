@@ -1,63 +1,40 @@
-# Experiment 09 — React Hooks and Sharing Data
+# Experiment 09 — React Hooks and Sharing Data Between Components
 
-## What is this?
+This experiment has two independently runnable parts, matching the uploaded handout.
 
-This experiment demonstrates React hooks and sharing data between components with Context.
+## Part (a) — Why hooks?
 
-## What can it do?
+**Main path:** `09-react-hooks-sharing-data/part-a-hooks/src/main.jsx`
 
-- Store data using useState().
-- Run an interval using useEffect().
-- Share a name through React Context.
-- Read shared data inside a child component with useContext().
+Files (5 total): `index.html`, `src/main.jsx`, `src/App.jsx`, `src/components/ClassCounter.jsx`, `src/components/HookCounter.jsx`.
 
-## Main concepts
-
-| Hook / API | Purpose |
-| --- | --- |
-| useState() | Stores component state |
-| useEffect() | Runs side effects |
-| createContext() | Creates shared data context |
-| useContext() | Reads shared context |
-| cleanup function | Clears the timer |
-
-## File structure
-
-```text
-09-react-hooks-sharing-data/
-├── index.html
-└── src/
-    └── main.jsx
-```
-
-## VS Code path
-
-Main React entry path:
-
-```text
-09-react-hooks-sharing-data/src/main.jsx
-```
-
-Complete experiment folder:
-
-```text
-09-react-hooks-sharing-data/
-```
-
-## Run
+Run:
 
 ```bash
-npm run react09
+npm run react09a
 ```
 
-Open the Vite URL shown in the terminal.
+Both counters start at zero. Click Increment in each counter. Compare class `this.state` / `this.setState()` with function component `useState()`.
 
-## Expected behavior
+## Part (b) — Sharing data between components
 
-- Edit the name in the input.
-- The child component receives the updated shared name.
-- The timer increases every second.
+**Main path:** `09-react-hooks-sharing-data/part-b-sharing-data/src/main.jsx`
 
-## Why hooks?
+Files (8 total): `index.html`, `src/main.jsx`, `src/App.jsx`, `src/context/ThemeContext.jsx`, and `src/components/Parent.jsx`, `Display.jsx`, `Buttons.jsx`, `ThemedBox.jsx`.
 
-Hooks let function components use state, effects and context without switching to class components.
+Run:
+
+```bash
+npm run react09b
+```
+
+Click Increment to see the parent-owned count update in Display. Click Toggle Theme to switch the ThemedBox between light and dark using Context without prop-drilling.
+
+## Key concepts
+
+- `useState`: local state in a function component.
+- Lifting state up: place shared state in the closest common parent and pass values/callbacks to children.
+- `createContext` / `useContext`: share a value across the component tree.
+- Class vs function component: two ways shown side-by-side to explain why hooks are useful.
+
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for exact exam run commands and Linux troubleshooting.
