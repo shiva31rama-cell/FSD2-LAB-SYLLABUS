@@ -93,3 +93,14 @@ jobs:
           npx vite build 09-react-hooks-sharing-data/part-a-hooks
           npx vite build 09-react-hooks-sharing-data/part-b-sharing-data
           npx vite build 12-augmented-programs-todo-and-quiz/quiz-react
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install material-generation packages
+        run: python -m pip install --upgrade pip pillow python-pptx reportlab
+
+      - name: Validate material generation
+        run: python tools/generate_materials.py

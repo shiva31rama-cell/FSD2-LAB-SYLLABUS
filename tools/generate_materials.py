@@ -245,6 +245,9 @@ def add_viva_slide(prs):
 
 
 def make_preview_pdf(path, title, number, tasks, workflow, runtime, chunks):
+    # A README may describe tasks using prose or a table instead of top-level bullets.
+    # ReportLab cannot create a zero-row Table, so provide a clear fallback task.
+    tasks = tasks or ["See the experiment README for the exact syllabus task."]
     page_w, page_h = landscape((13.333 * inch, 7.5 * inch))
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle("TitleClean", parent=styles["Title"], fontName="Helvetica-Bold", fontSize=25, leading=29, textColor=colors.HexColor("#1B2B4B"), spaceAfter=12)
