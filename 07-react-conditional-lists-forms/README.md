@@ -6,7 +6,7 @@ Demonstrate conditional rendering, list rendering/filter/removal, and controlled
 
 ## Files needed
 
-**Three main files:** `index.html`, `package.json` in the experiment folder, and `src/main.jsx`.
+**Seven files:** `index.html`, the experiment `package.json`, `src/main.jsx`, `src/App.jsx`, and `src/components/ConditionalDemo.jsx`, `ListDemo.jsx`, `RegistrationForm.jsx`.
 
 ## Run
 
