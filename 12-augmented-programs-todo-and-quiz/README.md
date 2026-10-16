@@ -1,95 +1,29 @@
-# Experiment 12 — NodeJS To-do and React Quiz
+# Experiment 12 — Augmented Programs
 
-## What is this?
+The R-23 syllabus lists a NodeJS + Express To-do application, a React Quiz application, or MongoDB University certification (any two augmented programs must be completed).
 
-Experiment 12 contains two small applications that combine the concepts learned in the earlier experiments.
+## 12(a) NodeJS + Express To-do
 
-## VS Code path
-
-Experiment 12 contains two separate programs.
-
-### Program A — Node + Express To-do
-
-```text
-12-augmented-programs-todo-and-quiz/todo-node-express/server.js
-```
-
-### Program B — React Quiz
-
-```text
-12-augmented-programs-todo-and-quiz/quiz-react/src/main.jsx
-```
-
-Quiz project folder:
-
-```text
-12-augmented-programs-todo-and-quiz/quiz-react/
-```
-
-## Program A — NodeJS + Express To-do
-
-### What can it do?
-
-- Create a to-do item.
-- Display all items.
-- Toggle an item's done status.
-- Delete an item.
-- Use REST endpoints with fetch().
-
-### API
-
-```text
-GET    /api/todos
-POST   /api/todos
-PATCH  /api/todos/:id
-DELETE /api/todos/:id
-```
-
-### Run
+**Files needed:** 1 — `todo-node-express/server.js`.
 
 ```bash
 node 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
 ```
 
-Open:
+Open `http://localhost:3012/`. Add a task, mark it done using Toggle and remove it using Delete. This classroom example stores tasks in memory; restart clears the list.
 
-```text
-http://localhost:3012
-```
+## 12(b) React Quiz
 
-## Program B — React Quiz
-
-### What can it do?
-
-- Display one question at a time.
-- Show multiple-choice options.
-- Track the score.
-- Move to the next question.
-- Display the final score.
-
-### Run
+**Files needed:** `quiz-react/index.html` and `quiz-react/src/main.jsx`; use root dependencies.
 
 ```bash
-npx vite --root 12-augmented-programs-todo-and-quiz/quiz-react
+npm run react12b
 ```
 
-## File structure
+Open the Vite URL printed by the terminal. Answer all three multiple-choice questions to see `Final Score: N / 3`.
 
-```text
-12-augmented-programs-todo-and-quiz/
-├── README.md
-├── todo-node-express/
-│   └── server.js
-└── quiz-react/
-    ├── index.html
-    └── src/
-        └── main.jsx
-```
+## 12(c) MongoDB University certification
 
-## Learning focus
+This syllabus option is a learning path rather than a local app. Use [CERTIFICATION_GUIDE.md](CERTIFICATION_GUIDE.md).
 
-To-do:
-Express + REST + fetch()
-
-Quiz:
-React + useState() + events + lists
+For the single source of truth for exam commands, file counts and errors, see [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md).
