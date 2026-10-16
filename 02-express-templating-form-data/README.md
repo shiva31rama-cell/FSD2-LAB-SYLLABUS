@@ -1,30 +1,12 @@
 # Experiment 02 — ExpressJS Templating and Form Data
 
-## What is this?
+## Aim
 
-This experiment shows how ExpressJS can render dynamic HTML using the EJS templating engine.
+Render dynamic HTML with EJS, display a form, receive submitted form values and show a rendered result.
 
-## What can it do?
+## Files needed
 
-- Display an HTML form.
-- Accept name and course values.
-- Read POST form data.
-- Send the submitted values back to the EJS template.
-- Display a dynamic result page.
-
-## Main concepts
-
-| Concept | Purpose |
-| --- | --- |
-| EJS | Dynamic HTML templates |
-| view engine | Tells Express to use EJS |
-| express.urlencoded() | Reads HTML form data |
-| GET | Displays the form |
-| POST | Receives the form |
-
-## VS Code path
-
-This experiment uses two connected files:
+**Two files:**
 
 ```text
 02-express-templating-form-data/
@@ -33,48 +15,25 @@ This experiment uses two connected files:
     └── index.ejs
 ```
 
-Main server path:
-
-```text
-02-express-templating-form-data/app.js
-```
-
-Template path:
-
-```text
-02-express-templating-form-data/views/index.ejs
-```
-
 ## Run
+
+From repository root:
 
 ```bash
 node 02-express-templating-form-data/app.js
 ```
 
-Open:
+Open `http://localhost:3002/`. Enter `Anitha`, select `FSD2`, and submit. Expected text on the result page:
 
 ```text
-http://localhost:3002
+Hello Anitha. Course: FSD2
 ```
 
-## File structure
+## How files connect
 
-```text
-02-express-templating-form-data/
-├── app.js
-└── views/
-    └── index.ejs
-```
+- `app.js`: configures EJS, reads form data using `express.urlencoded()`, defines `GET /` and `POST /submit`, and calls `res.render()`.
+- `views/index.ejs`: displays the form and server-provided title/message.
 
-## Basic flow
+**Do not open `index.ejs` directly in the browser**; Express must render it.
 
-HTML form
-→ POST /submit
-→ Express reads req.body
-→ EJS receives data
-→ HTML response
-
-## Source files
-
-- app.js — Express configuration and routes.
-- views/index.ejs — readable EJS template.
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for Linux commands and common errors.
