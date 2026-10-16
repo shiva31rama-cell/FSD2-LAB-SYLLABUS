@@ -1,34 +1,39 @@
 # Experiment 06 — React Props, State, Styles and Events
 
-This experiment follows the handout's three goals: props, state/event handling, and styling with CSS Modules plus Sass.
+## Aim
 
-## Main paths
+Use props to pass data, `useState` to update component state, event handlers to respond to clicks, and CSS Modules/Sass to style the UI.
 
-- `06-react-props-states-styles-events/src/main.jsx` — app entry and props examples
-- `06-react-props-states-styles-events/src/StudentCard.jsx` — reusable component receiving props
-- `06-react-props-states-styles-events/src/StudentCard.module.css` — component-scoped styles
-- `06-react-props-states-styles-events/src/Counter.jsx` — `useState` and click events
-- `06-react-props-states-styles-events/src/Counter.module.css` — counter styles
-- `06-react-props-states-styles-events/src/App.scss` — Sass variables and layout styles
+## Files needed
+
+**Seven files:**
+
+```text
+06-react-props-states-styles-events/
+├── index.html
+└── src/
+    ├── main.jsx
+    ├── StudentCard.jsx
+    ├── StudentCard.module.css
+    ├── Counter.jsx
+    ├── Counter.module.css
+    └── App.scss
+```
 
 ## Run
 
-From the repository root:
-
 ```bash
-npm install
 npm run react06
 ```
 
-Open the Vite URL shown in the terminal.
+Open the Vite URL in the terminal. Two StudentCard components show Anitha (CSE) and Ravi (ECE) as prop examples. The counter starts at zero.
 
-## Expected behavior
+- **Increment:** add 1
+- **Decrement:** subtract 1
+- **Reset:** return to zero
 
-- Two StudentCard instances display Anitha and Ravi using props.
-- Counter begins at 0.
-- Increment adds one; Decrement subtracts one; Reset returns the value to zero.
-- CSS Modules scope card/counter styles; Sass supplies reusable theme variables.
+## Core theory
 
-## Key distinction
+Props are read-only values passed from parent to child. State is component-owned data changed with a setter such as `setCount`. Event handlers call the setter; React re-renders. CSS Modules scope component classes and Sass supplies theme styles.
 
-Props are read-only values passed from the parent. State is owned by a component and updated through a setter such as `setCount`.
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for file counts and troubleshooting.
