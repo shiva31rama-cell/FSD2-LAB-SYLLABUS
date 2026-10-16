@@ -1,28 +1,38 @@
 # Experiment 10 — MongoDB Installation, Atlas Configuration and CRUD
 
-This repository's query file covers the handout's CRUD section. MongoDB installation and Atlas setup are environment steps; follow the uploaded handout for your OS and never commit Atlas credentials.
+## Part (a) — Setup
 
-## Part A — Installation and connection checks
+Install MongoDB Community Server and `mongosh`, or configure a MongoDB Atlas free cluster. Create an Atlas database user, allow the lab computer's current IP address, copy the connection string, and test with `mongosh`. Never commit a real Atlas password to GitHub; avoid leaving broad network access open.
 
-Verify the shell is installed:
+Check the shell:
 
 ```bash
 mongod --version
 mongosh --version
 ```
 
-For Atlas, create a database user, allow your current IP in Network Access, copy the cluster connection string, and test it with `mongosh`. Avoid committing passwords or leaving `0.0.0.0/0` enabled outside a controlled lab.
+For a local MongoDB service on Linux:
 
-## Part B — CRUD query path
+```bash
+sudo systemctl status mongod
+sudo systemctl start mongod
+mongosh
+```
 
-`10-mongodb-installation-configuration-crud/queries.js`
+## Part (b) — CRUD queries
 
-Run from the repository root after connecting to your local server or Atlas:
+**One program file:** `10-mongodb-installation-configuration-crud/queries.js`.
+
+Run from the repository root:
 
 ```bash
 mongosh < 10-mongodb-installation-configuration-crud/queries.js
 ```
 
-The script uses `fsdLab` and a five-student dataset. It demonstrates legacy syllabus methods `insert()`, `find()`, `update()`, `remove()`, plus modern replacements `insertOne/insertMany`, `updateOne/updateMany` and `deleteOne/deleteMany`.
+Connect to Atlas first if the script should use cloud data. The script selects `fsdLab`, loads five sample students and demonstrates syllabus methods `insert()`, `find()`, `update()`, `remove()`, together with filters, projections, operators and modern replacements.
 
-It includes filters, projections, sorting, limit, count, `findOne()`, `$set`, `$inc`, multi-update and upsert examples. Whole-collection/database deletion commands are commented out for safety.
+The script reloads the sample data to make re-runs predictable. Whole-collection and whole-database deletion commands stay commented out.
+
+## Verify
+
+Look for the final printed documents and document count in mongosh. If the shell cannot connect, see the MongoDB troubleshooting section in [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md).
