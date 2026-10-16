@@ -1,66 +1,37 @@
-# Experiment 07 — Conditional Rendering, Lists and React Forms
+# Experiment 07 — React Conditional Rendering, Lists and Forms
 
-## What is this?
+This experiment follows the three parts in the official handout.
 
-This experiment demonstrates how React conditionally displays content, renders arrays as lists and handles controlled form inputs.
+## Main path
 
-## What can it do?
-
-- Show or hide a message.
-- Render a student list using map().
-- Track input values with useState().
-- Display a live greeting while typing.
-- Handle a form submission.
-- Read the selected course.
-
-## Main concepts
-
-| Concept | Purpose |
-| --- | --- |
-| Conditional rendering | Show content when a condition is true |
-| map() | Convert array data into JSX |
-| Controlled input | React controls the input value |
-| onChange | Updates state from user input |
-| onSubmit | Handles form submission |
-
-## File structure
-
-```text
-07-react-conditional-lists-forms/
-├── index.html
-├── package.json
-└── src/
-    └── main.jsx
-```
-
-## VS Code path
-
-From the repository root, open:
-
-```text
-07-react-conditional-lists-forms/src/main.jsx
-```
-
-The complete experiment folder is:
-
-```text
-07-react-conditional-lists-forms/
-```
+`07-react-conditional-lists-forms/src/main.jsx`
 
 ## Run
 
+From the repository root:
+
 ```bash
+npm install
 npm run react07
 ```
 
 Open the Vite URL shown in the terminal.
 
-## Expected behavior
+## Part A — Conditional rendering
 
-Type a name into the live greeting field:
+Demonstrates login/logout with if/else behavior, a ternary expression for details, logical AND for unread messages, and a role panel for student/faculty/admin.
 
-```text
-Hello, <name>!
-```
+## Part B — Lists
 
-Use Toggle Message to demonstrate conditional rendering.
+Renders a student list using `map()` and stable keys, filters students by branch with `filter()`, and removes a student without mutating the previous state array.
+
+## Part C — Controlled form
+
+Demonstrates text, email, password, number, date, select, radio, checkbox and textarea fields. A shared change handler updates React state. Submit validates required name/email/checkbox fields; Reset clears the form.
+
+## What to test
+
+1. Log in and log out in the conditional section.
+2. Show and hide details, mark unread messages as read, and switch roles.
+3. Filter students by CSE/ECE and remove a student.
+4. Submit the form empty to see validation messages; fill required fields and check the agreement to submit successfully.

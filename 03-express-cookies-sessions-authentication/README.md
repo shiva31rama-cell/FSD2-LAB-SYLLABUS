@@ -1,68 +1,57 @@
-# Experiment 03 — Cookies, Sessions and Authentication
+# Experiment 03 — ExpressJS Cookies, Sessions and Authentication
 
-## What is this?
+This experiment follows the official handout and has two independently runnable parts.
 
-This experiment demonstrates a simple login system using ExpressJS sessions and cookies.
+## One-time setup
 
-## What can it do?
+From the repository root:
 
-- Display a login form.
-- Check demo username and password.
-- Store the logged-in user in a session.
-- Store a role value in a cookie.
-- Protect the profile route.
-- Destroy the session during logout.
-
-## Demo login
-
-```text
-Username: student
-Password: 1234
+```bash
+npm install
 ```
 
-## Main concepts
+Required packages: Express, cookie-parser, express-session, EJS and bcryptjs.
 
-| Concept | Purpose |
-| --- | --- |
-| Cookie | Stores small client-side values |
-| Session | Stores server-side login state |
-| Authentication | Checks user credentials |
-| Protected route | Allows access only after login |
-| Logout | Destroys the active session |
+## Part A — Cookies and sessions
 
-## VS Code path
+Source path: `03-express-cookies-sessions-authentication/app.js`
 
-From the repository root, open:
-
-```text
-03-express-cookies-sessions-authentication/app.js
+```bash
+node 03-express-cookies-sessions-authentication/app.js
 ```
+
+Open `http://localhost:3003`.
+
+| Route | Expected behavior |
+|---|---|
+| `/` | Link page for the demonstrations |
+| `/set-cookie` | Sets an HTTP-only username cookie |
+| `/get-cookie` | Displays the stored cookie or “No cookie found.” |
+| `/visit` | First visit message, then increments the session visit count |
+| `/destroy-session` | Destroys the session |
+
+## Part B — Hashed-password authentication
+
+Sources:
+- `03-express-cookies-sessions-authentication/auth-app.js`
+- `03-express-cookies-sessions-authentication/views/login.ejs`
+- `03-express-cookies-sessions-authentication/views/dashboard.ejs`
 
 Run:
 
 ```bash
-node 03-express-cookies-sessions-authentication/app.js
+node 03-express-cookies-sessions-authentication/auth-app.js
 ```
 
-## Run
+Open `http://localhost:3001/login`.
 
-```bash
-node 03-express-cookies-sessions-authentication/app.js
-```
+Classroom demo credentials: `admin` / `password123`. The in-memory demo user stores a bcrypt hash and login compares the submitted password against that hash. The dashboard is protected by `isAuthenticated`; logout destroys the session.
 
-Open:
+> This is a teaching demo, not production authentication. It uses an in-memory user list and a development session secret. Set SESSION_SECRET in a real deployment and use a persistent session store.
 
-```text
-http://localhost:3003
-```
+## Learning outcomes
 
-## Basic flow
-
-Login form
-→ POST /login
-→ Validate credentials
-→ Create session
-→ Redirect to /profile
-→ Logout destroys session
-
-> This is a classroom demonstration. The hard-coded credentials and session secret are intentionally simple for learning.
+- Read and set cookies.
+- Track visit counts with server-side sessions.
+- Hash and verify passwords with bcryptjs.
+- Protect routes with middleware and destroy sessions on logout.

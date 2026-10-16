@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login | FSD2 Lab</title>
+</head>
+<body style="font-family:Arial,sans-serif;max-width:480px;margin:40px auto;padding:0 16px">
+  <h1>Experiment 3(b): Login</h1>
+  <% if (error) { %>
+    <p role="alert" style="color:#b00020"><%= error %></p>
+  <% } %>
+  <form action="/login" method="POST">
+    <p><label>Username <input type="text" name="username" autocomplete="username" required></label></p>
+    <p><label>Password <input type="password" name="password" autocomplete="current-password" required></label></p>
+    <button type="submit">Login</button>
+  </form>
+  <p>Classroom demo credentials: <code>admin</code> / <code>password123</code></p>
+</body>
+</html>

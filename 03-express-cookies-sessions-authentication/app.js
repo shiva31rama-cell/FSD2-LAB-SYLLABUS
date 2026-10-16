@@ -1,18 +1,11 @@
 /**
- * Experiment 03: ExpressJS Cookies, Sessions and Authentication
+ * Experiment 03(a): Cookie and session management.
  *
- * Demo credentials:
- * Username: student
- * Password: 1234
+ * Run: node 03-express-cookies-sessions-authentication/app.js
+ * Open: http://localhost:3003
  *
- * What it demonstrates:
- * - Form-data handling
- * - Cookies
- * - Sessions
- * - Login and logout
- * - Protected profile route
+ * Try /set-cookie, /get-cookie, /visit and /destroy-session.
  */
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -20,146 +13,57 @@ const session = require('express-session');
 const app = express();
 const PORT = 3003;
 
-// ------------------------------------------------------------
-// Middleware
-// ------------------------------------------------------------
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-);
-
 app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'fsd2-classroom-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60_000 },
+}));
 
-app.use(
-  session({
-    secret: 'fsd2-demo-secret',
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
-
-// ------------------------------------------------------------
-// Routes
-// ------------------------------------------------------------
-
-// Login page.
-app.get('/', (req, res) => {
-  res.send(
-    `<!DOCTYPE html>
+app.get('/', (_req, res) => {
+  res.send(`<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>FSD2 Authentication Demo</title>
-  </head>
-
-  <body
-    style="
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 0 20px;
-    "
-  >
-    <h2>FSD2 Authentication Demo</h2>
-
-    <form method="POST" action="/login">
-      <label for="username">
-        Username
-      </label>
-
-      <br />
-
-      <input
-        id="username"
-        name="username"
-        placeholder="username"
-        required
-      />
-
-      <br />
-      <br />
-
-      <label for="password">
-        Password
-      </label>
-
-      <br />
-
-      <input
-        id="password"
-        name="password"
-        type="password"
-        placeholder="password"
-        required
-      />
-
-      <br />
-      <br />
-
-      <button type="submit">
-        Login
-      </button>
-    </form>
-  </body>
-</html>`,
-  );
+<head><meta charset="utf-8"><title>Cookies and Sessions</title></head>
+<body style="font-family:Arial,sans-serif;max-width:650px;margin:40px auto">
+  <h1>Experiment 3(a): Cookies and Sessions</h1>
+  <ul>
+    <li><a href="/set-cookie">Set cookie</a></li>
+    <li><a href="/get-cookie">Read cookie</a></li>
+    <li><a href="/visit">Visit counter</a></li>
+    <li><a href="/destroy-session">Destroy session</a></li>
+  </ul>
+  <p>Try the links more than once to observe the difference between cookies and sessions.</p>
+</body></html>`);
 });
 
-// Authenticate the user.
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+app.get('/set-cookie', (_req, res) => {
+  res.cookie('username', 'GuestUser', { maxAge: 15 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+  res.send('Cookie has been set! <a href="/get-cookie">Check cookie</a>');
+});
 
-  const validLogin =
-    username === 'student' &&
-    password === '1234';
+app.get('/get-cookie', (req, res) => {
+  const username = req.cookies.username;
+  res.send(username ? `Cookie value: ${username}` : 'No cookie found.');
+});
 
-  if (!validLogin) {
-    return res
-      .status(401)
-      .send('Invalid username or password');
+app.get('/visit', (req, res) => {
+  if (req.session.views) {
+    req.session.views += 1;
+    return res.send(`You have visited this page ${req.session.views} times.`);
   }
-
-  // Store the logged-in user in the session.
-  req.session.user = username;
-
-  // Store a simple role value in a cookie.
-  res.cookie('role', 'student', {
-    httpOnly: true,
-  });
-
-  return res.redirect('/profile');
+  req.session.views = 1;
+  return res.send('Welcome! This is your first visit.');
 });
 
-// Protected profile route.
-app.get('/profile', (req, res) => {
-  if (!req.session.user) {
-    return res
-      .status(401)
-      .send('Please login first');
-  }
-
-  res.send(
-    '<h2>Welcome ' +
-      req.session.user +
-      '</h2>' +
-      '<p>Session is active.</p>' +
-      '<a href="/logout">Logout</a>',
-  );
-});
-
-// Destroy the session and log out.
-app.get('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.send('Logged out');
+app.get('/destroy-session', (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) return next(error);
+    res.clearCookie('connect.sid');
+    res.send('Session destroyed. <a href="/visit">Visit again</a>');
   });
 });
-
-// ------------------------------------------------------------
-// Start server
-// ------------------------------------------------------------
 
 app.listen(PORT, () => {
-  console.log('Server: http://localhost:' + PORT);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

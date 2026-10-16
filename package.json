@@ -17,7 +17,8 @@
     "mongoose": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-router-dom": "latest",
+    "bcryptjs": "latest"
   },
   "devDependencies": {
     "sass": "latest",
