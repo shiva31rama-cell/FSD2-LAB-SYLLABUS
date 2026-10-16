@@ -25,7 +25,7 @@ jobs:
           node-version: "22"
           cache: npm
       - name: Install project dependencies
-        run: npm ci
+        run: npm install
       - name: Validate lab paths
         run: |
           test -f 01-express-routing-http-methods-middleware/app.js
