@@ -1,56 +1,28 @@
-# Experiment 10 — MongoDB Installation, Configuration and CRUD
+# Experiment 10 — MongoDB Installation, Atlas Configuration and CRUD
 
-## What is this?
+This repository's query file covers the handout's CRUD section. MongoDB installation and Atlas setup are environment steps; follow the uploaded handout for your OS and never commit Atlas credentials.
 
-This experiment introduces MongoDB shell commands for basic CRUD operations.
+## Part A — Installation and connection checks
 
-## What can it do?
+Verify the shell is installed:
 
-- Select a database.
-- Insert student documents.
-- Find all documents.
-- Filter documents by branch.
-- Update a document.
-- Delete a document.
-- Display the final collection.
-
-## Main CRUD operations
-
-| Operation | Modern command |
-| --- | --- |
-| Create | insertOne() |
-| Read | find() |
-| Update | updateOne() |
-| Delete | deleteOne() |
-
-The original syllabus may use the older names insert(), update() and remove(). The program uses modern equivalents.
-
-## VS Code path
-
-MongoDB query file:
-
-```text
-10-mongodb-installation-configuration-crud/queries.js
+```bash
+mongod --version
+mongosh --version
 ```
 
-Run it with `mongosh` from the repository root.
+For Atlas, create a database user, allow your current IP in Network Access, copy the cluster connection string, and test it with `mongosh`. Avoid committing passwords or leaving `0.0.0.0/0` enabled outside a controlled lab.
 
-## Run
+## Part B — CRUD query path
 
-Open mongosh and execute:
+`10-mongodb-installation-configuration-crud/queries.js`
+
+Run from the repository root after connecting to your local server or Atlas:
 
 ```bash
 mongosh < 10-mongodb-installation-configuration-crud/queries.js
 ```
 
-## Database
+The script uses `fsdLab` and a five-student dataset. It demonstrates legacy syllabus methods `insert()`, `find()`, `update()`, `remove()`, plus modern replacements `insertOne/insertMany`, `updateOne/updateMany` and `deleteOne/deleteMany`.
 
-The example uses:
-
-```text
-fsd2lab
-```
-
-## Source file
-
-- queries.js — readable, sectioned mongosh commands.
+It includes filters, projections, sorting, limit, count, `findOne()`, `$set`, `$inc`, multi-update and upsert examples. Whole-collection/database deletion commands are commented out for safety.
