@@ -1,41 +1,30 @@
 # Experiment 03 — ExpressJS Cookies, Sessions and Authentication
 
-This experiment follows the official handout and has two independently runnable parts.
+The uploaded handout defines two programs; they are separate, so run only the requested part.
 
-## One-time setup
+## Part (a): Session management using cookies and sessions
 
-From the repository root:
-
-```bash
-npm install
-```
-
-Required packages: Express, cookie-parser, express-session, EJS and bcryptjs.
-
-## Part A — Cookies and sessions
-
-Source path: `03-express-cookies-sessions-authentication/app.js`
+**Files needed: 1** — `03-express-cookies-sessions-authentication/app.js`.
 
 ```bash
 node 03-express-cookies-sessions-authentication/app.js
 ```
 
-Open `http://localhost:3003`.
+Open `http://localhost:3003/`. Try the Set cookie and Read cookie links. Open `/visit` repeatedly to see the session counter increase; open `/destroy-session` to clear it.
 
-| Route | Expected behavior |
-|---|---|
-| `/` | Link page for the demonstrations |
-| `/set-cookie` | Sets an HTTP-only username cookie |
-| `/get-cookie` | Displays the stored cookie or “No cookie found.” |
-| `/visit` | First visit message, then increments the session visit count |
-| `/destroy-session` | Destroys the session |
+Routes: `/set-cookie`, `/get-cookie`, `/visit`, `/destroy-session`.
 
-## Part B — Hashed-password authentication
+## Part (b): Authentication with a hashed password
 
-Sources:
-- `03-express-cookies-sessions-authentication/auth-app.js`
-- `03-express-cookies-sessions-authentication/views/login.ejs`
-- `03-express-cookies-sessions-authentication/views/dashboard.ejs`
+**Files needed: 3**
+
+```text
+03-express-cookies-sessions-authentication/
+├── auth-app.js
+└── views/
+    ├── login.ejs
+    └── dashboard.ejs
+```
 
 Run:
 
@@ -45,13 +34,8 @@ node 03-express-cookies-sessions-authentication/auth-app.js
 
 Open `http://localhost:3001/login`.
 
-Classroom demo credentials: `admin` / `password123`. The in-memory demo user stores a bcrypt hash and login compares the submitted password against that hash. The dashboard is protected by `isAuthenticated`; logout destroys the session.
+Classroom test credentials: `admin` / `password123`. Successful login redirects to the protected dashboard. Incorrect credentials show an error; Logout destroys the session. The password is checked with bcryptjs against a hash.
 
-> This is a teaching demo, not production authentication. It uses an in-memory user list and a development session secret. Set SESSION_SECRET in a real deployment and use a persistent session store.
+> Classroom only: the user list is in memory and the session secret is a development default. Do not reuse these settings in production.
 
-## Learning outcomes
-
-- Read and set cookies.
-- Track visit counts with server-side sessions.
-- Hash and verify passwords with bcryptjs.
-- Protect routes with middleware and destroy sessions on logout.
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for the exact file/path method and Linux troubleshooting.
