@@ -307,7 +307,7 @@ mongosh --file 10-mongodb-installation-configuration-crud/queries.js
 
 It selects `fsdLab`, loads five sample students, and demonstrates `insert()`, `find()`, filters/projections, `update()` with `$set` / `$inc` / upsert, and `remove()`; modern replacements are shown in comments. Confirm changes with the final `find()` and count.
 
-For Atlas, copy your own connection string from Atlas and connect with `mongosh`; don't add your real password to a tracked source file. See the Experiment 10 README for Atlas setup and common authentication/IP/DNS errors.
+For Atlas, pass your own URI to `mongosh` before `--file`; do not save your real URI/password in a tracked file. Example: `mongosh "YOUR_ATLAS_URI" --file 10-mongodb-installation-configuration-crud/queries.js`. See the Experiment 10 README for authentication, IP allow-list and DNS fixes.
 
 ### Experiment 11 — MongoDB databases, collections and records
 
