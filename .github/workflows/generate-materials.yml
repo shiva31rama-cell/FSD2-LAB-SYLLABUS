@@ -4,8 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   build-materials:
     if: github.actor != 'github-actions[bot]'
@@ -13,16 +15,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
+        with:
           node-version: "22"
           cache: npm
+
       - name: Install project dependencies
         run: npm install
+
       - name: Validate lab paths
         run: |
           test -f 01-express-routing-http-methods-middleware/app.js
@@ -33,10 +40,17 @@ jobs:
           test -f 03-express-cookies-sessions-authentication/views/login.ejs
           test -f 03-express-cookies-sessions-authentication/views/dashboard.ejs
           test -f 04-express-database-rest-api/server.js
+          test -f 05-react-render-html-jsx-components/index.html
           test -f 05-react-render-html-jsx-components/src/main.jsx
           test -f 05-react-render-html-jsx-components/src/StudentCard.jsx
+          test -f 06-react-props-states-styles-events/index.html
           test -f 06-react-props-states-styles-events/src/main.jsx
           test -f 06-react-props-states-styles-events/src/Counter.jsx
+          test -f 06-react-props-states-styles-events/src/StudentCard.jsx
+          test -f 06-react-props-states-styles-events/src/StudentCard.module.css
+          test -f 06-react-props-states-styles-events/src/Counter.module.css
+          test -f 06-react-props-states-styles-events/src/App.scss
+          test -f 07-react-conditional-lists-forms/index.html
           test -f 07-react-conditional-lists-forms/src/main.jsx
           test -f 07-react-conditional-lists-forms/src/App.jsx
           test -f 07-react-conditional-lists-forms/src/components/ConditionalDemo.jsx
@@ -44,32 +58,34 @@ jobs:
           test -f 07-react-conditional-lists-forms/src/components/RegistrationForm.jsx
           test -f 08-react-router-updating-screen/src/main.jsx
           test -f 08-react-router-updating-screen/part-a-routing/index.html
-          test -f 08-react-router-updating-screen/part-b-updating-screen/index.html
           test -f 08-react-router-updating-screen/part-a-routing/src/App.jsx
           test -f 08-react-router-updating-screen/part-a-routing/src/pages/StudentDetail.jsx
+          test -f 08-react-router-updating-screen/part-b-updating-screen/index.html
           test -f 08-react-router-updating-screen/part-b-updating-screen/src/components/Counter.jsx
           test -f 08-react-router-updating-screen/part-b-updating-screen/src/components/Clock.jsx
           test -f 09-react-hooks-sharing-data/src/main.jsx
           test -f 09-react-hooks-sharing-data/part-a-hooks/index.html
-          test -f 09-react-hooks-sharing-data/part-b-sharing-data/index.html
           test -f 09-react-hooks-sharing-data/part-a-hooks/src/components/ClassCounter.jsx
           test -f 09-react-hooks-sharing-data/part-a-hooks/src/components/HookCounter.jsx
+          test -f 09-react-hooks-sharing-data/part-b-sharing-data/index.html
           test -f 09-react-hooks-sharing-data/part-b-sharing-data/src/components/Parent.jsx
           test -f 09-react-hooks-sharing-data/part-b-sharing-data/src/context/ThemeContext.jsx
           test -f 10-mongodb-installation-configuration-crud/queries.js
           test -f 11-mongodb-databases-collections-records/queries.js
           test -f 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+          test -f 12-augmented-programs-todo-and-quiz/quiz-react/index.html
           test -f 12-augmented-programs-todo-and-quiz/quiz-react/src/main.jsx
+          test -f EXAM_HANDBOOK.md
+          test -f LAB_PATHS.md
+
       - name: Check repository whitespace
         run: git diff --check
+
       - name: Check Express and Node programs
-          node --check 01-express-routing-http-methods-middleware/app.js
-          node --check 02-express-templating-form-data/app.js
-          node --check 03-express-cookies-sessions-authentication/app.js
-          node --check 03-express-cookies-sessions-authentication/auth-app.js
-          node --check 04-express-database-rest-api/server.js
-          node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
+        run: npm run check:node
+
       - name: Build React experiments
+        run: |
           npx vite build 05-react-render-html-jsx-components
           npx vite build 06-react-props-states-styles-events
           npx vite build 07-react-conditional-lists-forms
@@ -80,11 +96,15 @@ jobs:
           npx vite build 09-react-hooks-sharing-data/part-a-hooks
           npx vite build 09-react-hooks-sharing-data/part-b-sharing-data
           npx vite build 12-augmented-programs-todo-and-quiz/quiz-react
+
       - name: Install material-generation packages
         run: python -m pip install --upgrade pip pillow python-pptx reportlab
+
       - name: Generate PPTs, runtime PDFs and visuals
         run: python tools/generate_materials.py
+
       - name: Commit generated material
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
