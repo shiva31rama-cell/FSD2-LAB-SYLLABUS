@@ -26,7 +26,7 @@ mongosh
 Run from the repository root:
 
 ```bash
-mongosh < 10-mongodb-installation-configuration-crud/queries.js
+mongosh --file 10-mongodb-installation-configuration-crud/queries.js
 ```
 
 Connect to Atlas first if the script should use cloud data. The script selects `fsdLab`, loads five sample students and demonstrates syllabus methods `insert()`, `find()`, `update()`, `remove()`, together with filters, projections, operators and modern replacements.
