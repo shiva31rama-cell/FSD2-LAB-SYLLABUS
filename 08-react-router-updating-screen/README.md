@@ -1,61 +1,46 @@
 # Experiment 08 — React Router and Updating the Screen
 
-## What is this?
+This experiment has two independently runnable programs, matching parts (a) and (b) in the uploaded handout. Both use the root repository dependencies; do not install packages inside these subfolders.
 
-This experiment introduces client-side routing and shows how changing state updates the React screen.
+## Part (a) — Student Portal using React Router
 
-## What can it do?
+**Main path:** `08-react-router-updating-screen/part-a-routing/src/main.jsx`
 
-- Navigate between Home, About and Counter screens.
-- Use React Router links without a full page reload.
-- Store counter state using useState().
-- Re-render the screen when state changes.
+Files (9 total): `index.html`, `src/main.jsx`, `src/App.jsx`, `src/components/Navbar.jsx`, and `src/pages/Home.jsx`, `Students.jsx`, `StudentDetail.jsx`, `About.jsx`, `NotFound.jsx`.
 
-## Routes
-
-```text
-/          → Home
-/about     → About
-/counter   → Counter
-```
-
-## Main concepts
-
-| Concept | Purpose |
-| --- | --- |
-| BrowserRouter | Enables client-side routing |
-| Link | Navigates between routes |
-| Routes | Holds route definitions |
-| Route | Connects a path to a component |
-| State | Causes the screen to update |
-
-## VS Code path
-
-Main React entry path:
-
-```text
-08-react-router-updating-screen/src/main.jsx
-```
-
-React Router paths used by the program:
-
-```text
-/          → Home
-/about     → About
-/counter   → Counter
-```
-
-## Run
+Run:
 
 ```bash
-npm run react08
+npm run react08a
 ```
 
-Open the Vite URL shown in the terminal.
+Try `/`, `/students`, `/students/1`, `/about` and a made-up route such as `/xyz`. The student detail reads the dynamic `:id` with `useParams()`; Back to Students uses `useNavigate()`. Unknown paths show the 404 component.
 
-## Basic flow
+## Part (b) — Updating the Screen
 
-Click Link
-→ React Router changes the route
-→ Matching component renders
-→ Counter state updates the screen
+**Main path:** `08-react-router-updating-screen/part-b-updating-screen/src/main.jsx`
+
+Files (5 total): `index.html`, `src/main.jsx`, `src/App.jsx`, `src/components/Counter.jsx`, `src/components/Clock.jsx`.
+
+Run:
+
+```bash
+npm run react08b
+```
+
+Click the naive +1 three-times button and watch the count increase by only one. Click the functional-updater button and watch it increase by three. The live clock updates once per second with `useEffect()` and stops its timer during cleanup.
+
+## Quick output
+
+- Router program: Home / Students / About navigation, student detail pages and 404 page.
+- Screen update program: counter plus a live clock.
+
+## Linux / build check
+
+```bash
+npm install
+npx vite build 08-react-router-updating-screen/part-a-routing
+npx vite build 08-react-router-updating-screen/part-b-updating-screen
+```
+
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for the complete exam workflow and error remedies.
