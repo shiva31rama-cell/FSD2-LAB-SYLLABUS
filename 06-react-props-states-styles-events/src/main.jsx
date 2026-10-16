@@ -1,46 +1,24 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
-
 import Counter from './Counter';
+import StudentCard from './StudentCard';
 import './App.scss';
-
-// ------------------------------------------------------------
-// Child component: receives a prop
-// ------------------------------------------------------------
-
-function Student({ name }) {
-  return <p>Prop received by child: {name}</p>;
-}
-
-// ------------------------------------------------------------
-// Main App component
-// ------------------------------------------------------------
 
 function App() {
   return (
     <main className="app">
-      <h1>Props + State + Styles + Events</h1>
-
-      <Student name="Rama" />
-
-      <h2 className="section-title">Counter Experiment</h2>
-      <Counter />
-
-      <p>
-        <strong>Theme:</strong> change <code>$primary-color</code> in{' '}
-        <code>App.scss</code>.
-      </p>
-
-      <p>
-        The h2 border, section title text, and Counter border use the same
-        theme color.
-      </p>
+      <h1>Experiment 6: Props, State, Styles and Events</h1>
+      <p>Props are passed from a parent; state belongs to a component and changes through its setter.</p>
+      <section>
+        <h2>StudentCard (Props Demo)</h2>
+        <StudentCard name="Anitha" branch="CSE" year={3} cgpa={8.9} />
+        <StudentCard name="Ravi" branch="ECE" year={2} cgpa={7.4} />
+      </section>
+      <section>
+        <h2>Counter (State and Event Demo)</h2>
+        <Counter />
+      </section>
     </main>
   );
 }
-
-// ------------------------------------------------------------
-// Render React application
-// ------------------------------------------------------------
 
 createRoot(document.getElementById('root')).render(<App />);
