@@ -1,57 +1,28 @@
 # Experiment 11 — MongoDB Databases, Collections and Records
 
-## What is this?
+This version follows the supplied handout's database/collection exercises and eight-student dataset.
 
-This experiment demonstrates database and collection operations together with common MongoDB query features.
+## Source and run
 
-## What can it do?
+Path: `11-mongodb-databases-collections-records/queries.js`
 
-- Create a database context.
-- Create a students collection.
-- Insert multiple records.
-- Find records.
-- Limit the number of results.
-- Sort by marks.
-- Create an index.
-- Calculate average marks with aggregation.
-
-## Main concepts
-
-| Feature | Example |
-| --- | --- |
-| Collection | db.createCollection() |
-| Find | find() |
-| Limit | limit(2) |
-| Sort | sort({ marks: -1 }) |
-| Index | createIndex({ branch: 1 }) |
-| Aggregation | $group + $sort |
-
-## VS Code path
-
-MongoDB query file:
-
-```text
-11-mongodb-databases-collections-records/queries.js
-```
-
-Run it with `mongosh` from the repository root.
-
-## Run
-
-Open mongosh and execute:
+Run from the repository root:
 
 ```bash
 mongosh < 11-mongodb-databases-collections-records/queries.js
 ```
 
-## Aggregation result
+Use a local MongoDB connection or connect with `mongosh` to Atlas first if your environment requires an explicit connection string.
 
-The aggregation calculates:
+## What the program demonstrates
 
-- Average marks for each branch.
-- Number of students in each branch.
-- Results ordered by average marks.
+- Select `college`; create/list databases and collections.
+- Explicit and implicit collection creation, including an optional capped `logs` collection.
+- Load the handout's eight students (roll numbers 101–108, with name, branch, year, CGPA and city).
+- `find()`, projections, filters, `findOne()`, `countDocuments()`, `limit()`, `skip()` and `sort()`.
+- Single-field, compound and unique indexes, index inspection, and query-plan inspection.
+- Aggregation with `$match`, `$group`, `$avg`, `$max`, `$push`, `$sort`, `$project`, `$limit` and `$count`.
 
-## Source file
+## Safety and repeat runs
 
-- queries.js — sectioned MongoDB commands with comments.
+The sample student collection is cleared and reloaded so the result set remains predictable. Cleanup commands such as `drop()` and `dropDatabase()` are left commented out because they permanently delete data. Review the current database with `db.getName()` before manually running destructive commands.
