@@ -2,9 +2,9 @@
 
 ## Part (a) — Setup
 
-Install MongoDB Community Server and `mongosh`, or configure a MongoDB Atlas free cluster. Create an Atlas database user, allow the lab computer's current IP address, copy the connection string, and test with `mongosh`. Never commit a real Atlas password to GitHub; avoid leaving broad network access open.
+Install MongoDB Community Server and `mongosh`, or configure a MongoDB Atlas cluster. In Atlas, create a database user, allow the lab computer's current IP address, copy the connection string and test the connection. Never commit a real Atlas password to GitHub or leave broad network access enabled beyond a controlled lab.
 
-Check the shell:
+Check the tools:
 
 ```bash
 mongod --version
@@ -23,16 +23,20 @@ mongosh
 
 **One program file:** `10-mongodb-installation-configuration-crud/queries.js`.
 
-Run from the repository root:
+Run from the repository root against local MongoDB:
 
 ```bash
 mongosh --file 10-mongodb-installation-configuration-crud/queries.js
 ```
 
-Connect to Atlas first if the script should use cloud data. The script selects `fsdLab`, loads five sample students and demonstrates syllabus methods `insert()`, `find()`, `update()`, `remove()`, together with filters, projections, operators and modern replacements.
+For Atlas, pass your own URI directly to mongosh (never paste the actual URI/password into GitHub):
 
-The script reloads the sample data to make re-runs predictable. Whole-collection and whole-database deletion commands stay commented out.
+```bash
+mongosh "YOUR_ATLAS_URI" --file 10-mongodb-installation-configuration-crud/queries.js
+```
+
+The script selects `fsdLab`, loads five sample students and prints the results of `insert()`, `find()`, `update()`, `remove()`, filters, projections, operators and modern replacements. It reloads the sample data to make re-runs predictable. Whole-collection and whole-database deletion commands stay commented out.
 
 ## Verify
 
-Look for the final printed documents and document count in mongosh. If the shell cannot connect, see the MongoDB troubleshooting section in [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md).
+Look for the final printed documents and count in mongosh. If the shell cannot connect, see the MongoDB troubleshooting section in [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md).
