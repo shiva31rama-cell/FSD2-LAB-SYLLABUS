@@ -1,14 +1,16 @@
 /**
  * Experiment 11: MongoDB Databases, Collections and Records.
  *
- * Run inside mongosh from repository root:
- *   mongosh < 11-mongodb-databases-collections-records/queries.js
+ * Run from repository root:
+ *   mongosh --file 11-mongodb-databases-collections-records/queries.js
+ * For Atlas:
+ *   mongosh "YOUR_ATLAS_URI" --file 11-mongodb-databases-collections-records/queries.js
  *
  * Uses the official handout's college database and eight-student dataset.
  */
-use college;
+db = db.getSiblingDB('college');
 
-// Part A — create databases and collections (safe to run repeatedly).
+print('PART A: database is ' + db.getName());
 if (!db.getCollectionNames().includes('students')) db.createCollection('students');
 if (!db.getCollectionNames().includes('courses')) db.createCollection('courses');
 db.faculty.updateOne(
@@ -19,15 +21,13 @@ db.faculty.updateOne(
 if (!db.getCollectionNames().includes('logs')) {
   db.createCollection('logs', { capped: true, size: 1048576, max: 100 });
 }
-print('Database: ' + db.getName());
 print('Collections:');
-show collections;
-print('Databases:');
-show dbs;
+printjson(db.getCollectionNames());
 
-// Part B — load one consistent sample dataset for all queries.
+// Part B: clear and reload only the sample students, to make reruns predictable.
 db.students.deleteMany({});
-db.students.insertMany([
+print('Insert the eight handout records:');
+printjson(db.students.insertMany([
   { rollNo: 101, name: 'Anitha', branch: 'CSE', year: 3, cgpa: 8.9, city: 'Bhimavaram' },
   { rollNo: 102, name: 'Ravi', branch: 'ECE', year: 2, cgpa: 7.4, city: 'Eluru' },
   { rollNo: 103, name: 'Sneha', branch: 'CSE', year: 3, cgpa: 9.2, city: 'Tanuku' },
@@ -36,73 +36,86 @@ db.students.insertMany([
   { rollNo: 106, name: 'Varun', branch: 'CSE', year: 2, cgpa: 7.9, city: 'Eluru' },
   { rollNo: 107, name: 'Divya', branch: 'MECH', year: 3, cgpa: 8.4, city: 'Tanuku' },
   { rollNo: 108, name: 'Harsha', branch: 'CSE', year: 4, cgpa: 8.6, city: 'Bhimavaram' }
-]);
+]));
+print('Count (expected 8):');
+printjson(db.students.countDocuments());
 
-print('Student count (expected 8):');
-db.students.countDocuments();
-
-// find() with projection and filters.
-db.students.find({ branch: 'CSE' }, { name: 1, cgpa: 1, _id: 0 });
-db.students.find({ cgpa: { $gt: 8 }, year: 3 }, { name: 1, cgpa: 1, _id: 0 });
-db.students.find(
+// find(), findOne(), filters and projections.
+print('CSE students:');
+printjson(db.students.find({ branch: 'CSE' }, { name: 1, cgpa: 1, _id: 0 }).toArray());
+print('Third-year students with CGPA > 8:');
+printjson(db.students.find({ cgpa: { $gt: 8 }, year: 3 }, { name: 1, cgpa: 1, _id: 0 }).toArray());
+print('ECE students or students from Tanuku:');
+printjson(db.students.find(
   { $or: [{ branch: 'ECE' }, { city: 'Tanuku' }] },
   { name: 1, branch: 1, city: 1, _id: 0 }
-);
-db.students.find({ city: { $in: ['Eluru', 'Tanuku'] } }, { name: 1, city: 1, _id: 0 });
-db.students.findOne({ rollNo: 105 }, { name: 1, branch: 1, _id: 0 });
+).toArray());
+print('Students from Eluru or Tanuku:');
+printjson(db.students.find({ city: { $in: ['Eluru', 'Tanuku'] } }, { name: 1, city: 1, _id: 0 }).toArray());
+print('findOne() for roll number 105:');
+printjson(db.students.findOne({ rollNo: 105 }, { name: 1, branch: 1, _id: 0 }));
 
 // limit(), skip() and sort().
-db.students.find({}, { name: 1, _id: 0 }).limit(3);
-db.students.find({}, { name: 1, _id: 0 }).skip(3).limit(3);
-db.students.find({}, { name: 1, cgpa: 1, _id: 0 }).sort({ cgpa: -1 });
-db.students.find({}, { name: 1, branch: 1, cgpa: 1, _id: 0 }).sort({ branch: 1, cgpa: -1 });
+print('First three names:');
+printjson(db.students.find({}, { name: 1, _id: 0 }).limit(3).toArray());
+print('Page 2 (skip 3, limit 3):');
+printjson(db.students.find({}, { name: 1, _id: 0 }).skip(3).limit(3).toArray());
+print('Highest CGPA first:');
+printjson(db.students.find({}, { name: 1, cgpa: 1, _id: 0 }).sort({ cgpa: -1 }).toArray());
+print('Sort branch A-Z, then CGPA descending:');
+printjson(db.students.find({}, { name: 1, branch: 1, cgpa: 1, _id: 0 }).sort({ branch: 1, cgpa: -1 }).toArray());
 
-// Indexes, including uniqueness.
-db.students.createIndex({ name: 1 });
-db.students.createIndex({ branch: 1, cgpa: -1 });
-db.students.createIndex({ rollNo: 1 }, { unique: true });
+// Indexes, uniqueness and query plan.
+print('Create indexes:');
+printjson(db.students.createIndex({ name: 1 }));
+printjson(db.students.createIndex({ branch: 1, cgpa: -1 }));
+printjson(db.students.createIndex({ rollNo: 1 }, { unique: true }));
 print('Index names:');
-db.students.getIndexes().map((index) => index.name);
-print('Winning query plan:');
-db.students.find({ branch: 'CSE' }).explain('executionStats').queryPlanner.winningPlan;
-// This intentionally returns E11000; uncomment only when testing a duplicate-key error:
+printjson(db.students.getIndexes().map((index) => index.name));
+print('Winning plan for branch filter:');
+printjson(db.students.find({ branch: 'CSE' }).explain('executionStats').queryPlanner.winningPlan);
+// Uncomment to demonstrate MongoServerError E11000 for the duplicate unique rollNo:
 // db.students.insertOne({ rollNo: 101, name: 'Duplicate', branch: 'IT', year: 1, cgpa: 5 });
 
-// Aggregation: average CGPA per branch.
-db.students.aggregate([
+// aggregate(): average CGPA by branch.
+print('Average CGPA by branch:');
+printjson(db.students.aggregate([
   { $group: { _id: '$branch', total: { $sum: 1 }, avgCgpa: { $avg: '$cgpa' } } },
   { $sort: { avgCgpa: -1 } }
-]);
+]).toArray());
 
-// Filter first, then calculate maximum CGPA per branch for third-year students.
-db.students.aggregate([
+// $match + $group: maximum CGPA for third-year students.
+print('Third-year counts and maximum CGPA by branch:');
+printjson(db.students.aggregate([
   { $match: { year: 3 } },
   { $group: { _id: '$branch', count: { $sum: 1 }, maxCgpa: { $max: '$cgpa' } } },
   { $sort: { _id: 1 } }
-]);
+]).toArray());
 
-// Top three students with CGPA >= 8.5.
-db.students.aggregate([
+// $project, $sort, $limit: top students with CGPA >= 8.5.
+print('Top students with CGPA >= 8.5:');
+printjson(db.students.aggregate([
   { $match: { cgpa: { $gte: 8.5 } } },
   { $project: { _id: 0, name: 1, branch: 1, cgpa: 1 } },
   { $sort: { cgpa: -1 } },
   { $limit: 3 }
-]);
+]).toArray());
 
-// Group student names by city.
-db.students.aggregate([
+// $push: group student names by city.
+printjson(db.students.aggregate([
   { $group: { _id: '$city', students: { $push: '$name' }, n: { $sum: 1 } } },
   { $sort: { n: -1, _id: 1 } }
-]);
+]).toArray());
 
-// Count students whose CGPA is above 8; expected result is { above8: 5 }.
-db.students.aggregate([
+// $count: expected { above8: 5 }.
+print('Number of students with CGPA > 8:');
+printjson(db.students.aggregate([
   { $match: { cgpa: { $gt: 8 } } },
   { $count: 'above8' }
-]);
+]).toArray());
 
-// Destructive cleanup from the handout — deliberately commented out.
-// Verify db.getName() before manually executing any drop command:
+// Database/collection cleanup is in the handout but intentionally disabled.
+// Check db.getName() before manually executing any destructive command:
 // db.faculty.drop();
 // db.logs.drop();
 // db.courses.drop();
