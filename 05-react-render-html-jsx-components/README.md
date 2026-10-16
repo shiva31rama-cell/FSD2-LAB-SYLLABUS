@@ -1,29 +1,12 @@
-# Experiment 05 — ReactJS, HTML, JSX and Components
+# Experiment 05 — React HTML, JSX and Function/Class Components
 
-## What is this?
+## Aim
 
-This experiment introduces the React rendering process and shows how JSX and reusable components work.
+Render a page with React, write markup in JSX, and create/nest function and class components.
 
-## What can it do?
+## Files needed
 
-- Render React into the HTML root element.
-- Display JavaScript values inside JSX.
-- Create function components.
-- Create a class component.
-- Reuse StudentCard as a child component.
-- Pass student information through props.
-
-## Main concepts
-
-| Concept | Meaning |
-| --- | --- |
-| JSX | HTML-like syntax inside JavaScript |
-| Function component | JavaScript function that returns JSX |
-| Class component | React component based on a class |
-| Props | Data passed from parent to child |
-| createRoot() | Connects React to the HTML page |
-
-## File structure
+**Three core files:**
 
 ```text
 05-react-render-html-jsx-components/
@@ -31,53 +14,30 @@ This experiment introduces the React rendering process and shows how JSX and reu
 └── src/
     ├── main.jsx
     └── StudentCard.jsx
-```
-
-## VS Code path
-
-React project:
-
-```text
-05-react-render-html-jsx-components/
-├── index.html
-└── src/
-    ├── main.jsx
-    └── StudentCard.jsx
-```
-
-Main React entry path:
-
-```text
-05-react-render-html-jsx-components/src/main.jsx
-```
-
-Reusable component path:
-
-```text
-05-react-render-html-jsx-components/src/StudentCard.jsx
 ```
 
 ## Run
 
-From the repository root:
+From repository root:
 
 ```bash
 npm run react05
 ```
 
-Open the Vite URL shown in the terminal.
+Open the Vite URL printed in the terminal.
 
-## Expected output
+## What you should see
 
-You should see:
+- Heading: `React Render + JSX`
+- A greeting for Rama
+- A function component card
+- A class component card
+- A StudentCard showing a sample name, branch, year and CGPA
 
-- A React heading.
-- A function component card.
-- A class component card.
-- A StudentCard showing the supplied props.
+## Which file does what?
 
-## Source files
+- `index.html` includes the root element where React displays the UI.
+- `src/main.jsx` contains JSX and the function/class components; it calls `createRoot(...).render(...)`.
+- `src/StudentCard.jsx` is a reusable component that receives props.
 
-- main.jsx — application entry point and components.
-- StudentCard.jsx — reusable component.
-- index.html — React root page.
+See [EXAM_HANDBOOK.md](../EXAM_HANDBOOK.md) for the exam structure and quick fixes.
