@@ -32,13 +32,22 @@ jobs:
           test -f 02-express-templating-form-data/app.js
           test -f 02-express-templating-form-data/views/index.ejs
           test -f 03-express-cookies-sessions-authentication/app.js
+          test -f 03-express-cookies-sessions-authentication/auth-app.js
+          test -f 03-express-cookies-sessions-authentication/views/login.ejs
+          test -f 03-express-cookies-sessions-authentication/views/dashboard.ejs
           test -f 04-express-database-rest-api/server.js
           test -f 05-react-render-html-jsx-components/src/main.jsx
           test -f 05-react-render-html-jsx-components/src/StudentCard.jsx
           test -f 06-react-props-states-styles-events/src/main.jsx
           test -f 06-react-props-states-styles-events/src/Counter.jsx
           test -f 07-react-conditional-lists-forms/src/main.jsx
+          test -f 07-react-conditional-lists-forms/src/App.jsx
+          test -f 07-react-conditional-lists-forms/src/components/ConditionalDemo.jsx
+          test -f 07-react-conditional-lists-forms/src/components/ListDemo.jsx
+          test -f 07-react-conditional-lists-forms/src/components/RegistrationForm.jsx
           test -f 08-react-router-updating-screen/src/main.jsx
+          test -f 08-react-router-updating-screen/part-a-routing/index.html
+          test -f 08-react-router-updating-screen/part-b-updating-screen/index.html
           test -f 08-react-router-updating-screen/part-a-routing/index.html
           test -f 08-react-router-updating-screen/part-b-updating-screen/index.html
           test -f 08-react-router-updating-screen/part-a-routing/index.html
@@ -48,6 +57,8 @@ jobs:
           test -f 08-react-router-updating-screen/part-b-updating-screen/src/components/Counter.jsx
           test -f 08-react-router-updating-screen/part-b-updating-screen/src/components/Clock.jsx
           test -f 09-react-hooks-sharing-data/src/main.jsx
+          test -f 09-react-hooks-sharing-data/part-a-hooks/index.html
+          test -f 09-react-hooks-sharing-data/part-b-sharing-data/index.html
           test -f 09-react-hooks-sharing-data/part-a-hooks/index.html
           test -f 09-react-hooks-sharing-data/part-b-sharing-data/index.html
           test -f 09-react-hooks-sharing-data/part-a-hooks/index.html
@@ -67,6 +78,7 @@ jobs:
           node --check 01-express-routing-http-methods-middleware/app.js
           node --check 02-express-templating-form-data/app.js
           node --check 03-express-cookies-sessions-authentication/app.js
+          node --check 03-express-cookies-sessions-authentication/auth-app.js
           node --check 04-express-database-rest-api/server.js
           node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js
       - name: Build React experiments
@@ -77,7 +89,11 @@ jobs:
           npx vite build 08-react-router-updating-screen
           npx vite build 08-react-router-updating-screen/part-a-routing
           npx vite build 08-react-router-updating-screen/part-b-updating-screen
+          npx vite build 08-react-router-updating-screen/part-a-routing
+          npx vite build 08-react-router-updating-screen/part-b-updating-screen
           npx vite build 09-react-hooks-sharing-data
+          npx vite build 09-react-hooks-sharing-data/part-a-hooks
+          npx vite build 09-react-hooks-sharing-data/part-b-sharing-data
           npx vite build 09-react-hooks-sharing-data/part-a-hooks
           npx vite build 09-react-hooks-sharing-data/part-b-sharing-data
           npx vite build 12-augmented-programs-todo-and-quiz/quiz-react
