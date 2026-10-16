@@ -7,10 +7,10 @@
 Run from the repository root in a local MongoDB environment:
 
 ```bash
-mongosh < 11-mongodb-databases-collections-records/queries.js
+mongosh --file 11-mongodb-databases-collections-records/queries.js
 ```
 
-Or connect `mongosh` to your Atlas cluster first if required by your lab.
+For Atlas use `mongosh "YOUR_ATLAS_URI" --file 11-mongodb-databases-collections-records/queries.js`.
 
 ## Handout coverage
 
