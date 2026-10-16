@@ -19,9 +19,9 @@ Every path below is relative to repository root `FSD2-LAB-SYLLABUS/`. Install de
 | 09a Importance of Hooks | a | `09-react-hooks-sharing-data/part-a-hooks/` | `npm run react09a` |
 | 09b Sharing data | b | `09-react-hooks-sharing-data/part-b-sharing-data/` | `npm run react09b` |
 | 10a MongoDB/Atlas setup | a | Manual setup in Experiment 10 README/handbook | `mongod --version`, `mongosh --version` |
-| 10b CRUD queries | b | `10-mongodb-installation-configuration-crud/queries.js` | `mongosh < 10-mongodb-installation-configuration-crud/queries.js` |
-| 11a Database/collection lifecycle | a | `11-mongodb-databases-collections-records/queries.js` (Part A section) | `mongosh < 11-mongodb-databases-collections-records/queries.js` |
-| 11b Record queries/index/aggregation | b | Same `queries.js` (Part B section) | `mongosh < 11-mongodb-databases-collections-records/queries.js` |
+| 10b CRUD queries | b | `10-mongodb-installation-configuration-crud/queries.js` | `mongosh --file 10-mongodb-installation-configuration-crud/queries.js` |
+| 11a Database/collection lifecycle | a | `11-mongodb-databases-collections-records/queries.js` (Part A section) | `mongosh --file 11-mongodb-databases-collections-records/queries.js` |
+| 11b Record queries/index/aggregation | b | Same `queries.js` (Part B section) | `mongosh --file 11-mongodb-databases-collections-records/queries.js` |
 | 12a To-do | a | `12-augmented-programs-todo-and-quiz/todo-node-express/server.js` | `node 12-augmented-programs-todo-and-quiz/todo-node-express/server.js` |
 | 12b Quiz | b | `12-augmented-programs-todo-and-quiz/quiz-react/` | `npm run react12b` |
 | 12c MongoDB learning certification | c | `12-augmented-programs-todo-and-quiz/CERTIFICATION_GUIDE.md` | Follow the documented online learning path |
