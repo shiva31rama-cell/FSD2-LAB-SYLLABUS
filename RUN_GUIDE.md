@@ -32,8 +32,8 @@ npm run react12b
 node --check 01-express-routing-http-methods-middleware/app.js
 
 # MongoDB shell programs
-mongosh < 10-mongodb-installation-configuration-crud/queries.js
-mongosh < 11-mongodb-databases-collections-records/queries.js
+mongosh --file 10-mongodb-installation-configuration-crud/queries.js
+mongosh --file 11-mongodb-databases-collections-records/queries.js
 ```
 
 ## Common rules
