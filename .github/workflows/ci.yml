@@ -49,6 +49,10 @@ jobs:
           test -f 06-react-props-states-styles-events/src/Counter.module.css
           test -f 06-react-props-states-styles-events/src/App.scss
           test -f 07-react-conditional-lists-forms/src/main.jsx
+          test -f 07-react-conditional-lists-forms/src/App.jsx
+          test -f 07-react-conditional-lists-forms/src/components/ConditionalDemo.jsx
+          test -f 07-react-conditional-lists-forms/src/components/ListDemo.jsx
+          test -f 07-react-conditional-lists-forms/src/components/RegistrationForm.jsx
           test -f 08-react-router-updating-screen/src/main.jsx
           test -f 08-react-router-updating-screen/part-a-routing/index.html
           test -f 08-react-router-updating-screen/part-a-routing/src/App.jsx
