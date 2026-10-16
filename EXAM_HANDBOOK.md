@@ -56,7 +56,7 @@ npm install
 |---|---|---|
 | Express / Node | `node path/to/program.js` | Terminal + browser at localhost |
 | React / JSX | `npm run reactNN` | Browser at the Vite URL shown in terminal |
-| MongoDB shell | `mongosh < path/to/queries.js` | mongosh terminal |
+| MongoDB shell | `mongosh --file path/to/queries.js` | mongosh terminal |
 | Express + MongoDB | Start MongoDB first, then `node path/to/server.js` | Terminal + browser/API |
 | Build/check only | `node --check path/to/file.js` or `npx vite build <project-folder>` | Terminal |
 
@@ -216,7 +216,7 @@ Remember for viva: **props are read-only inputs from a parent; state is data own
 
 ### Experiment 07 — React conditional rendering, lists and forms
 
-**Files needed:** 3 — `index.html`, `package.json` in that experiment folder, and `src/main.jsx`.
+**Files needed:** 7 — `index.html`, the experiment `package.json`, `src/main.jsx`, `src/App.jsx`, and `src/components/ConditionalDemo.jsx`, `ListDemo.jsx`, `RegistrationForm.jsx`.
 
 Run:
 
@@ -302,7 +302,7 @@ mongosh
 Run the script after exiting any interactive shell, from the repository root:
 
 ```bash
-mongosh < 10-mongodb-installation-configuration-crud/queries.js
+mongosh --file 10-mongodb-installation-configuration-crud/queries.js
 ```
 
 It selects `fsdLab`, loads five sample students, and demonstrates `insert()`, `find()`, filters/projections, `update()` with `$set` / `$inc` / upsert, and `remove()`; modern replacements are shown in comments. Confirm changes with the final `find()` and count.
@@ -316,7 +316,7 @@ For Atlas, copy your own connection string from Atlas and connect with `mongosh`
 Run:
 
 ```bash
-mongosh < 11-mongodb-databases-collections-records/queries.js
+mongosh --file 11-mongodb-databases-collections-records/queries.js
 ```
 
 The program selects `college`, creates collections as needed and loads the handout's eight students (roll numbers 101–108). It demonstrates:
@@ -326,7 +326,7 @@ The program selects `college`, creates collections as needed and loads the hando
 - name, compound and unique indexes;
 - aggregation using `$match`, `$group`, `$max`, `$avg`, `$push`, `$project`, `$sort`, `$limit`, `$count`.
 
-The script reloads only its sample `college.students` data to keep repeated runs predictable. Database/collection drop commands are left commented out because they permanently delete data.
+The script reloads only its sample `college.students` data to keep repeated runs predictable. Database/collection drop commands are left commented out because they permanently delete data. If the exam question explicitly asks to drop a collection/database, open an interactive `mongosh`, run `db.getName()` to verify the selected database, then use `db.courses.drop()` or `db.dropDatabase()` only when it is safe to delete that data.
 
 ### Experiment 12 — Augmented programs
 
