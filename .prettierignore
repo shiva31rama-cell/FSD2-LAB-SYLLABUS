@@ -1,0 +1,6 @@
+# Generated React build output: keep minified bundles unchanged.
+**/dist/**
+node_modules/**
+coverage/**
+PDFs/**
+PPTs/**/*.pptx
