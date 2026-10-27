@@ -4,3 +4,4 @@ node_modules/**
 coverage/**
 PDFs/**
 PPTs/**/*.pptx
+package-lock.json
