@@ -56,3 +56,17 @@ GitHub Actions validates required paths, Node syntax and React builds (including
 ## Extended learning material
 
 The repository also contains course material, previews and other study branches. For practical exam work, start with `EXAM_HANDBOOK.md` and use the matching experiment README.
+
+## Source code formatting
+
+The repository uses Prettier for JavaScript, JSX, CSS/SCSS, HTML, JSON, and Markdown, plus Black for the Python material-generation script.
+
+```bash
+npm install
+npm run format        # Format supported source and documentation files
+npm run format:check  # Check formatting without changing files
+python -m pip install black
+black tools/generate_materials.py
+```
+
+Generated React `dist` bundles and generated PDF/PPT materials are intentionally excluded from source formatting.
