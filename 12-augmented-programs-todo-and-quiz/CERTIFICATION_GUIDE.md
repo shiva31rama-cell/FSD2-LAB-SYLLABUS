@@ -3,6 +3,7 @@
 The syllabus includes MongoDB University certification as one possible augmented program.
 
 ## Study pathway
+
 1. Create a MongoDB University account.
 2. Start an introductory MongoDB learning path.
 3. Read lessons and complete hands-on checks.

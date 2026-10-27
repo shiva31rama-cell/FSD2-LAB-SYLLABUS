@@ -18,10 +18,19 @@ export default function Counter() {
   }
 
   return (
-    <section style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+    <section
+      style={{
+        border: '1px solid #ccc',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 16,
+      }}
+    >
       <h2>Counter: {count}</h2>
       <button onClick={addThreeNaive}>+1 three times (naive)</button>{' '}
-      <button onClick={addThreeFixed}>+1 three times (functional update)</button>{' '}
+      <button onClick={addThreeFixed}>
+        +1 three times (functional update)
+      </button>{' '}
       <button onClick={() => setCount(0)}>Reset</button>
     </section>
   );

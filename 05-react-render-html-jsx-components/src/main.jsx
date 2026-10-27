@@ -50,8 +50,7 @@ function App() {
       <h1>React Render + JSX</h1>
 
       <p>
-        Hello <strong>{name}</strong>. This text is rendered into the HTML
-        page.
+        Hello <strong>{name}</strong>. This text is rendered into the HTML page.
       </p>
 
       <FunctionCard />

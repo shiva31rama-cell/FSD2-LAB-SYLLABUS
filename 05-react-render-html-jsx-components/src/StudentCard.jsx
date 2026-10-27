@@ -8,12 +8,7 @@
  * - cgpa
  */
 
-function StudentCard({
-  name,
-  branch,
-  year,
-  cgpa,
-}) {
+function StudentCard({ name, branch, year, cgpa }) {
   return (
     <div className="student-card">
       <h2>{name}</h2>

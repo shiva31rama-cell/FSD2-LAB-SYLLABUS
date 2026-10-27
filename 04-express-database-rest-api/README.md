@@ -25,13 +25,13 @@ Enter `Notebook` as product name and `50` as price, then click **Add product**. 
 
 ## REST API endpoints
 
-| Method | Route | Meaning |
-|---|---|---|
-| GET | `/api/health` | Check API |
-| GET | `/api/products` | Read all products |
-| POST | `/api/products` | Create a product |
-| PUT | `/api/products/:id` | Update a product |
-| DELETE | `/api/products/:id` | Delete a product |
+| Method | Route               | Meaning           |
+| ------ | ------------------- | ----------------- |
+| GET    | `/api/health`       | Check API         |
+| GET    | `/api/products`     | Read all products |
+| POST   | `/api/products`     | Create a product  |
+| PUT    | `/api/products/:id` | Update a product  |
+| DELETE | `/api/products/:id` | Delete a product  |
 
 ## Program flow
 

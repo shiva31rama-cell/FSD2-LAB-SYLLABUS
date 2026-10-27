@@ -12,7 +12,15 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, PageBreak, Table, TableStyle
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Image as RLImage,
+    PageBreak,
+    Table,
+    TableStyle,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTP = ROOT / "PPTs"
@@ -22,7 +30,11 @@ for directory in (OUTP, OUTPDF, AS):
     directory.mkdir(parents=True, exist_ok=True)
 
 # Rebuild generated material from scratch so stale/broken files cannot remain.
-for directory, patterns in ((OUTP, ("*.pptx", "*_Preview.pdf")), (OUTPDF, ("*.pdf",)), (AS, ("*.png",))):
+for directory, patterns in (
+    (OUTP, ("*.pptx", "*_Preview.pdf")),
+    (OUTPDF, ("*.pdf",)),
+    (AS, ("*.png",)),
+):
     for pattern in patterns:
         for old in directory.glob(pattern):
             old.unlink()
@@ -76,20 +88,38 @@ def make_diagram(path, title, mode):
     title_font = load_font(40 if len(title) > 65 else 46)
     draw.text((70, 45), title, font=title_font, fill=(27, 43, 75))
     if mode == "workflow":
-        boxes = [("1. Input", "Browser / terminal"), ("2. Process", "Express / React"), ("3. Data", "State / database"), ("4. Output", "Screen / API")]
+        boxes = [
+            ("1. Input", "Browser / terminal"),
+            ("2. Process", "Express / React"),
+            ("3. Data", "State / database"),
+            ("4. Output", "Screen / API"),
+        ]
         footer = "Workflow: input → processing → data/state → output"
     else:
-        boxes = [("1. Start", "Run the program"), ("2. Enter", "Give sample input"), ("3. Execute", "Logic runs"), ("4. Observe", "See the result")]
+        boxes = [
+            ("1. Start", "Run the program"),
+            ("2. Enter", "Give sample input"),
+            ("3. Execute", "Logic runs"),
+            ("4. Observe", "See the result"),
+        ]
         footer = "Runtime: start → enter → execute → observe"
     xs = [55, 430, 805, 1180]
     for i, (heading, detail) in enumerate(boxes):
         x = xs[i]
-        draw.rounded_rectangle((x, 285, x + 315, 525), radius=24, fill=(232, 241, 252), outline=(48, 93, 156), width=5)
+        draw.rounded_rectangle(
+            (x, 285, x + 315, 525),
+            radius=24,
+            fill=(232, 241, 252),
+            outline=(48, 93, 156),
+            width=5,
+        )
         draw.text((x + 25, 330), heading, font=load_font(31), fill=(27, 43, 75))
         draw.text((x + 25, 400), detail, font=load_font(24), fill=(55, 62, 72))
         if i < 3:
             draw.line((x + 315, 405, x + 365, 405), fill=(48, 93, 156), width=8)
-            draw.polygon([(x + 365, 405), (x + 345, 392), (x + 345, 418)], fill=(48, 93, 156))
+            draw.polygon(
+                [(x + 365, 405), (x + 345, 392), (x + 345, 418)], fill=(48, 93, 156)
+            )
     draw.text((70, 720), footer, font=load_font(27), fill=(102, 110, 122))
     image.save(path)
 
@@ -97,7 +127,14 @@ def make_diagram(path, title, mode):
 def collect_code_files(folder):
     result = []
     for path in folder.rglob("*"):
-        if path.is_file() and path.suffix.lower() in {".js", ".jsx", ".ejs", ".html", ".css", ".scss"}:
+        if path.is_file() and path.suffix.lower() in {
+            ".js",
+            ".jsx",
+            ".ejs",
+            ".html",
+            ".css",
+            ".scss",
+        }:
             if "node_modules" not in path.parts and "dist" not in path.parts:
                 result.append(path)
     return sorted(result)
@@ -106,11 +143,14 @@ def collect_code_files(folder):
 def get_code_chunks(folder, max_lines=10, max_chunks=2):
     chunks = []
     for code_file in collect_code_files(folder)[:5]:
-        lines = [line.rstrip().replace("\t", "  ") for line in read_text(code_file).splitlines()]
+        lines = [
+            line.rstrip().replace("\t", "  ")
+            for line in read_text(code_file).splitlines()
+        ]
         if not any(line.strip() for line in lines):
             continue
         for start in range(0, min(len(lines), 30), max_lines):
-            part = lines[start:start + max_lines]
+            part = lines[start : start + max_lines]
             if part:
                 chunks.append((code_file.name, start + 1, part))
             if len(chunks) >= max_chunks:
@@ -119,7 +159,9 @@ def get_code_chunks(folder, max_lines=10, max_chunks=2):
 
 
 def add_bg(slide, color=WHITE):
-    shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
+    shape = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5)
+    )
     shape.fill.solid()
     shape.fill.fore_color.rgb = color
     shape.line.fill.background()
@@ -127,7 +169,20 @@ def add_bg(slide, color=WHITE):
     slide.shapes._spTree.insert(2, shape._element)
 
 
-def add_text(slide, text, x, y, w, h, size=20, color=DARK, bold=False, font="Aptos", align=PP_ALIGN.LEFT, valign=MSO_ANCHOR.TOP):
+def add_text(
+    slide,
+    text,
+    x,
+    y,
+    w,
+    h,
+    size=20,
+    color=DARK,
+    bold=False,
+    font="Aptos",
+    align=PP_ALIGN.LEFT,
+    valign=MSO_ANCHOR.TOP,
+):
     box = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
     frame = box.text_frame
     frame.clear()
@@ -149,8 +204,21 @@ def add_text(slide, text, x, y, w, h, size=20, color=DARK, bold=False, font="Apt
 
 def add_header(slide, title, subtitle=None):
     title_size = 27 if len(title) < 58 else 23
-    add_text(slide, title, 0.65, 0.30, 11.95, 0.68, size=title_size, color=NAVY, bold=True, valign=MSO_ANCHOR.MIDDLE)
-    bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.65), Inches(1.04), Inches(1.25), Inches(0.06))
+    add_text(
+        slide,
+        title,
+        0.65,
+        0.30,
+        11.95,
+        0.68,
+        size=title_size,
+        color=NAVY,
+        bold=True,
+        valign=MSO_ANCHOR.MIDDLE,
+    )
+    bar = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, Inches(0.65), Inches(1.04), Inches(1.25), Inches(0.06)
+    )
     bar.fill.solid()
     bar.fill.fore_color.rgb = BLUE
     bar.line.fill.background()
@@ -159,7 +227,9 @@ def add_header(slide, title, subtitle=None):
 
 
 def wrap_for_slide(text, width=72):
-    return textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False) or [""]
+    return textwrap.wrap(
+        text, width=width, break_long_words=False, break_on_hyphens=False
+    ) or [""]
 
 
 def add_bullets(slide, items, y=1.55, font_size=18):
@@ -167,18 +237,59 @@ def add_bullets(slide, items, y=1.55, font_size=18):
         wrapped = wrap_for_slide(item)
         height = 0.42 + 0.28 * (len(wrapped) - 1)
         add_text(slide, "•", 0.85, y, 0.32, 0.4, size=22, color=BLUE, bold=True)
-        add_text(slide, "\n".join(wrapped), 1.22, y - 0.01, 11.2, height, size=font_size, color=DARK)
+        add_text(
+            slide,
+            "\n".join(wrapped),
+            1.22,
+            y - 0.01,
+            11.2,
+            height,
+            size=font_size,
+            color=DARK,
+        )
         y += max(0.70, height + 0.18)
 
 
 def add_title_slide(prs, title, number):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide, LIGHT_BLUE)
-    add_text(slide, f"FSD2 LAB • EXPERIMENT {number}", 0.8, 1.0, 11.7, 0.45, size=18, color=BLUE, bold=True)
+    add_text(
+        slide,
+        f"FSD2 LAB • EXPERIMENT {number}",
+        0.8,
+        1.0,
+        11.7,
+        0.45,
+        size=18,
+        color=BLUE,
+        bold=True,
+    )
     title_size = 38 if len(title) < 55 else 32 if len(title) < 80 else 27
-    add_text(slide, title, 0.8, 1.78, 11.7, 1.75, size=title_size, color=NAVY, bold=True, valign=MSO_ANCHOR.MIDDLE)
-    add_text(slide, "Simple explanation • Clean code • Runtime pathway • Viva preparation", 0.8, 3.82, 11.4, 0.55, size=19, color=GREY)
-    add_text(slide, "FSD2 Lab Materials", 0.8, 6.35, 4.0, 0.4, size=16, color=BLUE, bold=True)
+    add_text(
+        slide,
+        title,
+        0.8,
+        1.78,
+        11.7,
+        1.75,
+        size=title_size,
+        color=NAVY,
+        bold=True,
+        valign=MSO_ANCHOR.MIDDLE,
+    )
+    add_text(
+        slide,
+        "Simple explanation • Clean code • Runtime pathway • Viva preparation",
+        0.8,
+        3.82,
+        11.4,
+        0.55,
+        size=19,
+        color=GREY,
+    )
+    add_text(
+        slide, "FSD2 Lab Materials", 0.8, 6.35, 4.0, 0.4, size=16, color=BLUE, bold=True
+    )
 
 
 def add_task_slides(prs, tasks):
@@ -187,42 +298,96 @@ def add_task_slides(prs, tasks):
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         add_bg(slide)
         add_header(slide, "Syllabus tasks", f"Part {page}" if len(tasks) > 5 else None)
-        add_bullets(slide, tasks[start:start + 5], y=1.55, font_size=18)
+        add_bullets(slide, tasks[start : start + 5], y=1.55, font_size=18)
 
 
 def add_code_slide(prs, index, filename, start_line, lines):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
-    add_header(slide, f"Code pathway {index}", f"{filename} • lines {start_line}–{start_line + len(lines) - 1}")
-    box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.65), Inches(1.42), Inches(12.0), Inches(5.55))
+    add_header(
+        slide,
+        f"Code pathway {index}",
+        f"{filename} • lines {start_line}–{start_line + len(lines) - 1}",
+    )
+    box = slide.shapes.add_shape(
+        MSO_SHAPE.ROUNDED_RECTANGLE,
+        Inches(0.65),
+        Inches(1.42),
+        Inches(12.0),
+        Inches(5.55),
+    )
     box.fill.solid()
     box.fill.fore_color.rgb = RGBColor(248, 250, 252)
     box.line.color.rgb = BORDER
     visual = []
     for offset, line in enumerate(lines):
-        pieces = textwrap.wrap(line, width=94, subsequent_indent="    ", break_long_words=False, break_on_hyphens=False) or [""]
+        pieces = textwrap.wrap(
+            line,
+            width=94,
+            subsequent_indent="    ",
+            break_long_words=False,
+            break_on_hyphens=False,
+        ) or [""]
         visual.append((start_line + offset, pieces))
     code_lines = []
     for number, pieces in visual:
         code_lines.append(f"{number:>3}  {pieces[0]}")
         code_lines.extend(f"     {piece}" for piece in pieces[1:])
-    add_text(slide, "\n".join(code_lines), 0.90, 1.68, 11.5, 5.05, size=12.5, color=DARK, font="DejaVu Sans Mono")
+    add_text(
+        slide,
+        "\n".join(code_lines),
+        0.90,
+        1.68,
+        11.5,
+        5.05,
+        size=12.5,
+        color=DARK,
+        font="DejaVu Sans Mono",
+    )
 
 
 def add_image_slide(prs, title, image_path, caption):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_header(slide, title)
-    slide.shapes.add_picture(str(image_path), Inches(0.65), Inches(1.40), width=Inches(12.0), height=Inches(5.55))
-    add_text(slide, caption, 0.85, 7.04, 11.6, 0.25, size=12, color=GREY, align=PP_ALIGN.CENTER)
+    slide.shapes.add_picture(
+        str(image_path),
+        Inches(0.65),
+        Inches(1.40),
+        width=Inches(12.0),
+        height=Inches(5.55),
+    )
+    add_text(
+        slide,
+        caption,
+        0.85,
+        7.04,
+        11.6,
+        0.25,
+        size=12,
+        color=GREY,
+        align=PP_ALIGN.CENTER,
+    )
 
 
 def add_card(slide, x, y, w, h, title, body, accent):
-    card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(y), Inches(w), Inches(h))
+    card = slide.shapes.add_shape(
+        MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(y), Inches(w), Inches(h)
+    )
     card.fill.solid()
     card.fill.fore_color.rgb = LIGHT_GREY
     card.line.color.rgb = BORDER
-    add_text(slide, title, x + 0.22, y + 0.18, w - 0.44, 0.4, size=18, color=accent, bold=True)
+    add_text(
+        slide,
+        title,
+        x + 0.22,
+        y + 0.18,
+        w - 0.44,
+        0.4,
+        size=18,
+        color=accent,
+        bold=True,
+    )
     add_text(slide, body, x + 0.22, y + 0.68, w - 0.44, h - 0.88, size=15.5, color=DARK)
 
 
@@ -230,18 +395,75 @@ def add_result_slide(prs, title):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_header(slide, "Expected result", title)
-    add_card(slide, 0.75, 1.55, 3.65, 2.1, "INPUT", "Enter the sample values or open the required page / route.", BLUE)
-    add_card(slide, 4.85, 1.55, 3.65, 2.1, "PROCESS", "The Express route, React component, hook, or MongoDB command performs the task.", GREEN)
-    add_card(slide, 8.95, 1.55, 3.65, 2.1, "OUTPUT", "Check the browser, terminal, API response, or database result.", ORANGE)
-    add_text(slide, "Verification checklist", 0.8, 4.15, 4.0, 0.45, size=22, color=NAVY, bold=True)
-    add_bullets(slide, ["No syntax errors appear in the terminal.", "The requested feature responds to the input.", "The displayed / returned value matches the operation."], y=4.78, font_size=17)
+    add_card(
+        slide,
+        0.75,
+        1.55,
+        3.65,
+        2.1,
+        "INPUT",
+        "Enter the sample values or open the required page / route.",
+        BLUE,
+    )
+    add_card(
+        slide,
+        4.85,
+        1.55,
+        3.65,
+        2.1,
+        "PROCESS",
+        "The Express route, React component, hook, or MongoDB command performs the task.",
+        GREEN,
+    )
+    add_card(
+        slide,
+        8.95,
+        1.55,
+        3.65,
+        2.1,
+        "OUTPUT",
+        "Check the browser, terminal, API response, or database result.",
+        ORANGE,
+    )
+    add_text(
+        slide,
+        "Verification checklist",
+        0.8,
+        4.15,
+        4.0,
+        0.45,
+        size=22,
+        color=NAVY,
+        bold=True,
+    )
+    add_bullets(
+        slide,
+        [
+            "No syntax errors appear in the terminal.",
+            "The requested feature responds to the input.",
+            "The displayed / returned value matches the operation.",
+        ],
+        y=4.78,
+        font_size=17,
+    )
 
 
 def add_viva_slide(prs):
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_bg(slide)
     add_header(slide, "Viva preparation")
-    add_bullets(slide, ["What is the purpose of this experiment?", "Which input is required?", "Which line or command performs the main operation?", "What output should you observe?", "What happens when the input changes?"], y=1.55, font_size=18)
+    add_bullets(
+        slide,
+        [
+            "What is the purpose of this experiment?",
+            "Which input is required?",
+            "Which line or command performs the main operation?",
+            "What output should you observe?",
+            "What happens when the input changes?",
+        ],
+        y=1.55,
+        font_size=18,
+    )
 
 
 def make_preview_pdf(path, title, number, tasks, workflow, runtime, chunks):
@@ -250,27 +472,121 @@ def make_preview_pdf(path, title, number, tasks, workflow, runtime, chunks):
     tasks = tasks or ["See the experiment README for the exact syllabus task."]
     page_w, page_h = landscape((13.333 * inch, 7.5 * inch))
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle("TitleClean", parent=styles["Title"], fontName="Helvetica-Bold", fontSize=25, leading=29, textColor=colors.HexColor("#1B2B4B"), spaceAfter=12)
-    h_style = ParagraphStyle("HClean", parent=styles["Heading2"], fontName="Helvetica-Bold", fontSize=19, leading=23, textColor=colors.HexColor("#1B2B4B"), spaceAfter=10)
-    body = ParagraphStyle("BodyClean", parent=styles["BodyText"], fontName="Helvetica", fontSize=13, leading=17, textColor=colors.HexColor("#23272F"))
-    code = ParagraphStyle("CodeClean", parent=body, fontName="Courier", fontSize=9.0, leading=11.3)
-    doc = SimpleDocTemplate(str(path), pagesize=(page_w, page_h), leftMargin=0.65 * inch, rightMargin=0.65 * inch, topMargin=0.48 * inch, bottomMargin=0.45 * inch, title=title)
-    story = [Paragraph(f"FSD2 LAB • EXPERIMENT {number}", body), Spacer(1, 6), Paragraph(title, title_style), Paragraph("GitHub-readable preview of the presentation. Download the matching .pptx for the editable PowerPoint.", body), PageBreak()]
+    title_style = ParagraphStyle(
+        "TitleClean",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=25,
+        leading=29,
+        textColor=colors.HexColor("#1B2B4B"),
+        spaceAfter=12,
+    )
+    h_style = ParagraphStyle(
+        "HClean",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=19,
+        leading=23,
+        textColor=colors.HexColor("#1B2B4B"),
+        spaceAfter=10,
+    )
+    body = ParagraphStyle(
+        "BodyClean",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=13,
+        leading=17,
+        textColor=colors.HexColor("#23272F"),
+    )
+    code = ParagraphStyle(
+        "CodeClean", parent=body, fontName="Courier", fontSize=9.0, leading=11.3
+    )
+    doc = SimpleDocTemplate(
+        str(path),
+        pagesize=(page_w, page_h),
+        leftMargin=0.65 * inch,
+        rightMargin=0.65 * inch,
+        topMargin=0.48 * inch,
+        bottomMargin=0.45 * inch,
+        title=title,
+    )
+    story = [
+        Paragraph(f"FSD2 LAB • EXPERIMENT {number}", body),
+        Spacer(1, 6),
+        Paragraph(title, title_style),
+        Paragraph(
+            "GitHub-readable preview of the presentation. Download the matching .pptx for the editable PowerPoint.",
+            body,
+        ),
+        PageBreak(),
+    ]
     story.append(Paragraph("1. Syllabus tasks", h_style))
     data = [[Paragraph(f"• {t}", body)] for t in tasks[:10]]
     table = Table(data, colWidths=[11.95 * inch])
-    table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F4F6F9")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#DCE1E8")), ("INNERGRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#E6EAF0")), ("LEFTPADDING", (0, 0), (-1, -1), 10), ("RIGHTPADDING", (0, 0), (-1, -1), 10), ("TOPPADDING", (0, 0), (-1, -1), 8), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
-    story += [table, PageBreak(), Paragraph("2. Workflow", h_style), RLImage(str(workflow), width=11.95 * inch, height=5.85 * inch), PageBreak()]
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F4F6F9")),
+                ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#DCE1E8")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#E6EAF0")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 10),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+                ("TOPPADDING", (0, 0), (-1, -1), 8),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+            ]
+        )
+    )
+    story += [
+        table,
+        PageBreak(),
+        Paragraph("2. Workflow", h_style),
+        RLImage(str(workflow), width=11.95 * inch, height=5.85 * inch),
+        PageBreak(),
+    ]
     for i, (filename, start, lines) in enumerate(chunks, start=1):
         story.append(Paragraph(f"3.{i}. Code pathway — {filename}", h_style))
-        escaped = "<br/>".join(f"{start + j:>3}  {line.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')}" for j, line in enumerate(lines))
-        story.append(Table([[Paragraph(escaped, code)]], colWidths=[11.95 * inch], style=TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F8FAFC")), ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#D2D8E0")), ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12), ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10)])))
+        escaped = "<br/>".join(
+            f"{start + j:>3}  {line.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')}"
+            for j, line in enumerate(lines)
+        )
+        story.append(
+            Table(
+                [[Paragraph(escaped, code)]],
+                colWidths=[11.95 * inch],
+                style=TableStyle(
+                    [
+                        ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#F8FAFC")),
+                        ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#D2D8E0")),
+                        ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                        ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                        ("TOPPADDING", (0, 0), (-1, -1), 10),
+                        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                    ]
+                ),
+            )
+        )
         story.append(PageBreak())
-    story += [Paragraph("4. Runtime walkthrough", h_style), RLImage(str(runtime), width=11.95 * inch, height=5.85 * inch), PageBreak(), Paragraph("5. Run and observe", h_style)]
-    for item in ["Start the server / Vite app or open the MongoDB shell as described in the experiment README.", "Enter the sample input or call the required route.", "Watch the terminal for logs and errors.", "Verify the browser, API response, or database result."]:
+    story += [
+        Paragraph("4. Runtime walkthrough", h_style),
+        RLImage(str(runtime), width=11.95 * inch, height=5.85 * inch),
+        PageBreak(),
+        Paragraph("5. Run and observe", h_style),
+    ]
+    for item in [
+        "Start the server / Vite app or open the MongoDB shell as described in the experiment README.",
+        "Enter the sample input or call the required route.",
+        "Watch the terminal for logs and errors.",
+        "Verify the browser, API response, or database result.",
+    ]:
         story += [Paragraph(f"• {item}", body), Spacer(1, 5)]
     story += [Spacer(1, 10), Paragraph("6. Viva questions", h_style)]
-    for item in ["What is the purpose of this experiment?", "Which input is required?", "Which line or command performs the main operation?", "What output should you observe?", "What happens when the input changes?"]:
+    for item in [
+        "What is the purpose of this experiment?",
+        "Which input is required?",
+        "Which line or command performs the main operation?",
+        "What output should you observe?",
+        "What happens when the input changes?",
+    ]:
         story.append(Paragraph(f"• {item}", body))
     doc.build(story)
 
@@ -290,10 +606,17 @@ def build(folder):
     prs.slide_height = Inches(7.5)
     add_title_slide(prs, title, number)
     add_task_slides(prs, tasks)
-    add_image_slide(prs, "How it works", workflow, "Input → processing → data/state → output")
+    add_image_slide(
+        prs, "How it works", workflow, "Input → processing → data/state → output"
+    )
     for i, chunk in enumerate(chunks, start=1):
         add_code_slide(prs, i, *chunk)
-    add_image_slide(prs, "Runtime walkthrough", runtime, "Start → enter input → execute → observe output")
+    add_image_slide(
+        prs,
+        "Runtime walkthrough",
+        runtime,
+        "Start → enter input → execute → observe output",
+    )
     add_result_slide(prs, title)
     add_viva_slide(prs)
 
@@ -308,7 +631,11 @@ def build(folder):
 
 rows = []
 for folder in sorted(ROOT.iterdir()):
-    if folder.is_dir() and re.match(r"^\d\d-", folder.name) and (folder / "README.md").exists():
+    if (
+        folder.is_dir()
+        and re.match(r"^\d\d-", folder.name)
+        and (folder / "README.md").exists()
+    ):
         rows.append(build(folder))
 
 index_lines = [
@@ -331,6 +658,11 @@ for number, title, slug in rows:
     ]
 (ROOT / "MATERIALS_INDEX.md").write_text("\n".join(index_lines), encoding="utf-8")
 
-(OUTP / "README.md").write_text("""# PPTs — FSD2 Lab Presentations\n\nEach experiment has:\n\n- `*.pptx` — editable PowerPoint file.\n- `*_Preview.pdf` — GitHub-readable version of the same presentation.\n\nThe presentations use a consistent 16:9 layout, readable text, short points, clean code blocks, workflow visuals, runtime walkthroughs, expected-result checks and viva questions.\n\n**To view a presentation directly in GitHub, open its `*_Preview.pdf`.**\n\nSee [`MATERIALS_INDEX.md`](../MATERIALS_INDEX.md) for the complete list.\n""", encoding="utf-8")
+(OUTP / "README.md").write_text(
+    """# PPTs — FSD2 Lab Presentations\n\nEach experiment has:\n\n- `*.pptx` — editable PowerPoint file.\n- `*_Preview.pdf` — GitHub-readable version of the same presentation.\n\nThe presentations use a consistent 16:9 layout, readable text, short points, clean code blocks, workflow visuals, runtime walkthroughs, expected-result checks and viva questions.\n\n**To view a presentation directly in GitHub, open its `*_Preview.pdf`.**\n\nSee [`MATERIALS_INDEX.md`](../MATERIALS_INDEX.md) for the complete list.\n""",
+    encoding="utf-8",
+)
 
-print(f"Generated clean FSD2 presentations, GitHub previews and runtime guides for {len(rows)} experiments.")
+print(
+    f"Generated clean FSD2 presentations, GitHub previews and runtime guides for {len(rows)} experiments."
+)

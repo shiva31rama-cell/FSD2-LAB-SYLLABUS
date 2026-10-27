@@ -13,7 +13,8 @@ export default function Students() {
       <ul>
         {students.map((student) => (
           <li key={student.id}>
-            <Link to={`/students/${student.id}`}>{student.name}</Link> — {student.branch}
+            <Link to={`/students/${student.id}`}>{student.name}</Link> —{' '}
+            {student.branch}
           </li>
         ))}
       </ul>

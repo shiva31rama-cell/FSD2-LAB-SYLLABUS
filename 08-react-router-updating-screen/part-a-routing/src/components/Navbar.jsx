@@ -9,9 +9,15 @@ const linkStyle = ({ isActive }) => ({
 export default function Navbar() {
   return (
     <nav style={{ padding: 12, borderBottom: '1px solid #ccc' }}>
-      <NavLink to="/" end style={linkStyle}>Home</NavLink>
-      <NavLink to="/students" style={linkStyle}>Students</NavLink>
-      <NavLink to="/about" style={linkStyle}>About</NavLink>
+      <NavLink to="/" end style={linkStyle}>
+        Home
+      </NavLink>
+      <NavLink to="/students" style={linkStyle}>
+        Students
+      </NavLink>
+      <NavLink to="/about" style={linkStyle}>
+        About
+      </NavLink>
     </nav>
   );
 }

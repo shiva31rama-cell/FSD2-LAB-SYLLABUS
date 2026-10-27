@@ -18,11 +18,7 @@ const questions = [
   },
   {
     question: 'Express is mainly used for?',
-    options: [
-      'Server-side web apps',
-      'Image editing',
-      'Operating systems',
-    ],
+    options: ['Server-side web apps', 'Image editing', 'Operating systems'],
     answer: 'Server-side web apps',
   },
 ];

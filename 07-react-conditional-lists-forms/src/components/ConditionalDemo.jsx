@@ -23,9 +23,11 @@ export default function ConditionalDemo() {
   const [showDetails, setShowDetails] = useState(false);
   const [unread, setUnread] = useState(3);
   const [role, setRole] = useState('student');
-  const authButton = isLoggedIn
-    ? <button onClick={() => setIsLoggedIn(false)}>Logout</button>
-    : <button onClick={() => setIsLoggedIn(true)}>Login</button>;
+  const authButton = isLoggedIn ? (
+    <button onClick={() => setIsLoggedIn(false)}>Logout</button>
+  ) : (
+    <button onClick={() => setIsLoggedIn(true)}>Login</button>
+  );
 
   return (
     <section>
@@ -38,17 +40,31 @@ export default function ConditionalDemo() {
       <button onClick={() => setShowDetails((shown) => !shown)}>
         {showDetails ? 'Hide details' : 'Show details'}
       </button>
-      {showDetails
-        ? <p>React re-renders whenever state changes, so this text appears and disappears.</p>
-        : <p>Details are hidden.</p>}
+      {showDetails ? (
+        <p>
+          React re-renders whenever state changes, so this text appears and
+          disappears.
+        </p>
+      ) : (
+        <p>Details are hidden.</p>
+      )}
 
       <h3>3. Logical AND (&&)</h3>
-      {isLoggedIn && unread > 0 && <p>You have {unread} unread message{unread > 1 ? 's' : ''}.</p>}
-      {isLoggedIn && <button onClick={() => setUnread((count) => Math.max(0, count - 1))}>Mark one as read</button>}
+      {isLoggedIn && unread > 0 && (
+        <p>
+          You have {unread} unread message{unread > 1 ? 's' : ''}.
+        </p>
+      )}
+      {isLoggedIn && (
+        <button onClick={() => setUnread((count) => Math.max(0, count - 1))}>
+          Mark one as read
+        </button>
+      )}
       {!isLoggedIn && <p>Log in to see your messages.</p>}
 
       <h3>4. Switch statement</h3>
-      <label>Role:{' '}
+      <label>
+        Role:{' '}
         <select value={role} onChange={(event) => setRole(event.target.value)}>
           <option value="student">Student</option>
           <option value="faculty">Faculty</option>

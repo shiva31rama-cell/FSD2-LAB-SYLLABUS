@@ -7,7 +7,10 @@ function App() {
   return (
     <main className="app">
       <h1>Experiment 6: Props, State, Styles and Events</h1>
-      <p>Props are passed from a parent; state belongs to a component and changes through its setter.</p>
+      <p>
+        Props are passed from a parent; state belongs to a component and changes
+        through its setter.
+      </p>
       <section>
         <h2>StudentCard (Props Demo)</h2>
         <StudentCard name="Anitha" branch="CSE" year={3} cgpa={8.9} />

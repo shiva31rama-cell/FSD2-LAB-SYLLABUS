@@ -16,7 +16,9 @@ function StudentRow({ student, onRemove }) {
       <td>{student.branch}</td>
       <td>{student.year}</td>
       <td>{student.cgpa.toFixed(1)}</td>
-      <td><button onClick={() => onRemove(student.id)}>Remove</button></td>
+      <td>
+        <button onClick={() => onRemove(student.id)}>Remove</button>
+      </td>
     </tr>
   );
 }
@@ -37,26 +39,50 @@ export default function ListDemo() {
     <section>
       <h2>Part (b): Rendering Lists Demo</h2>
       <h3>1. List of strings</h3>
-      <ul>{subjects.map((subject) => <li key={subject}>{subject}</li>)}</ul>
+      <ul>
+        {subjects.map((subject) => (
+          <li key={subject}>{subject}</li>
+        ))}
+      </ul>
 
       <h3>2. Student object list/table</h3>
-      <label>Filter by branch:{' '}
-        <select value={branch} onChange={(event) => setBranch(event.target.value)}>
+      <label>
+        Filter by branch:{' '}
+        <select
+          value={branch}
+          onChange={(event) => setBranch(event.target.value)}
+        >
           <option value="ALL">All branches</option>
           <option value="CSE">CSE</option>
           <option value="ECE">ECE</option>
           <option value="MECH">MECH</option>
         </select>
       </label>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 12 }}>
-        <thead><tr><th>Name</th><th>Branch</th><th>Year</th><th>CGPA</th><th>Action</th></tr></thead>
+      <table
+        style={{ width: '100%', borderCollapse: 'collapse', marginTop: 12 }}
+      >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Branch</th>
+            <th>Year</th>
+            <th>CGPA</th>
+            <th>Action</th>
+          </tr>
+        </thead>
         <tbody>
           {visibleStudents.map((student) => (
-            <StudentRow key={student.id} student={student} onRemove={removeStudent} />
+            <StudentRow
+              key={student.id}
+              student={student}
+              onRemove={removeStudent}
+            />
           ))}
         </tbody>
       </table>
-      {visibleStudents.length === 0 && <p>No students match this branch filter.</p>}
+      {visibleStudents.length === 0 && (
+        <p>No students match this branch filter.</p>
+      )}
     </section>
   );
 }

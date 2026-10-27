@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // ------------------------------------------------------------
@@ -58,18 +53,15 @@ function App() {
       >
         <h1>Hooks + Shared Data</h1>
 
-        <input
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
+        <input value={name} onChange={(event) => setName(event.target.value)} />
 
         <Child />
 
         <p>Timer using useEffect: {seconds}s</p>
 
         <p>
-          <strong>Why hooks?</strong> Hooks let function components use
-          state, effects and shared context.
+          <strong>Why hooks?</strong> Hooks let function components use state,
+          effects and shared context.
         </p>
       </main>
     </NameContext.Provider>
