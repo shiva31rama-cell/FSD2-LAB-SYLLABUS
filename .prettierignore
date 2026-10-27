@@ -5,3 +5,5 @@ coverage/**
 PDFs/**
 PPTs/**/*.pptx
 package-lock.json
+# Workflow files are maintained separately to avoid bot push restrictions.
+.github/workflows/**
