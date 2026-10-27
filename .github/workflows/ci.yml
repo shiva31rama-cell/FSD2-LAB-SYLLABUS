@@ -30,6 +30,9 @@ jobs:
       - name: Check repository whitespace
         run: git diff --check
 
+      - name: Check source formatting
+        run: npm run format:check
+
       - name: Validate lab paths
         run: |
           test -f 01-express-routing-http-methods-middleware/app.js
