@@ -7,7 +7,9 @@ export default function Parent() {
   return (
     <section>
       <h2>Lifting State Up</h2>
-      <p>The parent owns the count and passes the value and callback to children.</p>
+      <p>
+        The parent owns the count and passes the value and callback to children.
+      </p>
       <Display count={count} />
       <Buttons onIncrement={() => setCount((previous) => previous + 1)} />
     </section>

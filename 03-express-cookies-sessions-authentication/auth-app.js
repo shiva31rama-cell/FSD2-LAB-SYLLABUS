@@ -16,12 +16,14 @@ const PORT = 3001;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fsd2-auth-classroom-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax' },
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'fsd2-auth-classroom-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: 'lax' },
+  }),
+);
 
 // Simulated in-memory user database. Password is stored as a hash, not plaintext.
 const users = [
@@ -40,9 +42,11 @@ app.post('/login', async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = users.find((item) => item.username === username);
-    if (!user) return res.status(401).render('login', { error: 'User not found.' });
+    if (!user)
+      return res.status(401).render('login', { error: 'User not found.' });
     const matches = await bcrypt.compare(password, user.password);
-    if (!matches) return res.status(401).render('login', { error: 'Incorrect password.' });
+    if (!matches)
+      return res.status(401).render('login', { error: 'Incorrect password.' });
     req.session.user = user.username;
     return res.redirect('/dashboard');
   } catch (error) {
@@ -62,4 +66,6 @@ app.get('/logout', (req, res, next) => {
   });
 });
 
-app.listen(PORT, () => console.log(`Authentication demo: http://localhost:${PORT}/login`));
+app.listen(PORT, () =>
+  console.log(`Authentication demo: http://localhost:${PORT}/login`),
+);

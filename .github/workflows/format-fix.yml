@@ -1,0 +1,56 @@
+name: Format and Commit Source Files
+
+on:
+  push:
+    branches:
+      - chore/format-all-source-files
+
+permissions:
+  contents: write
+
+concurrency:
+  group: format-source-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out formatting branch
+        uses: actions/checkout@v4
+        with:
+          ref: chore/format-all-source-files
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Format JavaScript, JSX, CSS, HTML, JSON, Markdown, and YAML
+        run: npm run format
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Format Python source
+        run: |
+          python -m pip install black
+          black tools/generate_materials.py
+
+      - name: Commit formatting changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "style: format repository source files"
+            git push origin chore/format-all-source-files
+          else
+            echo "All supported source files are already formatted."
+          fi

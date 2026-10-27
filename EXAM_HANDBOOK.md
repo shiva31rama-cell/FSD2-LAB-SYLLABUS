@@ -52,13 +52,13 @@ npm install
 
 ### Fast command selection
 
-| Technology | Run style | Where output appears |
-|---|---|---|
-| Express / Node | `node path/to/program.js` | Terminal + browser at localhost |
-| React / JSX | `npm run reactNN` | Browser at the Vite URL shown in terminal |
-| MongoDB shell | `mongosh --file path/to/queries.js` | mongosh terminal |
-| Express + MongoDB | Start MongoDB first, then `node path/to/server.js` | Terminal + browser/API |
-| Build/check only | `node --check path/to/file.js` or `npx vite build <project-folder>` | Terminal |
+| Technology        | Run style                                                           | Where output appears                      |
+| ----------------- | ------------------------------------------------------------------- | ----------------------------------------- |
+| Express / Node    | `node path/to/program.js`                                           | Terminal + browser at localhost           |
+| React / JSX       | `npm run reactNN`                                                   | Browser at the Vite URL shown in terminal |
+| MongoDB shell     | `mongosh --file path/to/queries.js`                                 | mongosh terminal                          |
+| Express + MongoDB | Start MongoDB first, then `node path/to/server.js`                  | Terminal + browser/API                    |
+| Build/check only  | `node --check path/to/file.js` or `npx vite build <project-folder>` | Terminal                                  |
 
 ## 3. Experiment-by-experiment exam index
 
@@ -196,6 +196,7 @@ npm run react05
 Open the Vite URL shown in the terminal. The page shows a React JSX heading, a function component, a class component and a student card receiving props. The sample card displays a CSE student with year and CGPA data.
 
 For the lab-record subparts:
+
 - **HTML in browser:** `index.html` hosts the HTML page and the React root element.
 - **JSX markup:** `src/main.jsx` returns JSX from React components.
 - **Nested function/class components:** `FunctionCard`, `ClassCard` and `StudentCard` are rendered inside the main App component.
@@ -225,6 +226,7 @@ npm run react07
 ```
 
 This page demonstrates the handout's key groups:
+
 - **Conditional rendering:** if/else behavior, ternary, `&&`, and a role selection.
 - **Lists:** `map()`, stable keys, branch filter and remove.
 - **Forms:** controlled name/email/password/age/date/select/radio/checkbox/textarea fields; validation; Submit and Reset.
@@ -320,6 +322,7 @@ mongosh --file 11-mongodb-databases-collections-records/queries.js
 ```
 
 The program selects `college`, creates collections as needed and loads the handout's eight students (roll numbers 101–108). It demonstrates:
+
 - create/list databases and collections;
 - `find()`, filters, projections, `findOne()`, `countDocuments()`;
 - `limit()`, `skip()`, `sort()`;

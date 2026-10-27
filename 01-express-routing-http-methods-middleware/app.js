@@ -50,9 +50,7 @@ app.get('/', (req, res) => {
 app.get('/students/:id', (req, res) => {
   const studentId = Number(req.params.id);
 
-  const student = students.find(
-    (item) => item.id === studentId,
-  );
+  const student = students.find((item) => item.id === studentId);
 
   res.json(
     student || {
@@ -73,11 +71,7 @@ app.get('/search', (req, res) => {
 
 // Build a URL for a known student.
 app.get('/build-url', (req, res) => {
-  const url =
-    req.protocol +
-    '://' +
-    req.get('host') +
-    '/students/1';
+  const url = req.protocol + '://' + req.get('host') + '/students/1';
 
   res.json({
     url,
@@ -105,9 +99,7 @@ app.get('/students', (req, res) => {
 app.delete('/students/:id', (req, res) => {
   const studentId = Number(req.params.id);
 
-  students = students.filter(
-    (student) => student.id !== studentId,
-  );
+  students = students.filter((student) => student.id !== studentId);
 
   res.json({
     message: 'Student deleted',

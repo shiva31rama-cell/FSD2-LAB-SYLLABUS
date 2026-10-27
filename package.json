@@ -13,7 +13,9 @@
     "react09a": "vite --root 09-react-hooks-sharing-data/part-a-hooks",
     "react09b": "vite --root 09-react-hooks-sharing-data/part-b-sharing-data",
     "react12b": "vite --root 12-augmented-programs-todo-and-quiz/quiz-react",
-    "check:node": "node --check 01-express-routing-http-methods-middleware/app.js && node --check 02-express-templating-form-data/app.js && node --check 03-express-cookies-sessions-authentication/app.js && node --check 03-express-cookies-sessions-authentication/auth-app.js && node --check 04-express-database-rest-api/server.js && node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js"
+    "check:node": "node --check 01-express-routing-http-methods-middleware/app.js && node --check 02-express-templating-form-data/app.js && node --check 03-express-cookies-sessions-authentication/app.js && node --check 03-express-cookies-sessions-authentication/auth-app.js && node --check 04-express-database-rest-api/server.js && node --check 12-augmented-programs-todo-and-quiz/todo-node-express/server.js",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,sass,html,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,sass,html,md,yml,yaml}\""
   },
   "dependencies": {
     "cookie-parser": "latest",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "sass": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "prettier": "^3.6.2"
   }
 }

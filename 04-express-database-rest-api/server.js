@@ -28,14 +28,21 @@ app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 app.get('/api/products', async (_req, res, next) => {
   try {
     res.json(await Product.find().sort({ name: 1 }));
-  } catch (error) { next(error); }
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.post('/api/products', async (req, res, next) => {
   try {
-    const product = await Product.create({ name: req.body.name, price: req.body.price });
+    const product = await Product.create({
+      name: req.body.name,
+      price: req.body.price,
+    });
     res.status(201).json(product);
-  } catch (error) { next(error); }
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.put('/api/products/:id', async (req, res, next) => {
@@ -48,9 +55,12 @@ app.put('/api/products/:id', async (req, res, next) => {
       { name: req.body.name, price: req.body.price },
       { new: true, runValidators: true },
     );
-    if (!product) return res.status(404).json({ message: 'Product not found.' });
+    if (!product)
+      return res.status(404).json({ message: 'Product not found.' });
     return res.json(product);
-  } catch (error) { return next(error); }
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.delete('/api/products/:id', async (req, res, next) => {
@@ -59,9 +69,12 @@ app.delete('/api/products/:id', async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid product id.' });
     }
     const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found.' });
+    if (!product)
+      return res.status(404).json({ message: 'Product not found.' });
     return res.json({ message: 'Product deleted', id: product._id });
-  } catch (error) { return next(error); }
+  } catch (error) {
+    return next(error);
+  }
 });
 
 // Minimal single-page browser UI: create, list, edit and delete products via fetch().
@@ -173,7 +186,9 @@ app.use((error, _req, res, _next) => {
     return res.status(400).json({ message: error.message });
   }
   console.error(error);
-  return res.status(500).json({ message: 'Server error. Check the terminal for details.' });
+  return res
+    .status(500)
+    .json({ message: 'Server error. Check the terminal for details.' });
 });
 
 async function start() {

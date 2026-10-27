@@ -14,12 +14,14 @@ const app = express();
 const PORT = 3003;
 
 app.use(cookieParser());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'fsd2-classroom-session-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 60_000 },
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'fsd2-classroom-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 60_000 },
+  }),
+);
 
 app.get('/', (_req, res) => {
   res.send(`<!doctype html>
@@ -38,7 +40,11 @@ app.get('/', (_req, res) => {
 });
 
 app.get('/set-cookie', (_req, res) => {
-  res.cookie('username', 'GuestUser', { maxAge: 15 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+  res.cookie('username', 'GuestUser', {
+    maxAge: 15 * 60 * 1000,
+    httpOnly: true,
+    sameSite: 'lax',
+  });
   res.send('Cookie has been set! <a href="/get-cookie">Check cookie</a>');
 });
 

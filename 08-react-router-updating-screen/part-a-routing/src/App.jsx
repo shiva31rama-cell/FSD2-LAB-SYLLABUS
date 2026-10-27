@@ -8,7 +8,13 @@ import NotFound from './pages/NotFound';
 
 export default function App() {
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: 800, margin: '30px auto' }}>
+    <div
+      style={{
+        fontFamily: 'Arial, sans-serif',
+        maxWidth: 800,
+        margin: '30px auto',
+      }}
+    >
       <Navbar />
       <main style={{ padding: 20 }}>
         <Routes>
