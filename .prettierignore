@@ -7,3 +7,4 @@ PPTs/**/*.pptx
 package-lock.json
 # Workflow files are maintained separately to avoid bot push restrictions.
 .github/workflows/**
+# Ignore the build lockfile; dependency versions are managed through npm install.
